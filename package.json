@@ -5,16 +5,19 @@
   "main:src": "src/index.tsx",
   "dependencies": {
     "@parcel/transformer-raw": "^2.10.3",
+    "express": "^4.18.2",
     "parcel": "^2.10.3",
     "react": "^16.12.0",
     "react-app-polyfill": "^3.0.0",
     "react-dev-utils": "^12.0.1",
     "react-dom": "^16.12.0",
-    "react-godot": "^1.0.0"
+    "react-godot": "^1.0.0",
+    "react-router-dom": "^6.20.1"
   },
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html && node postprocess.js",
+    "serve":"nodemon server.js & npx localtunnel --port 3000",
     "test": "echo \"No tests available\""
   },
   "staticFiles": {
