@@ -1,40 +1,93 @@
 {
-  "name": "react-godot",
-  "version": "1.0.0",
-  "description": "Load a webassembly build of the Godot engine and Bootstrap packed games from within the react component tree",
-  "author": "d3dc",
-  "license": "MIT",
-  "repository": "d3dc/react-godot",
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
-  "types": "dist/index.d.ts",
-  "engines": {
-    "node": ">=8",
-    "npm": ">=5"
+  "name": "example",
+  "version": "0.1.0",
+  "private": true,
+  "main:src": "src/index.tsx",
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-app-polyfill": "^3.0.0",
+    "react-dev-utils": "^12.0.1",
+    "react-dom": "^16.12.0",
+    "react-godot": "^1.0.0"
   },
   "scripts": {
-    "test": "react-scripts test",
-    "build": "NODE_ENV=production tsc",
-    "build:css": "cp src/styles.css dist/",
-    "start": "NODE_ENV=development tsc -w",
-    "prepare": "npm run build && npm run build:css",
-    "predeploy": "cd example && npm install && npm run build"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "echo \"No tests available\""
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+  "staticFiles": {
+    "staticPath": [
+      "static"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^8.0.3",
-    "@types/jest": "^24.0.25",
-    "@types/react": "^18.2.40",
-    "@types/react-dom": "^18.2.17",
-    "typescript": "^3.7.4"
-  },
-  "files": [
-    "dist"
-  ]
+    "cssnano": "^6.0.1",
+    "parcel-plugin-static-files-copy": "^2.6.0",
+    "parcel-reporter-static-files-copy": "^1.5.3",
+    "postcss": "^8.2.15",
+    "typescript": "^5.3.2"
+  }
 }
