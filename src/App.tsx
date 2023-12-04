@@ -1,5 +1,3 @@
-import "react-godot/dist/styles.css"
-
 import React from "react"
 import ReactGodot from "./react-godot/src"
 
