@@ -11,7 +11,6 @@ async function replace() {
 
     const scriptsToAdd = `
         <link rel='manifest' href='index.manifest.json'>
-        <script src="index.service.worker.js"></script>
         <script src="index.js"></script>
     `
     // Replace placeholder

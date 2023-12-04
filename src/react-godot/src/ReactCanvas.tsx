@@ -30,6 +30,9 @@ function toFailure(err: any) {
   return { msg, mode: "notice", initialized: true }
 }
 
+const GODOT_CONFIG = { "args": [], "canvasResizePolicy": 2, "executable": "index", "experimentalVK": false, "fileSizes": { "index.pck": 6720, "index.wasm": 28972640 }, "focusCanvas": false, "gdextensionLibs": [], "serviceWorker": "index.service.worker.js" };
+
+
 const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   engine,
   pck,
@@ -42,7 +45,7 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   useEffect(() => {
     if (engine.isWebGLAvailable()) {
       changeLoadingState({ mode: "indeterminate" })
-      setInstance(new engine())
+      setInstance(new engine(GODOT_CONFIG))
     } else {
       changeLoadingState(toFailure("WebGL not available"))
     }
