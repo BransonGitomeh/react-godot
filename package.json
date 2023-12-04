@@ -14,8 +14,6 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "copy-static": "copyfiles -u 1 ./static/**/* ./dist",
-    "postbuild": "npm run copy-static",
     "build": "parcel build src/index.html",
     "test": "echo \"No tests available\""
   },
