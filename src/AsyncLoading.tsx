@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { FunctionComponent, createContext, useContext, useReducer } from "react"
+import { FunctionComponent, createContext, useContext, useReducer, ReactNode } from "react"
 
 export type PackLoadingState = {
   mode: string
@@ -92,7 +92,11 @@ const Loading: FunctionComponent<LoadingProps> = ({
   )
 }
 
-const AsyncLoading: FunctionComponent = ({ children }) => {
+interface AsyncLoadingProps {
+  children: ReactNode;
+}
+
+const AsyncLoading: FunctionComponent<AsyncLoadingProps> = ({ children }) => {
   const [loadingState, dispatchLoadingAction] = useReducer(packLoadingReducer, {
     mode: "indeterminate",
     initializing: true

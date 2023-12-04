@@ -4,8 +4,25 @@ import { FunctionComponent, useEffect, useRef, useState } from "react"
 
 import { useLoading } from "./AsyncLoading"
 
+// Define the Engine type if not already defined
+interface Engine {
+  // Define the properties and methods expected in your Engine
+  isWebGLAvailable: () => boolean
+  setProgressFunc: (cb) => boolean
+  startGame: (pck: string) => Promise<void>
+  setCanvas: (canvas: HTMLCanvasElement) => void
+  // Add any other properties/methods that your Engine should have
+}
+
+interface EngineConstructor {
+  new(): Engine;
+}
+
+// Combine the EngineConstructor with the original Engine interface
+type ExtendedEngine = Engine & EngineConstructor;
+
 export type ReactEngineProps = {
-  engine: Engine
+  engine: ExtendedEngine
   pck: string
   width?: number
   height?: number
@@ -26,7 +43,7 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   height = 300
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [instance, setInstance] = useState()
+  const [instance, setInstance] = useState<Engine | null>(null)
   const [loadingState, changeLoadingState] = useLoading()
 
   useEffect(() => {
@@ -58,7 +75,7 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   }, [instance, pck, changeLoadingState])
 
   useEffect(() => {
-    if (instance) {
+    if (instance && canvasRef.current) {
       instance.setCanvas(canvasRef.current)
     }
   }, [instance, canvasRef.current])

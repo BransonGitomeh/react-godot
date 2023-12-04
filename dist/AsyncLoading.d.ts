@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 export declare type PackLoadingState = {
     mode: string;
     initializing: boolean;
@@ -13,5 +13,8 @@ export declare type PackLoadingAction = {
 };
 export declare type PackLoadingDispatch = (action: PackLoadingAction) => void;
 export declare const useLoading: () => [PackLoadingState, PackLoadingDispatch];
-declare const AsyncLoading: FunctionComponent;
+interface AsyncLoadingProps {
+    children: ReactNode;
+}
+declare const AsyncLoading: FunctionComponent<AsyncLoadingProps>;
 export default AsyncLoading;
