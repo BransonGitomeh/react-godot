@@ -1,9 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://2br2jbngx1eo"]
 
-[ext_resource type="Texture2D" uid="uid://c8w2l8gdqnhx0" path="res://icon.svg" id="1_xsco0"]
+[sub_resource type="BoxMesh" id="BoxMesh_w1afd"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node3D" type="Node3D"]
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(70, 74)
-texture = ExtResource("1_xsco0")
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.908479, 0.123885, -0.399147, 0, 0.955056, 0.296425, 0.417931, -0.269296, 0.867648, -1.31472, 1.06209, 2.30388)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_w1afd")
