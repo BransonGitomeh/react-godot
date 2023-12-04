@@ -1,7 +1,7 @@
 import React from "react"
 import ReactGodot from "./react-godot/src"
 
-const examplePck = "/index.pck"
+const examplePck = "/index"
 const exampleEngine = "/index.js"
 
 function App() {

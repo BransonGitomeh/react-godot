@@ -14,12 +14,15 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "build": "parcel build src/index.html && node postprocess.js",
     "test": "echo \"No tests available\""
   },
   "staticFiles": {
     "staticPath": "static"
   },
+  "parcelIgnore": [
+    "index.js"
+  ],
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -87,6 +90,7 @@
     "cssnano": "^6.0.1",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
+    "parcel-resolver-ignore": "^2.2.0",
     "postcss": "^8.2.15",
     "typescript": "^5.3.2"
   }
