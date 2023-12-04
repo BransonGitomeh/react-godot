@@ -4,6 +4,7 @@
   "private": true,
   "main:src": "src/index.tsx",
   "dependencies": {
+    "@parcel/transformer-raw": "^2.10.3",
     "parcel": "^2.10.3",
     "react": "^16.12.0",
     "react-app-polyfill": "^3.0.0",
