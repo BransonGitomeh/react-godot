@@ -32,6 +32,14 @@ function toFailure(err: any) {
 
 const GODOT_CONFIG = { "args": [], "canvasResizePolicy": 2, "executable": "index", "experimentalVK": false, "fileSizes": { "index.pck": 6720, "index.wasm": 28972640 }, "focusCanvas": false, "gdextensionLibs": [], "serviceWorker": "index.service.worker.js" };
 
+const canvasStyle = {
+  position: 'absolute',
+  top: 'auto', // or 'unset'
+  left: '0px',
+  width: '100%',
+  height: '100%',
+  display: 'block',
+};
 
 const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   engine,
@@ -86,7 +94,7 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
       id="canvas"
       width={width}
       height={height}
-      style={{ display: loadingState.initializing ? "hidden" : "block" }}
+      style={{ display: loadingState.initializing ? "hidden" : "block", ...canvasStyle }}
     >
       HTML5 canvas appears to be unsupported in the current browser.
       <br />
