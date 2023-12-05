@@ -14,11 +14,11 @@ func _ready():
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
 		return
-	print("Automatically joining")
+	print("Automatically joining", address)
 	_on_join_pressed()
 	await get_tree().create_timer(1).timeout
 	
-	print("Dropping user in scene") 	
+	print("Dropping user in scene", address) 	
 	_on_start_browl_pressed()
 	
 	pass # Replace with function body.
