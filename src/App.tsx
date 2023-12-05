@@ -80,7 +80,7 @@ const SinglePlatform = () => {
 const GodotGame = () => {
   const iframeStyle = {
     width: '100%',
-    height: '100vh', // Adjust the height as needed
+    // height: '100vh', // Adjust the height as needed
     border: 'none', // Remove border for a cleaner look
     backgroundColor: '#f5f5f5',
     borderRadius: '12px',

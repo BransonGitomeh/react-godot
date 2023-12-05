@@ -36,8 +36,6 @@ const GODOT_CONFIG = { "args": [], "canvasResizePolicy": 2, "executable": "index
 const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   engine,
   pck,
-  width = 480,
-  height = 300
 }) => {
   const [instance, setInstance] = useState<Engine | null>(null)
   const [loadingState, changeLoadingState] = useLoading()
