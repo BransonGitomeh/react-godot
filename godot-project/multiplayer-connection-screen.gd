@@ -85,8 +85,24 @@ func _on_host_pressed():
 
 
 func _on_join_pressed():
+	if OS.has_feature("WEBRTC"):
+		# Running in a browser, use WebSocketPeer
+		print("Running in a browser. Using WebSocketPeer.")
+		peer = WebSocketPeer.new()
+		peer.connect_to_url("wss://" + address)
+		multiplayer.set_multiplayer_peer(peer)
+	else:
+		# Not running in a browser, use ENetMultiplayerPeer
+		print("Not running in a browser. Using ENetMultiplayerPeer.")
+		peer = ENetMultiplayerPeer.new()
+		peer.create_client(address, port, 32, 0, 0)
+		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
+		multiplayer.set_multiplayer_peer(peer)
+
+func _on_join_pressed_old():
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(address, port)
+	# peer.create_client(address, port)
+	peer.create_client(address, port, 32, 0, 0)
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	multiplayer.set_multiplayer_peer(peer)
 	pass # Replace with function body.
