@@ -1,7 +1,7 @@
 extends Control
 
 
-@export var address = "137.184.112.15"
+@export var address = "2604:a880:4:1d0::4a2:c000"
 @export var port = 8910
 var peer;
 
@@ -14,9 +14,11 @@ func _ready():
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
 		return
-		
+	print("Automatically joining")
 	_on_join_pressed()
 	await get_tree().create_timer(1).timeout
+	
+	print("Dropping user in scene") 	
 	_on_start_browl_pressed()
 	
 	pass # Replace with function body.
