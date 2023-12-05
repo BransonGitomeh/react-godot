@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useParams } from "react"
+import React, { useState, useEffect } from "react"
 import ReactGodot from "./react-godot/src"
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 
 const examplePck = "/index"
 const exampleEngine = "/index.js"

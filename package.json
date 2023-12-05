@@ -5,7 +5,9 @@
   "main:src": "src/index.tsx",
   "dependencies": {
     "@parcel/transformer-raw": "^2.10.3",
+    "@types/react": "^18.2.42",
     "express": "^4.18.2",
+    "live-reload": "^1.1.1",
     "parcel": "^2.10.3",
     "react": "^16.12.0",
     "react-app-polyfill": "^3.0.0",
@@ -15,9 +17,11 @@
     "react-router-dom": "^6.20.1"
   },
   "scripts": {
-    "start": "parcel src/index.html",
+    "start": "rm -rf .cache && rm -rf .parcel-cache && rm -rf dist && npm run watch & npm run serve",
     "build": "parcel build src/index.html && node postprocess.js",
-    "serve":"nodemon server.js & npx localtunnel --port 3000",
+    "watch": "parcel watch src/index.html",
+    "live-server": "npx http-server ./dist",
+    "serve": "nodemon server.js & npx localtunnel --port 3000",
     "test": "echo \"No tests available\""
   },
   "staticFiles": {
@@ -91,6 +95,8 @@
   },
   "devDependencies": {
     "cssnano": "^6.0.1",
+    "live-server": "^1.2.2",
+    "parcel-bundler": "^1.12.5",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "parcel-resolver-ignore": "^2.2.0",
