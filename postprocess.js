@@ -16,7 +16,7 @@ async function replace() {
             display: block;
             position: absolute;
             left: 0;
-            top: auto;
+            top: 60px;
         }
 
         /* Alternatively, using a direct selector for the canvas element */
@@ -24,7 +24,7 @@ async function replace() {
             display: block;
             position: absolute;
             left: 0;
-            top: auto;
+            top: 60px;
         }
         </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
