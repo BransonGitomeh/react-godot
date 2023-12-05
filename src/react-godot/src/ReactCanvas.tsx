@@ -89,6 +89,15 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   //   }
   // }, [instance]);
 
+  useEffect(() => {
+    // This useEffect will run after the component has mounted
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
+    if (canvas) {
+      canvas.style.top = '60px';
+    }
+  }, []); // Empty dependency array ensures this effect runs only once after the initial render
+
+
   return (
     <canvas
       id="canvas"
