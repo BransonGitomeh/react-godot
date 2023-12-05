@@ -34,7 +34,7 @@ const GODOT_CONFIG = { "args": [], "canvasResizePolicy": 2, "executable": "index
 
 const canvasStyle = {
   position: 'absolute',
-  top: 'auto', // or 'unset'
+  top: '60px', // or 'unset'
   left: '0px',
   width: '100%',
   height: '100%',
