@@ -1,7 +1,7 @@
 extends Control
 
 
-@export var address = "0.0.0.0"
+@export var address = "137.184.112.15"
 @export var port = 8910
 var peer;
 
@@ -13,6 +13,12 @@ func _ready():
 	multiplayer.connection_failed.connect(connection_failed)
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
+		return
+		
+	_on_join_pressed()
+	await get_tree().create_timer(1).timeout
+	_on_start_browl_pressed()
+	
 	pass # Replace with function body.
 
 
