@@ -92,8 +92,6 @@ const ReactCanvas: FunctionComponent<ReactEngineProps> = ({
   return (
     <canvas
       id="canvas"
-      width={width}
-      height={height}
       style={{ display: loadingState.initializing ? "hidden" : "block", ...canvasStyle }}
     >
       HTML5 canvas appears to be unsupported in the current browser.
