@@ -103,7 +103,7 @@ func _on_join_pressed():
 		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 		multiplayer.set_multiplayer_peer(peer)
 		
-		SendPlayerInformation($Name.text,multiplayer.get_unique_id() )	
+		SendPlayerInformation.rpc(1,$Name.text,multiplayer.get_unique_id() )	
 
 func _on_join_pressed_old():
 	peer = ENetMultiplayerPeer.new()
