@@ -14,12 +14,12 @@ func _ready():
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
 		return
-	print("Automatically joining", address)
-	_on_join_pressed()
-	await get_tree().create_timer(1).timeout
-	
-	print("Dropping user in scene", address) 	
-	_on_start_browl_pressed()
+	#print("Automatically joining", address)
+	#_on_join_pressed()
+	#await get_tree().create_timer(1).timeout
+	#
+	#print("Dropping user in scene", address) 	
+	#_on_start_browl_pressed()
 	
 	pass # Replace with function body.
 
@@ -30,8 +30,8 @@ func _process(delta):
 
 
 func peer_connected(id):
-	SendPlayerInformation.rpc_id(1,$Name.text,multiplayer.get_unique_id())	
-	print("peer_connected " ,id)
+	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
+	
 
 
 func peer_disconnected(id):
@@ -39,7 +39,7 @@ func peer_disconnected(id):
 	
 func connected_to_server(id):
 	print("connected_to_server! :" ,id)
-	SendPlayerInformation.rpc_id(1,$Name.text,multiplayer.get_unique_id())
+	SendPlayerInformation.rpc_id($Name.text,multiplayer.get_unique_id())
 	
 func connection_failed(id):
 	print("connection_failed :" ,id)
@@ -52,21 +52,23 @@ func StartBrowl():
 	# add transition 
 	self.hide()
 	
-@rpc("any_peer", "call_local")
+@rpc("call_local", "reliable")
 func SendPlayerInformation(name, id):
-	if BrowlManager.Players.has(id):
-		var player = {
-			"name": name,
-			"id": id,
-			"score":0
-		}	
-		BrowlManager.Players[id] = player
-	
-		print("Added", BrowlManager.Players, player)
-
 	if multiplayer.is_server():
 		for i in BrowlManager.Players:
+			print(i)
 			SendPlayerInformation.rpc(BrowlManager.Players[i].name, i)
+	else:
+		if !BrowlManager.Players.has(id):
+			var player = {
+				"name": name,
+				"id": id,
+				"score":0
+			}	
+			print("Attempting to add ", player)
+			BrowlManager.Players[id] = player
+		
+			print("Added", BrowlManager.Players, player)
 
 func _on_host_pressed():
 	peer = ENetMultiplayerPeer.new()
@@ -100,6 +102,8 @@ func _on_join_pressed():
 		peer.create_client(address, port, 32, 0, 0)
 		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 		multiplayer.set_multiplayer_peer(peer)
+		
+		SendPlayerInformation($Name.text,multiplayer.get_unique_id() )	
 
 func _on_join_pressed_old():
 	peer = ENetMultiplayerPeer.new()
