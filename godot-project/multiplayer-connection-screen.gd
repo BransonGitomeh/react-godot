@@ -84,7 +84,7 @@ func _on_host_pressed():
 
 	print("Started server successfully on ", address,":", port)
 	print("Waiting for Player")
-	SendPlayerInformation($Name.text,multiplayer.get_unique_id())
+	#SendPlayerInformation($Name.text,multiplayer.get_unique_id())
 	pass # Replace with function body.
 
 
@@ -102,7 +102,7 @@ func _on_join_pressed():
 		peer.create_client(address, port, 32, 0, 0)
 		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 		multiplayer.set_multiplayer_peer(peer)
-		
+		print("SendPlayerInformation",1,$Name.text,multiplayer.get_unique_id() )
 		SendPlayerInformation.rpc(1,$Name.text,multiplayer.get_unique_id() )	
 
 func _on_join_pressed_old():
