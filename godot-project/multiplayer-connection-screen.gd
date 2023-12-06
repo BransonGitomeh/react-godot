@@ -84,7 +84,7 @@ func _on_host_pressed():
 	multiplayer.set_multiplayer_peer(peer)
 
 	print("Started server successfully on ", address,":", port)
-	print("Waiting for Player")
+	print("Waiting for Player v2")
 	#SendPlayerInformation($Name.text,multiplayer.get_unique_id())
 	pass # Replace with function body.
 
