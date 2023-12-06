@@ -39,7 +39,7 @@ func peer_disconnected(id):
 	
 func connected_to_server(id):
 	print("connected_to_server! :" ,id)
-	#SendPlayerInformation.rpc_id($Name.text,multiplayer.get_unique_id())
+	SendPlayerInformation.rpc_id(1,$Name.text,multiplayer.get_unique_id())
 	
 func connection_failed(id):
 	print("connection_failed :" ,id)
@@ -52,7 +52,7 @@ func StartBrowl():
 	# add transition 
 	self.hide()
 	
-@rpc("any_peer","call_local", "reliable")
+@rpc("any_peer")
 func SendPlayerInformation(name, id):
 	if multiplayer.is_server():
 		print("SendPlayerInformation", BrowlManager.Players)
