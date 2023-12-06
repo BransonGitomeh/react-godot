@@ -55,6 +55,7 @@ func StartBrowl():
 @rpc("call_local", "reliable")
 func SendPlayerInformation(name, id):
 	if multiplayer.is_server():
+		print("SendPlayerInformation", BrowlManager.Players)
 		for i in BrowlManager.Players:
 			print(i)
 			SendPlayerInformation.rpc(BrowlManager.Players[i].name, i)
