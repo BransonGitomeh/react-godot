@@ -1,0 +1,9 @@
+[[headers]]
+  # Enable SharedArrayBuffer
+  for = "/*"
+    [headers.values]
+      Cross-Origin-Opener-Policy = "same-origin"
+      Cross-Origin-Embedder-Policy = "require-corp"
+[build]
+  command = "yarn build"
+  publish = "dist"  # Adjust this to match your build output directory
