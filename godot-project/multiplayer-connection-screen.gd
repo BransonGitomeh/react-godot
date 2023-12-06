@@ -103,8 +103,11 @@ func _on_join_pressed():
 		peer.create_client(address, port, 32, 0, 0)
 		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 		multiplayer.set_multiplayer_peer(peer)
-		print("SendPlayerInformation",1,$Name.text,multiplayer.get_unique_id() )
-		SendPlayerInformation.rpc(1,$Name.text,multiplayer.get_unique_id() )	
+		
+		# Call SendPlayerInformation only on the server (host)
+		if multiplayer.is_server():
+			SendPlayerInformation.rpc(1, $Name.text, multiplayer.get_unique_id())
+
 
 func _on_join_pressed_old():
 	peer = ENetMultiplayerPeer.new()
