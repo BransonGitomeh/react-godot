@@ -52,7 +52,7 @@ func StartBrowl():
 	# add transition 
 	self.hide()
 	
-@rpc("call_local", "reliable")
+@rpc("any_peer","call_local", "reliable")
 func SendPlayerInformation(name, id):
 	if multiplayer.is_server():
 		print("SendPlayerInformation", BrowlManager.Players)
