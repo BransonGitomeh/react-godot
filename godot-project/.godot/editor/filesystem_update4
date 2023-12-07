@@ -4,16 +4,6 @@ res://Player/BulletVisuals/bullet_trail_mat.tres
 res://Player/ExplosionVisuals/materials/shell_mat.tres
 res://Player/ExplosionVisuals/materials/blast_mat.tres
 res://Player/ExplosionVisuals/materials/particles_mat.tres
-res://Enemies/smoke_puff/smoke_ball_middle_mat.tres
-res://Player/model/materials/face_mat.tres
 res://Player/model/character_blend_tree.tres
-res://Player/model/materials/heart_core_mat.tres
-res://SceneManager.gd
-res://multiplayer-connection-screen.gd
-res://browl_manager.gd
-res://Player/Player.tscn
-res://Player/CharacterSkin.gd
-res://Environment/sky/blue_sky.tres
-res://Environment/Terrain/terrain_mat.tres
+res://Enemies/smoke_puff/smoke_ball_middle_mat.tres
 res://multiplayer-connection-screen.tscn
-res://Player/Player.gd
