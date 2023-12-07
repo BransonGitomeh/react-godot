@@ -56,6 +56,12 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _grenade_cooldown_tick := grenade_cooldown
 
 
+
+# Variables for interpolation
+var target_rotation_basis := Basis()
+var current_rotation_basis := Basis()
+var interpolation_alpha: float = 0.1  # Adjust this value for the desired smoothness
+
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -194,6 +200,10 @@ func _physics_process(delta: float) -> void:
 	var epsilon := 0.001
 	if delta_position.length() < epsilon and velocity.length() > epsilon:
 		global_position += get_wall_normal() * 0.1
+		
+	# smoothen rotation
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
 
 @rpc
 func attack() -> void:
@@ -262,14 +272,30 @@ func damage(_impact_point: Vector3, force: Vector3) -> void:
 	velocity = force.limit_length(max_throwback_force)
 	lose_coins()
 
+
+
+
 @rpc("any_peer", "call_local", "reliable", 0)
 func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
 	var left_axis := Vector3.UP.cross(direction)
-	var rotation_basis := Basis(left_axis, Vector3.UP, direction).get_rotation_quaternion()
-	var model_scale := _rotation_root.transform.basis.get_scale()
-	_rotation_root.transform.basis = Basis(_rotation_root.transform.basis.get_rotation_quaternion().slerp(rotation_basis, delta * rotation_speed)).scaled(
-		model_scale
-	)
+	target_rotation_basis = Basis(left_axis, Vector3.UP, direction).get_rotation_quaternion()
+
+
+
+#@rpc("any_peer", "call_local", "reliable", 0)
+#func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
+	#var left_axis := Vector3.UP.cross(direction)
+	#var rotation_basis := Basis(left_axis, Vector3.UP, direction).get_rotation_quaternion()
+	#
+	## Update the target rotation for interpolation
+	#target_rotation_basis = rotation_basis
+	#
+	## Interpolate the rotation
+	#var current_rotation := _rotation_root.transform.basis.get_rotation_quaternion()
+	#var interpolated_rotation := current_rotation.slerp(target_rotation_basis, delta * interpolation_alpha)
+	#
+	#var model_scale := _rotation_root.transform.basis.get_scale()
+	#_rotation_root.transform.basis = Basis(interpolated_rotation).scaled(model_scale)
 
 
 ## Used to register required input actions when copying this character to a different project.
@@ -296,3 +322,13 @@ func _register_input_actions() -> void:
 		var input_key = InputEventKey.new()
 		input_key.keycode = INPUT_ACTIONS[action]
 		InputMap.action_add_event(action, input_key)
+
+
+func _on_multiplayer_synchronizer_synchronized(rootNode):
+	print("_on_multiplayer_synchronizer_synchronized ====> ",rootNode.get_children())
+	pass # Replace with function body.
+
+
+func _on_multiplayer_synchronizer_delta_synchronized(rootNode):
+	print("_on_multiplayer_synchronizer_delta_synchronized ====> ",rootNode.get_children())
+	pass # Replace with function body.

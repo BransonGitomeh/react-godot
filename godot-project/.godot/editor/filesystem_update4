@@ -9,3 +9,4 @@ res://Player/model/character_blend_tree.tres
 res://Player/Player.tscn
 res://Player/model/materials/face_mat.tres
 res://Player/model/materials/heart_core_mat.tres
+res://Player/Player.gd

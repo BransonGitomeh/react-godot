@@ -2661,13 +2661,13 @@ _data = {
 }
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dtgvc"]
-properties/0/path = NodePath("CharacterRotationRoot:rotation")
+properties/0/path = NodePath("CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer:current_animation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer:current_animation")
+properties/1/path = NodePath(".:position")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("CharacterRotationRoot:position")
+properties/2/path = NodePath("CharacterRotationRoot:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
@@ -2903,6 +2903,8 @@ volume_db = 1.0
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
+[connection signal="delta_synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_delta_synchronized"]
+[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 
 [editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
 [editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
