@@ -23,7 +23,6 @@ func _ready():
 
 @rpc("any_peer", "call_local", "reliable")
 func set_moving(value : bool):
-	print("Setting move status ", multiplayer.get_unique_id(), " ", value)
 	moving = value
 	if moving:
 		state_machine.travel("move")

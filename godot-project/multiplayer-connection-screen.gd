@@ -1,5 +1,7 @@
 extends Control
 
+var PlayerScene = preload("res://Player/Player.tscn")
+
 
 @export var address = "137.184.112.15"
 @export var port = 8910
@@ -14,9 +16,9 @@ func _ready():
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
 		return
-	#print("Automatically joining", address)
-	#_on_join_pressed()
-	#await get_tree().create_timer(1).timeout
+	print("Automatically joining", address)
+	_on_join_pressed()
+	await get_tree().create_timer(1).timeout
 	#
 	#print("Dropping user in scene", address) 	
 	#_on_start_browl_pressed()
@@ -30,7 +32,22 @@ func _process(delta):
 
 
 func peer_connected(id):
+	var spawnLocations = get_node("../spawnLocations")
 	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
+	
+	print(multiplayer.get_unique_id()," Spawning in network player ", id)
+	var newPlayer = PlayerScene.instantiate()
+	
+	var spawnLocationsChildren = spawnLocations.get_children()
+	
+	# Randomly select a spawn position
+	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
+	
+	print(randomSpawnNode)
+	newPlayer.position = randomSpawnNode.position
+	newPlayer.name = str(id)
+	
+	add_child(newPlayer)
 	
 
 
@@ -85,28 +102,21 @@ func _on_host_pressed():
 
 	print("Started server successfully on ", address,":", port)
 	print("Waiting for Player v2")
-	#SendPlayerInformation($Name.text,multiplayer.get_unique_id())
+	SendPlayerInformation($Name.text,multiplayer.get_unique_id())
 	pass # Replace with function body.
 
 
 func _on_join_pressed():
-	if OS.has_feature("WEBRTC"):
-		# Running in a browser, use WebSocketPeer
-		print("Running in a browser. Using WebSocketPeer.")
-		peer = WebSocketPeer.new()
-		peer.connect_to_url("wss://" + address)
-		multiplayer.set_multiplayer_peer(peer)
-	else:
-		# Not running in a browser, use ENetMultiplayerPeer
-		print("Not running in a browser. Using ENetMultiplayerPeer.")
-		peer = ENetMultiplayerPeer.new()
-		peer.create_client(address, port, 32, 0, 0)
-		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
-		multiplayer.set_multiplayer_peer(peer)
-		
-		# Call SendPlayerInformation only on the server (host)
-		if multiplayer.is_server():
-			SendPlayerInformation.rpc(1, $Name.text, multiplayer.get_unique_id())
+	# Not running in a browser, use ENetMultiplayerPeer
+	print("Not running in a browser. Using ENetMultiplayerPeer.")
+	peer = ENetMultiplayerPeer.new()
+	peer.create_client(address, port, 32, 0, 0)
+	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
+	multiplayer.set_multiplayer_peer(peer)
+	
+	# Call SendPlayerInformation only on the server (host)
+	if multiplayer.is_server():
+		SendPlayerInformation.rpc(1, $Name.text, multiplayer.get_unique_id())
 
 
 func _on_join_pressed_old():

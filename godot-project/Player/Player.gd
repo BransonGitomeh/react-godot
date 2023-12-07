@@ -170,13 +170,12 @@ func _physics_process(delta: float) -> void:
 	elif is_on_floor():
 		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
 		if xz_velocity.length() > stopping_speed:
-			print("_character_skin.set_moving", true)
 			_character_skin.set_moving.rpc(true)
 			#_character_skin.set_moving(true)
 			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
 		else:
 			_character_skin.set_moving.rpc(false)
-			print("_character_skin.set_moving", false)
+
 			#_character_skin.set_moving(false)
 
 	if is_just_on_floor:
