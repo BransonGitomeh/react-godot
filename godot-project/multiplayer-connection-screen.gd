@@ -32,6 +32,10 @@ func _process(delta):
 
 
 func peer_connected(id):
+	if(id == 1):
+		# dont spawn on the clients
+		return;
+		
 	var spawnLocations = get_node("../spawnLocations")
 	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
 	
@@ -42,12 +46,30 @@ func peer_connected(id):
 	
 	# Randomly select a spawn position
 	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
-	
-	print(randomSpawnNode)
+
 	newPlayer.position = randomSpawnNode.position
 	newPlayer.name = str(id)
+	print(get_parent())
 	
-	add_child(newPlayer)
+		# Find the "Playground" node in the scene tree
+	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
+
+	# Check if the "Playground" node was found
+	if playgroundNode:
+		playgroundNode.add_child(newPlayer)
+	else:
+		print("Node not found: Playground")
+
+func find_node_by_name(node, target_name):
+	if node.get_name() == target_name:
+		return node
+
+	for child in node.get_children():
+		var result = find_node_by_name(child, target_name)
+		if result:
+			return result
+
+	return null
 	
 
 
