@@ -2679,6 +2679,15 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath(".:_velocity_before")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+properties/6/path = NodePath(".:_last_position_received")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:_last_velocity_received")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath(".:_last_update_time")
+properties/8/spawn = true
+properties/8/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
