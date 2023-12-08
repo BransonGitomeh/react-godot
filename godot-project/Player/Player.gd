@@ -60,10 +60,18 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 # Variables for interpolation
 var target_rotation_basis := Basis()
 var current_rotation_basis := Basis()
-var interpolation_alpha: float = 0.1  # Adjust this value for the desired smoothness
+var interpolation_alpha: float = 0.01  # Adjust this value for the desired smoothness
+
+# Add these variables to your script
+var target_position: Vector3 = Vector3.ZERO
+var current_position: Vector3 = Vector3.ZERO
+
+@export var _position_before: Vector3
+@export var _position_after: Vector3
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_camera_controller.setup(self)
 	_grenade_aim_controller.visible = false
@@ -78,9 +86,9 @@ func _ready() -> void:
 		$CameraController/PlayerCamera.current = true
 		return;
 
+
+
 func _physics_process(delta: float) -> void:
-	
-		
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
@@ -115,9 +123,11 @@ func _physics_process(delta: float) -> void:
 		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 
 	_orient_character_to_direction(_last_strong_direction, delta)
-	#_orient_character_to_direction.rpc(_last_strong_direction, delta)
+	
 	
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		# Use interpolation for smooth movement
+		global_position = _position_before.lerp(_position_after, interpolation_alpha)
 		return;
 
 	# We separate out the y velocity to not interpolate on the gravity
@@ -188,11 +198,10 @@ func _physics_process(delta: float) -> void:
 		_landing_sound.play()
 
 	var position_before := global_position
-	
-
-		
+	_position_before = position_before
 	move_and_slide()
 	var position_after := global_position
+	_position_after = position_after
 
 	# If velocity is not 0 but the difference of positions after move_and_slide is,
 	# character might be stuck somewhere!
@@ -204,6 +213,8 @@ func _physics_process(delta: float) -> void:
 	# smoothen rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	
+	
 
 @rpc
 func attack() -> void:
@@ -324,11 +335,10 @@ func _register_input_actions() -> void:
 		InputMap.action_add_event(action, input_key)
 
 
-func _on_multiplayer_synchronizer_synchronized(rootNode):
-	print("_on_multiplayer_synchronizer_synchronized ====> ",rootNode.get_children())
-	pass # Replace with function body.
 
+func _on_multiplayer_synchronizer_delta_synchronized(delta_data):
+	# Capture and store delta_data, which may include position information
+	# For example, you might capture the target position from delta_data
+	target_position = delta_data.get("position", Vector3.ZERO)
+	print("target_position", target_position)
 
-func _on_multiplayer_synchronizer_delta_synchronized(rootNode):
-	print("_on_multiplayer_synchronizer_delta_synchronized ====> ",rootNode.get_children())
-	pass # Replace with function body.
