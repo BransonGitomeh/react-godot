@@ -60,7 +60,8 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 # Variables for interpolation
 var target_rotation_basis := Basis()
 var current_rotation_basis := Basis()
-var interpolation_alpha: float = 0.01  # Adjust this value for the desired smoothness
+var interpolation_alpha: float = 0.1  # Adjust this value for the desired smoothness
+var network_position_interpolation_duration: float = 4
 
 # Add these variables to your script
 var target_position: Vector3 = Vector3.ZERO
@@ -68,6 +69,7 @@ var current_position: Vector3 = Vector3.ZERO
 
 @export var _position_before: Vector3
 @export var _position_after: Vector3
+@export var _current_velocity: Vector3
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -89,6 +91,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_current_velocity = velocity
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
@@ -127,8 +130,15 @@ func _physics_process(delta: float) -> void:
 	
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Use interpolation for smooth movement
-		global_position = _position_before.lerp(_position_after, interpolation_alpha)
-		return;
+		# Use the ease-in quadratic function for smooth movement
+		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
+		t = 1 - pow(1 - t, .5)
+
+		# Apply the eased alpha value to interpolate between positions
+		global_position = _position_before.slerp(_position_after, t)
+
+		return
+
 
 	# We separate out the y velocity to not interpolate on the gravity
 	var y_velocity := velocity.y
