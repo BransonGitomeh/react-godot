@@ -263,6 +263,7 @@ func _physics_process(delta: float) -> void:
 
 	# smoothen rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	current_rotation_basis.orthonormalized()
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
 	
 	
