@@ -61,7 +61,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 var target_rotation_basis := Basis()
 var current_rotation_basis := Basis()
 var interpolation_alpha: float = 0.1  # Adjust this value for the desired smoothness
-var network_position_interpolation_duration: float = 4
+
 
 # Add these variables to your script
 var target_position: Vector3 = Vector3.ZERO
@@ -69,7 +69,15 @@ var current_position: Vector3 = Vector3.ZERO
 
 @export var _position_before: Vector3
 @export var _position_after: Vector3
-@export var _current_velocity: Vector3
+@export var _velocity_before: Vector3
+@export var _last_position_received: Vector3 = Vector3.ZERO
+@export var _last_velocity_received: Vector3 = Vector3.ZERO
+@export var _last_update_time: float = 0.0
+
+var _input_buffer: Array = []
+const INPUT_BUFFER_SIZE: int = 10
+
+var _predicted_position: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -89,9 +97,14 @@ func _ready() -> void:
 		return;
 
 
+func ease_out_cubic(t: float) -> float:
+	return 1.0 - pow(1.0 - t, 0.1)
+
+func ease_out_quartic(t: float) -> float:
+	return 1.0 - pow(1.0 - t, 0.1)
 
 func _physics_process(delta: float) -> void:
-	_current_velocity = velocity
+	_velocity_before = velocity
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
@@ -120,24 +133,52 @@ func _physics_process(delta: float) -> void:
 
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
-	if _move_direction.length() > 0.2:
-		_last_strong_direction = _move_direction.normalized()
-	if is_aiming:
-		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+	# Input smoothing using moving average
+	_input_buffer.append(_move_direction)
+	while _input_buffer.size() > INPUT_BUFFER_SIZE:
+		_input_buffer.pop_front()
+	var smoothed_input = Vector3.ZERO
+	for input_vector in _input_buffer:
+		smoothed_input += input_vector
+	if _input_buffer.size() > 0:
+		smoothed_input /= _input_buffer.size()
 
-	_orient_character_to_direction(_last_strong_direction, delta)
+	# Use smoothed input for orientation
+	_orient_character_to_direction(smoothed_input, delta)
 	
-	
+	var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
+
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		# Use interpolation for smooth movement
-		# Use the ease-in quadratic function for smooth movement
+		# Interpolation for smooth movement
+		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-		t = 1 - pow(1 - t, .5)
+		t = 1 - pow(1 - t, 0.5)
 
-		# Apply the eased alpha value to interpolate between positions
-		global_position = _position_before.slerp(_position_after, t)
+		# Interpolate between positions
+		global_position = _position_before.lerp(global_position, t)
 
-		return
+		# Update rotation with interpolation
+		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+		_rotation_root.transform.basis = Basis(current_rotation_basis)
+
+
+		# Extrapolation for predicting position
+	elif multiplayer.is_server():
+		# Store velocity for extrapolation
+		_velocity_before = velocity
+
+		# Handle input and update position
+		_update_position_with_input(delta, smoothed_input)
+
+		# Predict position using extrapolation
+		var predicted_position = global_position + _velocity_before * delta
+
+		# Set the network player's position to the predicted position
+		global_position = predicted_position
+
+
+
+
 
 
 	# We separate out the y velocity to not interpolate on the gravity
@@ -219,7 +260,7 @@ func _physics_process(delta: float) -> void:
 	var epsilon := 0.001
 	if delta_position.length() < epsilon and velocity.length() > epsilon:
 		global_position += get_wall_normal() * 0.1
-		
+
 	# smoothen rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
@@ -317,6 +358,37 @@ func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
 	#
 	#var model_scale := _rotation_root.transform.basis.get_scale()
 	#_rotation_root.transform.basis = Basis(interpolated_rotation).scaled(model_scale)
+
+# ... (Other parts of the script remain unchanged)
+
+func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
+	# Apply input to movement
+	var move_direction = input_vector.normalized()
+
+	# Handle movement
+	var target_velocity = move_direction * move_speed
+	var acceleration_factor = 1.0
+
+	if is_on_floor():
+		# Apply ground acceleration
+		velocity.x = lerp(velocity.x, target_velocity.x, acceleration * delta * acceleration_factor)
+		velocity.z = lerp(velocity.z, target_velocity.z, acceleration * delta * acceleration_factor)
+	else:
+		# Apply air acceleration
+		velocity.x += move_direction.x * acceleration * delta * acceleration_factor
+		velocity.z += move_direction.z * acceleration * delta * acceleration_factor
+
+	# Limit velocity
+	velocity.x = clamp(velocity.x, -move_speed, move_speed)
+	velocity.z = clamp(velocity.z, -move_speed, move_speed)
+
+	# Apply gravity
+	velocity.y += _gravity * delta
+
+	# Move character
+	move_and_slide()
+
+	# ... (Other parts of the function remain unchanged)
 
 
 ## Used to register required input actions when copying this character to a different project.

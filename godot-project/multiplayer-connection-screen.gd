@@ -16,7 +16,7 @@ func _ready():
 	if "--server" in OS.get_cmdline_args():
 		_on_host_pressed()
 		return
-	print("Automatically joining", address)
+	
 	_on_join_pressed()
 	await get_tree().create_timer(1).timeout
 	#
@@ -132,14 +132,19 @@ func _on_join_pressed():
 	# Not running in a browser, use ENetMultiplayerPeer
 	print("Not running in a browser. Using ENetMultiplayerPeer.")
 	peer = ENetMultiplayerPeer.new()
-	peer.create_client(address, port, 32, 0, 0)
-	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
-	multiplayer.set_multiplayer_peer(peer)
-	
-	# Call SendPlayerInformation only on the server (host)
-	if multiplayer.is_server():
-		SendPlayerInformation.rpc(1, $Name.text, multiplayer.get_unique_id())
-
+	var result = peer.create_client(address, port, 32, 0, 0)
+	print(result)
+	if result == OK:
+		print("Automatically joining", address)
+		
+		peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
+		multiplayer.set_multiplayer_peer(peer)
+		
+		# Call SendPlayerInformation only on the server (host)
+		if multiplayer.is_server():
+			SendPlayerInformation.rpc(1, $Name.text, multiplayer.get_unique_id())
+	else:
+		print("Unable to join ", result)
 
 func _on_join_pressed_old():
 	peer = ENetMultiplayerPeer.new()
