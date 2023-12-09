@@ -113,9 +113,11 @@ func ease_out_quartic(t: float) -> float:
 	return 1.0 - pow(1.0 - t, 0.1)
 
 func _physics_process(delta: float) -> void:
-	_velocity_before = velocity.normalized()
-	print("Client" + str($MultiplayerSynchronizer.get_multiplayer_authority()) +  " setting _velocity_before " + str(_velocity_before))
-	
+	if not multiplayer.is_server():
+		# This code only runs on the client side
+		_velocity_before = velocity.normalized()
+		print("Client " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + " setting _velocity_before " + str(_velocity_before))
+		
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
