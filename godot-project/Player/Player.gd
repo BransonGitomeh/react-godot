@@ -317,69 +317,71 @@ func _physics_process(delta: float) -> void:
 
 			# Log updated _velocity_before
 			print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
-
+	
 	  # Handle local player input (client-side only)
-		if not multiplayer.is_server():
+	else:
+		print("Handling Local Input For: ", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+
 		# Get input and movement state
-			var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-			var is_just_attacking := Input.is_action_just_pressed("attack")
-			var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-			var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-			var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-			var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
+		var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+		var is_just_attacking := Input.is_action_just_pressed("attack")
+		var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
+		var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
+		var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+		var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
 
-			_is_on_floor_buffer = is_on_floor()
-			_move_direction = _get_camera_oriented_input()
+		_is_on_floor_buffer = is_on_floor()
+		_move_direction = _get_camera_oriented_input()
 
-			# To not orient quickly to the last input, we save a last strong direction,
-			# this also ensures a good normalized value for the rotation basis.
-			if _move_direction.length() > 0.2:
-				_last_strong_direction = _move_direction.normalized()
-			if is_aiming:
-				_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+		# To not orient quickly to the last input, we save a last strong direction,
+		# this also ensures a good normalized value for the rotation basis.
+		if _move_direction.length() > 0.2:
+			_last_strong_direction = _move_direction.normalized()
+		if is_aiming:
+			_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 
-			# Input smoothing using moving average
-			_input_buffer.append(_last_strong_direction)
-			while _input_buffer.size() > INPUT_BUFFER_SIZE:
-				_input_buffer.pop_front()
-			for input_vector in _input_buffer:
-				_smoothed_input += input_vector
-			if _input_buffer.size() > 0:
-				_smoothed_input /= _input_buffer.size()
+		# Input smoothing using moving average
+		_input_buffer.append(_last_strong_direction)
+		while _input_buffer.size() > INPUT_BUFFER_SIZE:
+			_input_buffer.pop_front()
+		for input_vector in _input_buffer:
+			_smoothed_input += input_vector
+		if _input_buffer.size() > 0:
+			_smoothed_input /= _input_buffer.size()
+		
+		# Update attack state and position (client-side only)
+		_shoot_cooldown_tick += delta
+		_grenade_cooldown_tick += delta
+
+		if is_attacking:
+			match _equipped_weapon:
+				WEAPON_TYPE.DEFAULT:
+					if is_aiming and is_on_floor():
+						if _shoot_cooldown_tick > shoot_cooldown:
+							_shoot_cooldown_tick = 0.0
+							shoot.rpc()
+					elif is_just_attacking:
+						attack.rpc()
+				WEAPON_TYPE.GRENADE:
+					if _grenade_cooldown_tick > grenade_cooldown:
+						_grenade_cooldown_tick = 0.0
+						_grenade_aim_controller.throw_grenade()
+		var position_before := global_position
+		_position_before = position_before
+		move_and_slide()
+		var position_after := global_position
+		_position_after = position_after
+
+		# If velocity is not 0 but the difference of positions after move_and_slide is,
+		# character might be stuck somewhere!
+		var delta_position := position_after - position_before
+		var epsilon := 0.001
+		if delta_position.length() < epsilon and velocity.length() > epsilon:
+			global_position += get_wall_normal() * 0.1
 			
-			# Update attack state and position (client-side only)
-			_shoot_cooldown_tick += delta
-			_grenade_cooldown_tick += delta
-
-			if is_attacking:
-				match _equipped_weapon:
-					WEAPON_TYPE.DEFAULT:
-						if is_aiming and is_on_floor():
-							if _shoot_cooldown_tick > shoot_cooldown:
-								_shoot_cooldown_tick = 0.0
-								shoot.rpc()
-						elif is_just_attacking:
-							attack.rpc()
-					WEAPON_TYPE.GRENADE:
-						if _grenade_cooldown_tick > grenade_cooldown:
-							_grenade_cooldown_tick = 0.0
-							_grenade_aim_controller.throw_grenade()
-			var position_before := global_position
-			_position_before = position_before
-			move_and_slide()
-			var position_after := global_position
-			_position_after = position_after
-
-			# If velocity is not 0 but the difference of positions after move_and_slide is,
-			# character might be stuck somewhere!
-			var delta_position := position_after - position_before
-			var epsilon := 0.001
-			if delta_position.length() < epsilon and velocity.length() > epsilon:
-				global_position += get_wall_normal() * 0.1
-				
-			# smoothen rotation
-			current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-			_rotation_root.transform.basis = Basis(current_rotation_basis)
+		# smoothen rotation
+		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+		_rotation_root.transform.basis = Basis(current_rotation_basis)
 
 		
 
