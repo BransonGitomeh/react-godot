@@ -117,7 +117,10 @@ func _physics_process(delta: float) -> void:
 		# This code only runs on the client side
 		_velocity_before = velocity.normalized()
 		print("Client " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + " setting _velocity_before " + str(_velocity_before))
-		
+	else:
+		# This code runs on the server side
+		print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
+
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
