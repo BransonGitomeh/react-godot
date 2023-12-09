@@ -146,13 +146,7 @@ func _physics_process(delta: float) -> void:
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
 	# Input smoothing using moving average
-	#_input_buffer.append(_move_direction)
-	#while _input_buffer.size() > INPUT_BUFFER_SIZE:
-		#_input_buffer.pop_front()
-	#for input_vector in _input_buffer:
-		#smoothed_input += input_vector
-	#if _input_buffer.size() > 0:
-		#smoothed_input /= _input_buffer.size()
+	
 #
 	# Use smoothed input for orientation
 	#_orient_character_to_direction(smoothed_input, delta)
@@ -163,8 +157,15 @@ func _physics_process(delta: float) -> void:
 	if is_aiming:
 		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 
-	_smoothed_input=_last_strong_direction
-	_orient_character_to_direction(_last_strong_direction, delta)
+	_input_buffer.append(_last_strong_direction)
+	while _input_buffer.size() > INPUT_BUFFER_SIZE:
+		_input_buffer.pop_front()
+	for input_vector in _input_buffer:
+		_smoothed_input += input_vector
+	if _input_buffer.size() > 0:
+		_smoothed_input /= _input_buffer.size()
+		
+	_orient_character_to_direction(_smoothed_input, delta)
 	
 	var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
 
@@ -265,7 +266,8 @@ func _physics_process(delta: float) -> void:
 		#current_rotation_basis.orthonormalized()
 		_rotation_root.transform.basis = current_rotation_basis
 			# Extrapolation for predicting position
-	elif multiplayer.is_server():
+	
+	if multiplayer.is_server():
 		# Store velocity for extrapolation
 		_velocity_before = velocity.normalized()
 
