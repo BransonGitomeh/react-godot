@@ -270,7 +270,7 @@ func _physics_process(delta: float) -> void:
 
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
-		if $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+		if multiplayer.get_unique_id() != 1:
 			print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
 			
 			if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
