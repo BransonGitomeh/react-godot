@@ -79,7 +79,16 @@ const INPUT_BUFFER_SIZE: int = 10
 
 var _predicted_position: Vector3 = Vector3.ZERO
 
+# Constants for interpolation
+var network_position_interpolation_duration: float = 0.1
+
+# Flag to determine if the player has authority
+var has_authority: bool = false
+
 func _ready() -> void:
+	# Check if this instance has authority based on the unique ID
+	has_authority = $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id()
+
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -105,6 +114,7 @@ func ease_out_quartic(t: float) -> float:
 
 func _physics_process(delta: float) -> void:
 	_velocity_before = velocity
+	var smoothed_input = Vector3.ZERO
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
@@ -120,35 +130,36 @@ func _physics_process(delta: float) -> void:
 		_grenade_aim_controller.visible = _equipped_weapon == WEAPON_TYPE.GRENADE
 		emit_signal("weapon_switched", WEAPON_TYPE.keys()[_equipped_weapon])
 
-	# Get input and movement state
-	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-	var is_just_attacking := Input.is_action_just_pressed("attack")
-	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
+	# Handle local player input
+	if has_authority:
+		# Get input and movement state
+		var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+		var is_just_attacking := Input.is_action_just_pressed("attack")
+		var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
+		var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
+		var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+		var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
 
-	_is_on_floor_buffer = is_on_floor()
-	_move_direction = _get_camera_oriented_input()
+		_is_on_floor_buffer = is_on_floor()
+		_move_direction = _get_camera_oriented_input()
 
-	# To not orient quickly to the last input, we save a last strong direction,
-	# this also ensures a good normalized value for the rotation basis.
-	# Input smoothing using moving average
-	_input_buffer.append(_move_direction)
-	while _input_buffer.size() > INPUT_BUFFER_SIZE:
-		_input_buffer.pop_front()
-	var smoothed_input = Vector3.ZERO
-	for input_vector in _input_buffer:
-		smoothed_input += input_vector
-	if _input_buffer.size() > 0:
-		smoothed_input /= _input_buffer.size()
+		# To not orient quickly to the last input, we save a last strong direction,
+		# this also ensures a good normalized value for the rotation basis.
+		# Input smoothing using moving average
+		_input_buffer.append(_move_direction)
+		while _input_buffer.size() > INPUT_BUFFER_SIZE:
+			_input_buffer.pop_front()
+		for input_vector in _input_buffer:
+			smoothed_input += input_vector
+		if _input_buffer.size() > 0:
+			smoothed_input /= _input_buffer.size()
 
-	# Use smoothed input for orientation
-	_orient_character_to_direction(smoothed_input, delta)
-	
-	var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
+		# Use smoothed input for orientation
+		_orient_character_to_direction(smoothed_input, delta)
+		
+		var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
 
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		
 		# Interpolation for smooth movement
 		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
@@ -159,10 +170,94 @@ func _physics_process(delta: float) -> void:
 
 		# Update rotation with interpolation
 		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-		_rotation_root.transform.basis = Basis(current_rotation_basis)
+		_rotation_root.transform.basis = current_rotation_basis
+		return;
 
+		# We separate out the y velocity to not interpolate on the gravity
+		var y_velocity := velocity.y
+		velocity.y = 0.0
+		velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
+		if _move_direction.length() == 0 and velocity.length() < stopping_speed:
+			velocity = Vector3.ZERO
+		velocity.y = y_velocity
 
-		# Extrapolation for predicting position
+		# Set aiming camera and UI
+		if is_aiming:
+			_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
+			_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
+			_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
+			_ui_aim_recticle.visible = true
+		else:
+			_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
+			_grenade_aim_controller.throw_direction = _last_strong_direction
+			_grenade_aim_controller.from_look_position = global_position
+			_ui_aim_recticle.visible = false
+
+		# Update attack state and position
+
+		_shoot_cooldown_tick += delta
+		_grenade_cooldown_tick += delta
+
+		if is_attacking:
+			match _equipped_weapon:
+				WEAPON_TYPE.DEFAULT:
+					if is_aiming and is_on_floor():
+						if _shoot_cooldown_tick > shoot_cooldown:
+							_shoot_cooldown_tick = 0.0
+							shoot.rpc()
+					elif is_just_attacking:
+						attack.rpc()
+				WEAPON_TYPE.GRENADE:
+					if _grenade_cooldown_tick > grenade_cooldown:
+						_grenade_cooldown_tick = 0.0
+						_grenade_aim_controller.throw_grenade()
+
+		velocity.y += _gravity * delta
+
+		if is_just_jumping:
+			velocity.y += jump_initial_impulse
+		elif is_air_boosting:
+			velocity.y += jump_additional_force * delta
+
+		# Set character animation
+		if is_just_jumping:
+			_character_skin.jump.rpc()
+			#_character_skin.jump()
+		elif not is_on_floor() and velocity.y < 0:
+			_character_skin.fall.rpc()
+			#_character_skin.fall()
+		elif is_on_floor():
+			var xz_velocity := Vector3(velocity.x, 0, velocity.z)
+			if xz_velocity.length() > stopping_speed:
+				_character_skin.set_moving.rpc(true)
+				#_character_skin.set_moving(true)
+				_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+			else:
+				_character_skin.set_moving.rpc(false)
+
+				#_character_skin.set_moving(false)
+
+		if is_just_on_floor:
+			_landing_sound.play()
+
+		var position_before := global_position
+		_position_before = position_before
+		move_and_slide()
+		var position_after := global_position
+		_position_after = position_after
+
+		# If velocity is not 0 but the difference of positions after move_and_slide is,
+		# character might be stuck somewhere!
+		var delta_position := position_after - position_before
+		var epsilon := 0.001
+		if delta_position.length() < epsilon and velocity.length() > epsilon:
+			global_position += get_wall_normal() * 0.1
+
+		# smoothen rotation
+		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+		#current_rotation_basis.orthonormalized()
+		_rotation_root.transform.basis = current_rotation_basis
+			# Extrapolation for predicting position
 	elif multiplayer.is_server():
 		# Store velocity for extrapolation
 		_velocity_before = velocity
@@ -175,97 +270,6 @@ func _physics_process(delta: float) -> void:
 
 		# Set the network player's position to the predicted position
 		global_position = predicted_position
-
-
-
-
-
-
-	# We separate out the y velocity to not interpolate on the gravity
-	var y_velocity := velocity.y
-	velocity.y = 0.0
-	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
-	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
-		velocity = Vector3.ZERO
-	velocity.y = y_velocity
-
-	# Set aiming camera and UI
-	if is_aiming:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
-		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
-		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
-		_ui_aim_recticle.visible = true
-	else:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
-		_grenade_aim_controller.throw_direction = _last_strong_direction
-		_grenade_aim_controller.from_look_position = global_position
-		_ui_aim_recticle.visible = false
-
-	# Update attack state and position
-
-	_shoot_cooldown_tick += delta
-	_grenade_cooldown_tick += delta
-
-	if is_attacking:
-		match _equipped_weapon:
-			WEAPON_TYPE.DEFAULT:
-				if is_aiming and is_on_floor():
-					if _shoot_cooldown_tick > shoot_cooldown:
-						_shoot_cooldown_tick = 0.0
-						shoot.rpc()
-				elif is_just_attacking:
-					attack.rpc()
-			WEAPON_TYPE.GRENADE:
-				if _grenade_cooldown_tick > grenade_cooldown:
-					_grenade_cooldown_tick = 0.0
-					_grenade_aim_controller.throw_grenade()
-
-	velocity.y += _gravity * delta
-
-	if is_just_jumping:
-		velocity.y += jump_initial_impulse
-	elif is_air_boosting:
-		velocity.y += jump_additional_force * delta
-
-	# Set character animation
-	if is_just_jumping:
-		_character_skin.jump.rpc()
-		#_character_skin.jump()
-	elif not is_on_floor() and velocity.y < 0:
-		_character_skin.fall.rpc()
-		#_character_skin.fall()
-	elif is_on_floor():
-		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
-		if xz_velocity.length() > stopping_speed:
-			_character_skin.set_moving.rpc(true)
-			#_character_skin.set_moving(true)
-			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
-		else:
-			_character_skin.set_moving.rpc(false)
-
-			#_character_skin.set_moving(false)
-
-	if is_just_on_floor:
-		_landing_sound.play()
-
-	var position_before := global_position
-	_position_before = position_before
-	move_and_slide()
-	var position_after := global_position
-	_position_after = position_after
-
-	# If velocity is not 0 but the difference of positions after move_and_slide is,
-	# character might be stuck somewhere!
-	var delta_position := position_after - position_before
-	var epsilon := 0.001
-	if delta_position.length() < epsilon and velocity.length() > epsilon:
-		global_position += get_wall_normal() * 0.1
-
-	# smoothen rotation
-	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	#current_rotation_basis.orthonormalized()
-	_rotation_root.transform.basis = current_rotation_basis
-	
 	
 
 @rpc
