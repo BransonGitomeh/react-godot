@@ -274,7 +274,7 @@ func _physics_process(delta: float) -> void:
 
 		# Predict and set network player's position
 		_predict_and_set_network_player_position(delta)
-		return
+		#return
 
   # Client-side processing
 	else:
@@ -469,50 +469,7 @@ func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
 	#var model_scale := _rotation_root.transform.basis.get_scale()
 	#_rotation_root.transform.basis = Basis(interpolated_rotation).scaled(model_scale)
 
-# ... (Other parts of the script remain unchanged)
 
-func _update_position_with_input_old(delta: float, input_vector: Vector3) -> void:
-	# Apply input to movement
-	var move_direction = input_vector.normalized()
-	
-	# Handle movement
-	var target_velocity = move_direction * move_speed
-	var acceleration_factor = 1.0
-
-	# We separate out the y velocity to not interpolate on the gravity
-	var y_velocity := velocity.y
-	velocity.y = 0.0
-	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
-	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
-		velocity = Vector3.ZERO
-	velocity.y = y_velocity
-	
-	velocity.y += _gravity * delta
-
-	var position_before := global_position
-	_position_before = position_before
-	move_and_slide()
-	var position_after := global_position
-	_position_after = position_after
-
-	# ... (Other parts of the function remain unchanged)
-	# If velocity is not 0 but the difference of positions after move_and_slide is,
-	# character might be stuck somewhere!
-	var delta_position := position_after - position_before
-	var epsilon := 0.001
-	if delta_position.length() < epsilon and velocity.length() > epsilon:
-		global_position += get_wall_normal() * 0.1
-		
-	# smoothen rotation
-	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	_rotation_root.transform.basis = Basis(current_rotation_basis)
-	
-	
-	# Set the global predicted_position variable
-	_predicted_position = global_position + _velocity_before * delta
-	#print("Predicted Position:", _predicted_position)
-	#print("Velocity Before:", _velocity_before)
-	#print("Smoothed Input:", _smoothed_input)
 
 
 ## Used to register required input actions when copying this character to a different project.
