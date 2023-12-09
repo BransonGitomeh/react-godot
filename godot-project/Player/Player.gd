@@ -297,7 +297,7 @@ func _physics_process(delta: float) -> void:
 			return
 
 	# Client-side processing
-	else:
+	elif not multiplayer.is_server():
 		print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 		# Store previous predicted velocity
 		_predicted_velocity_previous = _predicted_velocity
