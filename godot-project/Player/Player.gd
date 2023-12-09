@@ -73,28 +73,24 @@ var current_position: Vector3 = Vector3.ZERO
 @export var _last_position_received: Vector3 = Vector3.ZERO
 @export var _last_velocity_received: Vector3 = Vector3.ZERO
 @export var _last_update_time: float = 0.0
+@export var _predicted_positions : Array = []
+@export var _predicted_velocity: Vector3 = Vector3.ZERO
+@export var _predicted_velocity_current: Vector3 = Vector3.ZERO
+@export var _predicted_velocity_previous: Vector3 = Vector3.ZERO
+@export var network_position_interpolation_duration: float = 5.0
+@export var _last_velocity_before: Vector3 = Vector3.ZERO
+@export var _smoothed_input: Vector3 = Vector3.ZERO
+@export  var _time_since_last_update: float = 0.0
 
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
 
 @export var _predicted_position: Vector3
 
-# Constants for interpolation
-@export var network_position_interpolation_duration: float = 1000.0
-
 # Flag to determine if the player has authority
 var has_authority: bool = false
 
-# Declare predicted_position and smoothed_input at a higher scope
-@export var _smoothed_input: Vector3 = Vector3.ZERO
 
-@export var _last_velocity_before: Vector3 = Vector3.ZERO
-
-@export var _predicted_positions : Array = []
-# Add this variable to store predicted velocity
-@export var _predicted_velocity: Vector3 = Vector3.ZERO
-@export var _predicted_velocity_current: Vector3 = Vector3.ZERO
-@export var _predicted_velocity_previous: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -188,6 +184,71 @@ func _predict_future_positions(delta):
 		_predicted_positions.append(predicted_position)
 
 
+func _get_latency_compensation() -> float:
+	# Calculate the average round-trip time (RTT)
+	var average_rtt = 225 # Calculate average RTT based on your network implementation
+
+	# Convert RTT to compensation factor
+	var compensation_factor = 1.0 + (average_rtt / 2.0) / _time_since_last_update
+
+	return compensation_factor
+
+
+var _last_position_received_previous;	
+
+func _move_network_client_smoothly(delta: float) -> void:
+	# Calculate time since last update
+	_time_since_last_update += delta
+	var _target_position: Vector3
+	var movement_vector = Vector3.ZERO
+	
+	
+	# Check if there are predicted positions available
+	if _predicted_positions.size() > 0:
+		# Get the predicted position for the current time
+		var target_position = _predicted_positions[0]
+
+		# Calculate the movement vector towards the target position
+		movement_vector = target_position - global_position
+
+	else:
+		# No predicted positions, use dead reckoning
+		movement_vector = _velocity_before * _time_since_last_update
+
+	# Apply latency compensation
+	movement_vector *= _get_latency_compensation()
+	# Limit movement speed
+	movement_vector =  movement_vector.clamp(
+		Vector3.ZERO, movement_vector.normalized() * move_speed * _time_since_last_update
+	)
+
+	# Perform client-side prediction error correction
+	if _last_position_received != Vector3.ZERO:
+		movement_vector += _last_position_received - _target_position
+
+	# Interpolate between current and target positions
+	global_position = lerp(global_position, _target_position, network_position_interpolation_duration)
+
+	# Move the client using KinematicCollision2D
+
+	var collision = move_and_collide(movement_vector)
+
+	# Update position based on the collision
+	if collision:
+		var travel = collision.get_travel()
+		global_position.x += travel.x
+		global_position.z += travel.z
+		global_position.y = 0.0
+
+	# Update last received position and velocity
+	_last_position_received = global_position
+	_velocity_before = movement_vector / _time_since_last_update
+
+	# Update predicted positions
+	#if _predicted_positions.size() > 0:
+	_predicted_positions.pop_front()
+		
+		
 # On the client side
 func _move_client_smoothly(delta):
 	_move_direction = _get_camera_oriented_input()
@@ -298,6 +359,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 func _client_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		_move_network_client_smoothly(delta)
 		return;
 		
 	var time_since_update:=delta
@@ -377,7 +439,8 @@ func _handle_local_input(delta: float) -> void:
 		velocity.y += jump_initial_impulse
 	elif is_air_boosting:
 		velocity.y += jump_additional_force * delta
-
+	
+	_character_skin.set_moving.rpc(true)
 	# Set character animation
 	if is_just_jumping:
 		_character_skin.jump.rpc()
