@@ -110,7 +110,7 @@ func ease_out_quartic(t: float) -> float:
 	return 1.0 - pow(1.0 - t, 0.1)
 
 func _physics_process(delta: float) -> void:
-	_velocity_before = velocity
+	_velocity_before = velocity.normalized()
 	var smoothed_input = Vector3.ZERO
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
@@ -258,7 +258,7 @@ func _physics_process(delta: float) -> void:
 			# Extrapolation for predicting position
 	elif multiplayer.is_server():
 		# Store velocity for extrapolation
-		_velocity_before = velocity
+		_velocity_before = velocity.normalized()
 
 		# Handle input and update position
 		_update_position_with_input(delta, smoothed_input)
