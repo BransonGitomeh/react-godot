@@ -249,13 +249,14 @@ func _physics_process(delta: float) -> void:
 		if _predicted_position != Vector3.ZERO:
 			_predicted_position = calculated_predicted_position
 			# Set the network player's position to the predicted position
-			global_position = _predicted_position
+			move_and_collide(_predicted_position - global_position)
+			return
 
 	# Interpolation for smooth movement on the client
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-		t = 1 - pow(1 - t, network_position_interpolation_duration)
+		t = 1 - pow(1 - t, 10)  # Adjust the exponent for smoother interpolation
 		
 		# Quadratic interpolation between positions
 		interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
@@ -263,14 +264,15 @@ func _physics_process(delta: float) -> void:
 		if interpolated_position == Vector3.ZERO:
 			return
 
-		# Set the client's position to the interpolated position smoothly
-		global_position = interpolated_position
+		# Move the client's position smoothly
+		move_and_collide(interpolated_position - global_position)
 
 		# Predict the next positions on the client
 		_predicted_positions.clear()
 		for i in range(3):
 			t = clamp((delta * (i + 1)) / network_position_interpolation_duration, 0, 1)
 			_predicted_positions.append(interpolate_quadratic(_position_before, _predicted_position, _position_after, t))
+
 
 
 
