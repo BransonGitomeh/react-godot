@@ -201,7 +201,7 @@ func _physics_process(delta: float) -> void:
 	# Extrapolation for predicting position on the server
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		# Store last known velocity for extrapolation
-		var _last_velocity_before = _velocity_before
+		_last_velocity_before = _velocity_before
 
 		# Handle input and update position
 		_update_position_with_input(delta, _smoothed_input)
