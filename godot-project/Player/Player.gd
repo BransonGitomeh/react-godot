@@ -271,7 +271,7 @@ func _physics_process(delta: float) -> void:
 		_rotation_root.transform.basis = current_rotation_basis
 			# Extrapolation for predicting position
 	
-	if multiplayer.is_server():
+	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		# Store velocity for extrapolation
 		_velocity_before = velocity.normalized()
 
