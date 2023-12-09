@@ -279,7 +279,22 @@ func _physics_process(delta: float) -> void:
 
 			# Predict and set network player's position
 			_predict_and_set_network_player_position(delta)
-			#return
+			
+			# Update _velocity_before if velocity changed (client-side only)
+			# Check if velocity changed
+			var has_velocity_changed := false
+			for hist_velocity in _velocity_history:
+				if hist_velocity != velocity.normalized():
+					has_velocity_changed = true
+					break
+				
+			if has_velocity_changed:
+				_velocity_before = velocity.normalized()
+
+				# Log updated _velocity_before
+				print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+			
+			return
 
 	# Client-side processing
 	else:
@@ -310,20 +325,8 @@ func _physics_process(delta: float) -> void:
 				has_velocity_changed = true
 				break
 
-	  	# Update _velocity_before if velocity changed (client-side only)
-		if has_velocity_changed and multiplayer.is_server():
-			_velocity_before = velocity.normalized()
 
-			# Log updated _velocity_before
-			print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
-	
-	  # Handle local player input (client-side only)
-	else:
-		# server is not a player
-		if multiplayer.get_unique_id() == 1:
-			return;
-			
-		print("Handling Local Input For: ", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+		print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
 		# Get input and movement state
 		var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
@@ -343,7 +346,7 @@ func _physics_process(delta: float) -> void:
 		if is_aiming:
 			_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 
-	# Set aiming camera and UI
+		# Set aiming camera and UI
 		if is_aiming:
 			_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
 			_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
