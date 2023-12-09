@@ -147,7 +147,7 @@ func _physics_process(delta: float) -> void:
 				#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
 				_velocity_before = velocity.normalized()
 				#print("Updated _velocity_before:", _velocity_before)		
-		else:
+		#else:
 			# This code runs on the server side
 			#print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
 
