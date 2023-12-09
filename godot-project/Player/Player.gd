@@ -197,30 +197,64 @@ func _predict_future_positions(delta):
 		_predicted_positions.append(predicted_position)
 
 
+# On the client side
 func _move_client_smoothly(delta):
-  # Log client timestamp and multiplayer ID
-	print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system())
+	_move_direction = _get_camera_oriented_input()
 
 	# Calculate time since last update
 	var time_since_update = delta
 
-	# Get target position
-	var target_position = _predicted_positions[0]
+	# Separate out the y velocity to not interpolate on gravity
+	var y_velocity := velocity.y
+	velocity.y = 0.0
+	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
 
-	# Calculate movement direction and distance
-	var movement_direction = target_position - global_position
-	var movement_distance = movement_direction.length()
+	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
+		velocity = Vector3.ZERO
 
-	if movement_distance > 0:
-		# Limit movement speed
-		movement_distance = min(movement_distance, move_speed * delta)
+	velocity.y = y_velocity
 
-		# Normalize and scale movement direction
-		movement_direction = movement_direction.normalized() * movement_distance
+	# Store the predicted position based on the client's input
+	_predicted_position = global_position + velocity * delta
 
-		# Move and collide
-		move_and_collide(movement_direction)
+	# Smooth rotation
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
 
+# On the server side
+func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
+	# Apply input to movement
+	var move_direction = input_vector.normalized()
+
+	# Separate out the y velocity to not interpolate on gravity
+	var y_velocity := velocity.y
+	velocity.y = 0.0
+	velocity = velocity.lerp(move_direction * move_speed, acceleration * delta)
+
+	if move_direction.length() == 0 and velocity.length() < stopping_speed:
+		velocity = Vector3.ZERO
+
+	velocity.y = y_velocity
+
+	velocity.y += _gravity * delta
+
+	var position_before := global_position
+
+	# Move and slide on the server side
+	move_and_slide()
+
+	var position_after := global_position
+
+	# If there's a significant position change, adjust the predicted position on the client
+	var delta_position := position_after - position_before
+	var epsilon := 0.001
+	if delta_position.length() > epsilon:
+		# Notify the client about the authoritative position
+		_predicted_position = position_after
+
+	# Smoothen rotation
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
 
 
 var interpolated_position;
@@ -254,7 +288,7 @@ func _physics_process(delta: float) -> void:
 
 		# Move client smoothly with collision detection
 		_move_client_smoothly(delta)
-		return
+		#return
 
   # Store velocity history for client-side prediction
 	_velocity_history.append(velocity.normalized())
@@ -290,6 +324,13 @@ func _physics_process(delta: float) -> void:
 		_is_on_floor_buffer = is_on_floor()
 		_move_direction = _get_camera_oriented_input()
 
+		# To not orient quickly to the last input, we save a last strong direction,
+		# this also ensures a good normalized value for the rotation basis.
+		if _move_direction.length() > 0.2:
+			_last_strong_direction = _move_direction.normalized()
+		if is_aiming:
+			_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+
 		# Input smoothing using moving average
 		_input_buffer.append(_last_strong_direction)
 		while _input_buffer.size() > INPUT_BUFFER_SIZE:
@@ -298,10 +339,7 @@ func _physics_process(delta: float) -> void:
 			_smoothed_input += input_vector
 		if _input_buffer.size() > 0:
 			_smoothed_input /= _input_buffer.size()
-
-		# Orient character to direction (client-side only)
-		_orient_character_to_direction(_smoothed_input, delta)
-
+		
 		# Update attack state and position (client-side only)
 		_shoot_cooldown_tick += delta
 		_grenade_cooldown_tick += delta
@@ -319,7 +357,22 @@ func _physics_process(delta: float) -> void:
 					if _grenade_cooldown_tick > grenade_cooldown:
 						_grenade_cooldown_tick = 0.0
 						_grenade_aim_controller.throw_grenade()
+		var position_before := global_position
+		_position_before = position_before
+		move_and_slide()
+		var position_after := global_position
+		_position_after = position_after
 
+		# If velocity is not 0 but the difference of positions after move_and_slide is,
+		# character might be stuck somewhere!
+		var delta_position := position_after - position_before
+		var epsilon := 0.001
+		if delta_position.length() < epsilon and velocity.length() > epsilon:
+			global_position += get_wall_normal() * 0.1
+			
+		# smoothen rotation
+		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+		_rotation_root.transform.basis = Basis(current_rotation_basis)
 
 		
 
@@ -418,34 +471,42 @@ func _orient_character_to_direction(direction: Vector3, delta: float) -> void:
 
 # ... (Other parts of the script remain unchanged)
 
-func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
+func _update_position_with_input_old(delta: float, input_vector: Vector3) -> void:
 	# Apply input to movement
 	var move_direction = input_vector.normalized()
-
+	
 	# Handle movement
 	var target_velocity = move_direction * move_speed
 	var acceleration_factor = 1.0
 
-	if is_on_floor():
-		# Apply ground acceleration
-		velocity.x = lerp(velocity.x, target_velocity.x, acceleration * delta * acceleration_factor)
-		velocity.z = lerp(velocity.z, target_velocity.z, acceleration * delta * acceleration_factor)
-	else:
-		# Apply air acceleration
-		velocity.x += move_direction.x * acceleration * delta * acceleration_factor
-		velocity.z += move_direction.z * acceleration * delta * acceleration_factor
-
-	# Limit velocity
-	velocity.x = clamp(velocity.x, -move_speed, move_speed)
-	velocity.z = clamp(velocity.z, -move_speed, move_speed)
-
-	# Apply gravity
+	# We separate out the y velocity to not interpolate on the gravity
+	var y_velocity := velocity.y
+	velocity.y = 0.0
+	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
+	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
+		velocity = Vector3.ZERO
+	velocity.y = y_velocity
+	
 	velocity.y += _gravity * delta
 
-	# Move character
+	var position_before := global_position
+	_position_before = position_before
 	move_and_slide()
+	var position_after := global_position
+	_position_after = position_after
 
 	# ... (Other parts of the function remain unchanged)
+	# If velocity is not 0 but the difference of positions after move_and_slide is,
+	# character might be stuck somewhere!
+	var delta_position := position_after - position_before
+	var epsilon := 0.001
+	if delta_position.length() < epsilon and velocity.length() > epsilon:
+		global_position += get_wall_normal() * 0.1
+		
+	# smoothen rotation
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	
 	
 	# Set the global predicted_position variable
 	_predicted_position = global_position + _velocity_before * delta
