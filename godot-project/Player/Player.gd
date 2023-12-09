@@ -88,7 +88,7 @@ var has_authority: bool = false
 # Declare predicted_position and smoothed_input at a higher scope
 @export var _smoothed_input: Vector3 = Vector3.ZERO
 
-var _last_velocity_before: Vector3 = Vector3.ZERO
+@export var _last_velocity_before: Vector3
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
