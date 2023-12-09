@@ -139,18 +139,32 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 	p += ttt * p3               # t^3 * p3
 
 	return p
-
+	
+	
 func _predict_and_set_network_player_position(delta):
+  # Log client and server timestamps, multiplayer ID
+	print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system(), "Position:", global_position)
+	print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
+
 	# Calculate time since last update
 	var time_since_update = delta
+
 	# Calculate t for interpolation
 	var t = clamp(delta / network_position_interpolation_duration, 0, 1)
 
-	# Calculate predicted position
-	var predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
+	# Calculate predicted position based on client input (if not server)
+	var predicted_position: Vector3
+	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+		predicted_position = global_position + _last_velocity_before * delta
+	else:
+		# Client prediction
+		predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
+
+	# Log predicted position
+	print("Predicted Position:", predicted_position)
 
 	# Set network player's position
-	move_and_collide(predicted_position - global_position)
+	global_position = predicted_position
 
 	# Save predicted position and velocity for future calculations
 	_predicted_position = predicted_position
@@ -158,7 +172,7 @@ func _predict_and_set_network_player_position(delta):
 
 
 func _update_predicted_velocity(time_since_update, _position_before, _position_after, delta):
-	# Calculate constant acceleration
+  # Calculate constant acceleration
 	var acceleration = (_predicted_velocity_current - _predicted_velocity_previous) / delta
 
 	# Update predicted velocity
@@ -182,9 +196,14 @@ func _predict_future_positions(delta):
 
 		_predicted_positions.append(predicted_position)
 
+
 func _move_client_smoothly(delta):
-	 # Calculate time since last update
+  # Log client timestamp and multiplayer ID
+	print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system())
+
+	# Calculate time since last update
 	var time_since_update = delta
+
 	# Get target position
 	var target_position = _predicted_positions[0]
 
@@ -203,244 +222,103 @@ func _move_client_smoothly(delta):
 		move_and_collide(movement_direction)
 
 
+
 var interpolated_position;
 var _velocity_history := []
 func _physics_process(delta: float) -> void:
-	
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		if not multiplayer.is_server():
-			# This code only runs on the client side
-			# Store the current velocity in the history
-			_velocity_history.append(velocity.normalized())
-			# Keep only the last N values in the history (adjust N based on your needs)
-			var max_history_size := 5
-			while _velocity_history.size() > max_history_size:
-				_velocity_history.pop_front()
-				
-			# Check if the velocity has changed
-			var has_velocity_changed := false
-			for hist_velocity in _velocity_history:
-				if hist_velocity != velocity.normalized():
-					has_velocity_changed = true
-					break
-					
-			# Update _velocity_before only if the velocity has changed
-			if has_velocity_changed:
-				_velocity_before = velocity.normalized()
+  
+  # Declare variables
+	var time_since_update := delta
+	var max_history_size := 5
+  # Log server timestamp and multiplayer ID
+	print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
 
-				# Print statements for debugging
-				#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-				_velocity_before = velocity.normalized()
-				#print("Updated _velocity_before:", _velocity_before)		
-			# Store previous predicted velocity for acceleration calculation
-			_predicted_velocity_previous = _predicted_velocity
-		#else:
-			# This code runs on the server side
-			#print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
-
-	# Calculate ground height for camera controller
-	if _ground_shapecast.get_collision_count() > 0:
-		for collision_result in _ground_shapecast.collision_result:
-			_ground_height = max(_ground_height, collision_result.point.y)
-	else:
-		_ground_height = global_position.y + _ground_shapecast.target_position.y
-	if global_position.y < _ground_height:
-		_ground_height = global_position.y
-
-	# Swap weapons
-	if Input.is_action_just_pressed("swap_weapons"):
-		_equipped_weapon = WEAPON_TYPE.DEFAULT if _equipped_weapon == WEAPON_TYPE.GRENADE else WEAPON_TYPE.GRENADE
-		_grenade_aim_controller.visible = _equipped_weapon == WEAPON_TYPE.GRENADE
-		emit_signal("weapon_switched", WEAPON_TYPE.keys()[_equipped_weapon])
-
-	# Handle local player input
-	
-	# Get input and movement state
-	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-	var is_just_attacking := Input.is_action_just_pressed("attack")
-	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
-
-	_is_on_floor_buffer = is_on_floor()
-	_move_direction = _get_camera_oriented_input()
-
-	# To not orient quickly to the last input, we save a last strong direction,
-	# this also ensures a good normalized value for the rotation basis.
-	# Input smoothing using moving average
-	
-#
-	# Use smoothed input for orientation
-	#_orient_character_to_direction(smoothed_input, delta)
-	# To not orient quickly to the last input, we save a last strong direction,
-	# this also ensures a good normalized value for the rotation basis.
-	if _move_direction.length() > 0.2:
-		_last_strong_direction = _move_direction.normalized()
-	if is_aiming:
-		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
-
-	_input_buffer.append(_last_strong_direction)
-	while _input_buffer.size() > INPUT_BUFFER_SIZE:
-		_input_buffer.pop_front()
-	for input_vector in _input_buffer:
-		_smoothed_input += input_vector
-	if _input_buffer.size() > 0:
-		_smoothed_input /= _input_buffer.size()
-		
-	_orient_character_to_direction(_smoothed_input, delta)
-	
-	## Interpolation for smooth movement on the client
-	#if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		## Calculate interpolation factor
-		#var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-		#t = 1 - pow(1 - t, 2)
-#
-		## Interpolate between positions using _predicted_position
-		#interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
-		#print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
-		#global_position = interpolated_position
-		#return;
-	
-	 # Handle multiplayer authority
+  # Handle input and update position if server
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		# Store last known velocity
-		_last_velocity_before = _velocity_before
-
 		# Update position with input
 		_update_position_with_input(delta, _smoothed_input)
 
-		# Predict position and set network player's position
+		# Predict and set network player's position
 		_predict_and_set_network_player_position(delta)
 		return
 
-	# Handle non-server clients
+  # Client-side processing
 	else:
-		if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-			# Calculate time since last update
-			var time_since_update = delta
+		# Store previous predicted velocity
+		_predicted_velocity_previous = _predicted_velocity
 
-			# Extract position data
-			var _position_before = _position_after
-			_position_after = _predicted_position
+		# Update predicted velocity (client-side only)
+		_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+		# Predict future positions (client-side only)
+		_predict_future_positions(delta)
 
-			# Calculate acceleration and update predicted velocity
-			_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+		# Move client smoothly with collision detection
+		_move_client_smoothly(delta)
+		return
 
-			# Predict future positions
-			_predict_future_positions(delta)
+  # Store velocity history for client-side prediction
+	_velocity_history.append(velocity.normalized())
 
-			# Move client smoothly with collision detection
-			_move_client_smoothly(delta)
-			return
+  # Limit history size
+	while _velocity_history.size() > max_history_size:
+		_velocity_history.pop_front()
 
+  # Check if velocity changed
+	var has_velocity_changed := false
+	for hist_velocity in _velocity_history:
+		if hist_velocity != velocity.normalized():
+			has_velocity_changed = true
+			break
 
-	# We separate out the y velocity to not interpolate on the gravity
-	var y_velocity := velocity.y
-	velocity.y = 0.0
-	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
-	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
-		velocity = Vector3.ZERO
-	velocity.y = y_velocity
+  	# Update _velocity_before if velocity changed (client-side only)
+	if has_velocity_changed and multiplayer.is_server():
+		_velocity_before = velocity.normalized()
 
-	# Set aiming camera and UI
-	if is_aiming:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
-		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
-		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
-		_ui_aim_recticle.visible = true
-	else:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
-		_grenade_aim_controller.throw_direction = _last_strong_direction
-		_grenade_aim_controller.from_look_position = global_position
-		_ui_aim_recticle.visible = false
+	# Log updated _velocity_before
+	print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
-	# Update attack state and position
+  # Handle local player input (client-side only)
+	if not multiplayer.is_server():
+	# Get input and movement state
+		var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+		var is_just_attacking := Input.is_action_just_pressed("attack")
+		var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
+		var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
+		var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+		var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
 
-	_shoot_cooldown_tick += delta
-	_grenade_cooldown_tick += delta
+		_is_on_floor_buffer = is_on_floor()
+		_move_direction = _get_camera_oriented_input()
 
-	if is_attacking:
-		match _equipped_weapon:
-			WEAPON_TYPE.DEFAULT:
-				if is_aiming and is_on_floor():
-					if _shoot_cooldown_tick > shoot_cooldown:
-						_shoot_cooldown_tick = 0.0
-						shoot.rpc()
-				elif is_just_attacking:
-					attack.rpc()
-			WEAPON_TYPE.GRENADE:
-				if _grenade_cooldown_tick > grenade_cooldown:
-					_grenade_cooldown_tick = 0.0
-					_grenade_aim_controller.throw_grenade()
+		# Input smoothing using moving average
+		_input_buffer.append(_last_strong_direction)
+		while _input_buffer.size() > INPUT_BUFFER_SIZE:
+			_input_buffer.pop_front()
+		for input_vector in _input_buffer:
+			_smoothed_input += input_vector
+		if _input_buffer.size() > 0:
+			_smoothed_input /= _input_buffer.size()
 
-	velocity.y += _gravity * delta
+		# Orient character to direction (client-side only)
+		_orient_character_to_direction(_smoothed_input, delta)
 
-	if is_just_jumping:
-		velocity.y += jump_initial_impulse
-	elif is_air_boosting:
-		velocity.y += jump_additional_force * delta
+		# Update attack state and position (client-side only)
+		_shoot_cooldown_tick += delta
+		_grenade_cooldown_tick += delta
 
-	# Set character animation
-	if is_just_jumping:
-		_character_skin.jump.rpc()
-		#_character_skin.jump()
-	elif not is_on_floor() and velocity.y < 0:
-		_character_skin.fall.rpc()
-		#_character_skin.fall()
-	elif is_on_floor():
-		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
-		if xz_velocity.length() > stopping_speed:
-			_character_skin.set_moving.rpc(true)
-			#_character_skin.set_moving(true)
-			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
-		else:
-			_character_skin.set_moving.rpc(false)
-
-			#_character_skin.set_moving(false)
-
-	if is_just_on_floor:
-		_landing_sound.play()
-		
-	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		var position_before := global_position
-		_position_before = position_before
-		move_and_slide()
-		var position_after := global_position
-		_position_after = position_after
-
-		# If velocity is not 0 but the difference of positions after move_and_slide is,
-		# character might be stuck somewhere!
-		var delta_position := position_after - position_before
-		var epsilon := 0.001
-		if delta_position.length() < epsilon and velocity.length() > epsilon:
-			global_position += get_wall_normal() * 0.1
-
-		# smoothen rotation
-		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-		#current_rotation_basis.orthonormalized()
-		_rotation_root.transform.basis = current_rotation_basis
-			# Extrapolation for predicting position
-	
-	#if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		## Store last known velocity for extrapolation
-		#var _last_velocity_before = _velocity_before
-#
-		## Handle input and update position
-		#_update_position_with_input(delta, _smoothed_input)
-#
-		## Predict position using extrapolation based on the last known velocity
-		#_predicted_position = global_position + _last_velocity_before * delta
-#
-		## Print statements for debugging
-		#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-		#print("Last Velocity Before:", _last_velocity_before)
-		#print("Global Position Before:", global_position)
-		#print("Delta:", delta)
-		#print("Predicted Position:", _predicted_position)
-#
-		## Set the network player's position to the predicted position
-		#global_position = _predicted_position
+		if is_attacking:
+			match _equipped_weapon:
+				WEAPON_TYPE.DEFAULT:
+					if is_aiming and is_on_floor():
+						if _shoot_cooldown_tick > shoot_cooldown:
+							_shoot_cooldown_tick = 0.0
+							shoot.rpc()
+					elif is_just_attacking:
+						attack.rpc()
+				WEAPON_TYPE.GRENADE:
+					if _grenade_cooldown_tick > grenade_cooldown:
+						_grenade_cooldown_tick = 0.0
+						_grenade_aim_controller.throw_grenade()
 
 
 		
