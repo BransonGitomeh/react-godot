@@ -114,12 +114,34 @@ func ease_out_cubic(t: float) -> float:
 func ease_out_quartic(t: float) -> float:
 	return 1.0 - pow(1.0 - t, 0.1)
 
+
+var _velocity_history := []
 func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		if not multiplayer.is_server():
 			# This code only runs on the client side
-			_velocity_before = velocity.normalized()
-			print("Client " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + " setting _velocity_before " + str(_velocity_before))
+			# Store the current velocity in the history
+			_velocity_history.append(velocity.normalized())
+			# Keep only the last N values in the history (adjust N based on your needs)
+			var max_history_size := 5
+			while _velocity_history.size() > max_history_size:
+				_velocity_history.pop_front()
+				
+			# Check if the velocity has changed
+			var has_velocity_changed := false
+			for hist_velocity in _velocity_history:
+				if hist_velocity != velocity.normalized():
+					has_velocity_changed = true
+					break
+					
+			# Update _velocity_before only if the velocity has changed
+			if has_velocity_changed:
+				_velocity_before = velocity.normalized()
+
+				# Print statements for debugging
+				print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+				_velocity_before = velocity.normalized()
+				print("Updated _velocity_before:", _velocity_before)		
 		else:
 			# This code runs on the server side
 			print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
