@@ -206,6 +206,13 @@ func _move_client_smoothly(delta):
 	if(velocity.y != _predicted_velocity.y):
 		velocity.y = y_velocity
 
+	_position_before = global_position
+
+	# Move and slide on the server side
+	move_and_slide()
+
+	_position_after = global_position
+	
 	# Store the predicted position based on the client's input
 	_predicted_position = global_position + velocity * delta
 
@@ -290,6 +297,9 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
+	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		return;
+		
 	var time_since_update:=delta
 	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
@@ -332,7 +342,7 @@ func _handle_local_input(delta: float) -> void:
 	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
 	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
 	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
-
+		
 	_is_on_floor_buffer = is_on_floor()
 	_move_direction = _get_camera_oriented_input()
 	
@@ -344,9 +354,8 @@ func _handle_local_input(delta: float) -> void:
 	if is_aiming:
 		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 	
+	
 	_orient_character_to_direction(_last_strong_direction, delta)
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		return;
 	# Set aiming camera and UI
 	if is_aiming:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
