@@ -261,162 +261,166 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 
 var interpolated_position;
 var _velocity_history := []
+var max_history_size := 5
 func _physics_process(delta: float) -> void:
-  
   # Declare variables
 	var time_since_update := delta
-	var max_history_size := 5
-  # Log server timestamp and multiplayer ID
-
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
-		if multiplayer.get_unique_id() != 1:
-			print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
-			
-			if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-				print(multiplayer.get_unique_id() ," _update_position_with_input and _predict_and_set_network_player_position ", $MultiplayerSynchronizer.get_multiplayer_authority()," _smoothed_input ", _smoothed_input)
-				# Update position with input
-				_update_position_with_input(delta, _smoothed_input)
+		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
+			_server_process(delta, time_since_update)
+		else:
+			_client_process(delta)
+	else:
+		_client_process(delta)
 
-				# Predict and set network player's position
-				_predict_and_set_network_player_position(delta)
-				
-				# Update _velocity_before if velocity changed (client-side only)
-				# Check if velocity changed
-				var has_velocity_changed := false
-				for hist_velocity in _velocity_history:
-					if hist_velocity != velocity.normalized():
-						has_velocity_changed = true
-						break
-					
-				if has_velocity_changed:
-					_velocity_before = velocity.normalized()
+func _server_process(delta: float, time_since_update: float) -> void:
+	# Update position with input
+	_update_position_with_input(delta, _smoothed_input)
 
-					# Log updated _velocity_before
-					print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
-				
-				return
-
-		# Client-side processing for movement()
-		elif $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-			print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
-			# Store previous predicted velocity
-			_predicted_velocity_previous = _predicted_velocity
-
-			# Update predicted velocity (client-side only)
-			_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
-			# Predict future positions (client-side only)
-			_predict_future_positions(delta)
-
-			# Move client smoothly with collision detection
-			_move_client_smoothly(delta)
-			#return
-
-		  # Store velocity history for client-side prediction
-			_velocity_history.append(velocity.normalized())
-
-		  # Limit history size
-			while _velocity_history.size() > max_history_size:
-				_velocity_history.pop_front()
-
-		  # Check if velocity changed
-			var has_velocity_changed := false
-			for hist_velocity in _velocity_history:
-				if hist_velocity != velocity.normalized():
-					has_velocity_changed = true
-					break
-
-
-			print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
-
-			# Get input and movement state
-			var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-			var is_just_attacking := Input.is_action_just_pressed("attack")
-			var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-			var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-			var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-			var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
-
-			_is_on_floor_buffer = is_on_floor()
-			_move_direction = _get_camera_oriented_input()
-
-			# To not orient quickly to the last input, we save a last strong direction,
-			# this also ensures a good normalized value for the rotation basis.
-			if _move_direction.length() > 0.2:
-				_last_strong_direction = _move_direction.normalized()
-			if is_aiming:
-				_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
-
-			# Set aiming camera and UI
-			if is_aiming:
-				_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
-				_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
-				_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
-				_ui_aim_recticle.visible = true
-			else:
-				_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
-				_grenade_aim_controller.throw_direction = _last_strong_direction
-				_grenade_aim_controller.from_look_position = global_position
-				_ui_aim_recticle.visible = false
-
-			# Update attack state and position
-
-			_shoot_cooldown_tick += delta
-			_grenade_cooldown_tick += delta
-			
-			if is_just_jumping:
-				velocity.y += jump_initial_impulse
-			elif is_air_boosting:
-				velocity.y += jump_additional_force * delta
-
-			# Set character animation
-			if is_just_jumping:
-				_character_skin.jump.rpc()
-				#_character_skin.jump()
-			elif not is_on_floor() and velocity.y < 0:
-				_character_skin.fall.rpc()
-				#_character_skin.fall()
-			elif is_on_floor():
-				var xz_velocity := Vector3(velocity.x, 0, velocity.z)
-				if xz_velocity.length() > stopping_speed:
-					_character_skin.set_moving.rpc(true)
-					#_character_skin.set_moving(true)
-					_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
-				else:
-					_character_skin.set_moving.rpc(false)
-
-					#_character_skin.set_moving(false)
-
-			if is_just_on_floor:
-				_landing_sound.play()
-			
-			# Input smoothing using moving average
-			_input_buffer.append(_last_strong_direction)
-			while _input_buffer.size() > INPUT_BUFFER_SIZE:
-				_input_buffer.pop_front()
-			for input_vector in _input_buffer:
-				_smoothed_input += input_vector
-			if _input_buffer.size() > 0:
-				_smoothed_input /= _input_buffer.size()
-			
-			# Update attack state and position (client-side only)
-			_shoot_cooldown_tick += delta
-			_grenade_cooldown_tick += delta
-
-			if is_attacking:
-				match _equipped_weapon:
-					WEAPON_TYPE.DEFAULT:
-						if is_aiming and is_on_floor():
-							if _shoot_cooldown_tick > shoot_cooldown:
-								_shoot_cooldown_tick = 0.0
-								shoot.rpc()
-						elif is_just_attacking:
-							attack.rpc()
-					WEAPON_TYPE.GRENADE:
-						if _grenade_cooldown_tick > grenade_cooldown:
-							_grenade_cooldown_tick = 0.0
-							_grenade_aim_controller.throw_grenade()
+	# Predict and set network player's position
+	_predict_and_set_network_player_position(delta)
+	
+	# Update _velocity_before if velocity changed (client-side only)
+	# Check if velocity changed
+	var has_velocity_changed := false
+	for hist_velocity in _velocity_history:
+		if hist_velocity != velocity.normalized():
+			has_velocity_changed = true
+			break
 		
+	if has_velocity_changed:
+		_velocity_before = velocity.normalized()
+
+		# Log updated _velocity_before
+		print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	
+	return
+
+var time_since_update
+func _client_process(delta: float) -> void:
+	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+	# Store previous predicted velocity
+	_predicted_velocity_previous = _predicted_velocity
+	
+
+	# Update predicted velocity (client-side only)
+	_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+	# Predict future positions (client-side only)
+	_predict_future_positions(delta)
+
+	# Move client smoothly with collision detection
+	_move_client_smoothly(delta)
+	#return
+
+  # Store velocity history for client-side prediction
+	_velocity_history.append(velocity.normalized())
+
+  # Limit history size
+	while _velocity_history.size() > max_history_size:
+		_velocity_history.pop_front()
+	
+	_handle_local_input(delta)
+
+func _handle_local_input(delta: float) -> void:
+  # Check if velocity changed
+	var has_velocity_changed := false
+	for hist_velocity in _velocity_history:
+		if hist_velocity != velocity.normalized():
+			has_velocity_changed = true
+			break
+
+
+	print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+
+	# Get input and movement state
+	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+	var is_just_attacking := Input.is_action_just_pressed("attack")
+	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
+	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
+	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
+
+	_is_on_floor_buffer = is_on_floor()
+	_move_direction = _get_camera_oriented_input()
+
+	# To not orient quickly to the last input, we save a last strong direction,
+	# this also ensures a good normalized value for the rotation basis.
+	if _move_direction.length() > 0.2:
+		_last_strong_direction = _move_direction.normalized()
+	if is_aiming:
+		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+
+	# Set aiming camera and UI
+	if is_aiming:
+		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
+		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
+		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
+		_ui_aim_recticle.visible = true
+	else:
+		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
+		_grenade_aim_controller.throw_direction = _last_strong_direction
+		_grenade_aim_controller.from_look_position = global_position
+		_ui_aim_recticle.visible = false
+
+	# Update attack state and position
+
+	_shoot_cooldown_tick += delta
+	_grenade_cooldown_tick += delta
+	
+	if is_just_jumping:
+		velocity.y += jump_initial_impulse
+	elif is_air_boosting:
+		velocity.y += jump_additional_force * delta
+
+	# Set character animation
+	if is_just_jumping:
+		_character_skin.jump.rpc()
+		#_character_skin.jump()
+	elif not is_on_floor() and velocity.y < 0:
+		_character_skin.fall.rpc()
+		#_character_skin.fall()
+	elif is_on_floor():
+		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
+		if xz_velocity.length() > stopping_speed:
+			_character_skin.set_moving.rpc(true)
+			#_character_skin.set_moving(true)
+			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+		else:
+			_character_skin.set_moving.rpc(false)
+
+			#_character_skin.set_moving(false)
+
+	if is_just_on_floor:
+		_landing_sound.play()
+	
+	# Input smoothing using moving average
+	_input_buffer.append(_last_strong_direction)
+	while _input_buffer.size() > INPUT_BUFFER_SIZE:
+		_input_buffer.pop_front()
+	for input_vector in _input_buffer:
+		_smoothed_input += input_vector
+	if _input_buffer.size() > 0:
+		_smoothed_input /= _input_buffer.size()
+	
+	# Update attack state and position (client-side only)
+	_shoot_cooldown_tick += delta
+	_grenade_cooldown_tick += delta
+
+	if is_attacking:
+		match _equipped_weapon:
+			WEAPON_TYPE.DEFAULT:
+				if is_aiming and is_on_floor():
+					if _shoot_cooldown_tick > shoot_cooldown:
+						_shoot_cooldown_tick = 0.0
+						shoot.rpc()
+				elif is_just_attacking:
+					attack.rpc()
+			WEAPON_TYPE.GRENADE:
+				if _grenade_cooldown_tick > grenade_cooldown:
+					_grenade_cooldown_tick = 0.0
+					_grenade_aim_controller.throw_grenade()
+	time_since_update = delta
 	
 
 		
