@@ -80,7 +80,7 @@ const INPUT_BUFFER_SIZE: int = 10
 @export var _predicted_position: Vector3
 
 # Constants for interpolation
-@export var network_position_interpolation_duration: float = 5.0
+@export var network_position_interpolation_duration: float = 10.0
 
 # Flag to determine if the player has authority
 var has_authority: bool = false
@@ -144,12 +144,12 @@ func _physics_process(delta: float) -> void:
 				_velocity_before = velocity.normalized()
 
 				# Print statements for debugging
-				print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+				#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
 				_velocity_before = velocity.normalized()
-				print("Updated _velocity_before:", _velocity_before)		
+				#print("Updated _velocity_before:", _velocity_before)		
 		else:
 			# This code runs on the server side
-			print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
+			#print("Server got " + str($MultiplayerSynchronizer.get_multiplayer_authority()) + "'s _velocity_before as " + str(_velocity_before))
 
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
@@ -225,28 +225,37 @@ func _physics_process(delta: float) -> void:
 
 		# Quadratic interpolation for position prediction
 		var t :float= clamp(delta / network_position_interpolation_duration, 0, 1)
-		_predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
+		
+		var calculated_predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
 
-		# Print statements for debugging
-		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-		print("Last Velocity Before:", _last_velocity_before)
-		print("Global Position Before:", global_position)
-		print("Delta:", delta)
-		print("Predicted Position:", _predicted_position)
+		if _predicted_position != Vector3.ZERO:
+			_predicted_position = calculated_predicted_position
+			
 
-		# Set the network player's position to the predicted position
-		global_position = _predicted_position
+			## Print statements for debugging
+			#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+			#print("Last Velocity Before:", _last_velocity_before)
+			#print("Global Position Before:", global_position)
+			#print("Delta:", delta)
+			#print("Predicted Position:", _predicted_position)
+			
+			
+			# Set the network player's position to the predicted position
+			global_position = _predicted_position
+			return;
 	
 	# Interpolation for smooth movement on the client
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
-		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
+		var t = clamp(delta / network_position_interpolation_duration*2, 0, 1)
 		t = 1 - pow(1 - t, 2)
 
 		# Quadratic interpolation between positions
 		interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
-		print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
+		#print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
 		
+		if interpolated_position == Vector3.ZERO:
+			return;
 		# Set the client's position to the interpolated position
 		global_position = interpolated_position
 		return;
@@ -488,9 +497,9 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	
 	# Set the global predicted_position variable
 	_predicted_position = global_position + _velocity_before * delta
-	print("Predicted Position:", _predicted_position)
-	print("Velocity Before:", _velocity_before)
-	print("Smoothed Input:", _smoothed_input)
+	#print("Predicted Position:", _predicted_position)
+	#print("Velocity Before:", _velocity_before)
+	#print("Smoothed Input:", _smoothed_input)
 
 
 ## Used to register required input actions when copying this character to a different project.
@@ -524,10 +533,10 @@ func _on_multiplayer_synchronizer_delta_synchronized(delta_data):
 	# Capture and store delta_data, which may include position information
 	# For example, you might capture the target position from delta_data
 	target_position = delta_data.get("position", Vector3.ZERO)
-	print("target_position", target_position)
+	#print("target_position", target_position)
 
 
 
 func _on_multiplayer_synchronizer_synchronized():
-	print("---------------MulitplayerSynchronizer.syncronized!!!!----------------")
+	#print("---------------MulitplayerSynchronizer.syncronized!!!!----------------")
 	pass # Replace with function body.
