@@ -88,6 +88,8 @@ var has_authority: bool = false
 # Declare predicted_position and smoothed_input at a higher scope
 @export var _smoothed_input: Vector3 = Vector3.ZERO
 
+var _last_velocity_before: Vector3 = Vector3.ZERO
+
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
@@ -272,25 +274,25 @@ func _physics_process(delta: float) -> void:
 			# Extrapolation for predicting position
 	
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		# Store velocity for extrapolation
-		_velocity_before = velocity.normalized()
+		# Store last known velocity for extrapolation
+		var _last_velocity_before = _velocity_before
 
 		# Handle input and update position
 		_update_position_with_input(delta, _smoothed_input)
 
-		# Predict position using extrapolation
-		_predicted_position = global_position + _velocity_before * delta
+		# Predict position using extrapolation based on the last known velocity
+		_predicted_position = global_position + _last_velocity_before * delta
 
 		# Print statements for debugging
-		
 		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-		print("Velocity Before:", _velocity_before)
+		print("Last Velocity Before:", _last_velocity_before)
 		print("Global Position Before:", global_position)
 		print("Delta:", delta)
 		print("Predicted Position:", _predicted_position)
 
 		# Set the network player's position to the predicted position
 		global_position = _predicted_position
+
 
 		
 		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
