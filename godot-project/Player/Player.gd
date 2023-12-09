@@ -272,8 +272,9 @@ func _physics_process(delta: float) -> void:
 
   # Handle input and update position if server
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		if str($MultiplayerSynchronizer.get_multiplayer_authority()) != str(name):
 			return
+			
 		# Update position with input
 		_update_position_with_input(delta, _smoothed_input)
 
@@ -313,8 +314,8 @@ func _physics_process(delta: float) -> void:
 	if has_velocity_changed and multiplayer.is_server():
 		_velocity_before = velocity.normalized()
 
-	# Log updated _velocity_before
-	print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+		# Log updated _velocity_before
+		print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
   # Handle local player input (client-side only)
 	if not multiplayer.is_server():
