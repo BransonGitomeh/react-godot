@@ -77,7 +77,7 @@ var current_position: Vector3 = Vector3.ZERO
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
 
-@export var _predicted_position: Vector3 = Vector3.ZERO
+@export var _predicted_position: Vector3
 
 # Constants for interpolation
 @export var network_position_interpolation_duration: float = 5.0
@@ -275,8 +275,17 @@ func _physics_process(delta: float) -> void:
 		# Predict position using extrapolation
 		_predicted_position = global_position + _velocity_before * delta
 
+		# Print statements for debugging
+		
+		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+		print("Velocity Before:", _velocity_before)
+		print("Global Position Before:", global_position)
+		print("Delta:", delta)
+		print("Predicted Position:", _predicted_position)
+
 		# Set the network player's position to the predicted position
 		global_position = _predicted_position
+
 		
 		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
 	
