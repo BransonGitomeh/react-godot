@@ -2703,28 +2703,8 @@ axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_rvo1c")
-move_speed = null
 bullet_speed = 14.0
-attack_impulse = null
 acceleration = 6.0
-jump_initial_impulse = null
-jump_additional_force = null
-rotation_speed = null
-stopping_speed = null
-max_throwback_force = null
-shoot_cooldown = null
-grenade_cooldown = null
-_move_direction = null
-_position_before = null
-_position_after = null
-_velocity_before = null
-_last_position_received = null
-_last_velocity_received = null
-_last_update_time = null
-_predicted_position = null
-network_position_interpolation_duration = null
-_smoothed_input = null
-_last_velocity_before = null
 
 [node name="CharacterCollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -2951,6 +2931,7 @@ replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
+[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 
 [editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
 [editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]

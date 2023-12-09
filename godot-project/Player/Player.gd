@@ -526,3 +526,8 @@ func _on_multiplayer_synchronizer_delta_synchronized(delta_data):
 	target_position = delta_data.get("position", Vector3.ZERO)
 	print("target_position", target_position)
 
+
+
+func _on_multiplayer_synchronizer_synchronized():
+	print("---------------MulitplayerSynchronizer.syncronized!!!!----------------")
+	pass # Replace with function body.
