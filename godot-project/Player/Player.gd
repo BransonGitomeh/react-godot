@@ -272,19 +272,19 @@ func _physics_process(delta: float) -> void:
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
-		print("Looking at ", $MultiplayerSynchronizer.get_multiplayer_authority())
+		
 		if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-			return
-			
+			print(multiplayer.get_unique_id() ," _update_position_with_input and _predict_and_set_network_player_position ", $MultiplayerSynchronizer.get_multiplayer_authority())
 			# Update position with input
 			_update_position_with_input(delta, _smoothed_input)
 
 			# Predict and set network player's position
 			_predict_and_set_network_player_position(delta)
-			return
+			#return
 
 	  # Client-side processing
 		else:
+			print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority())
 			# Store previous predicted velocity
 			_predicted_velocity_previous = _predicted_velocity
 
