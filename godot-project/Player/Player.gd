@@ -259,7 +259,6 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
 
-
 var interpolated_position;
 var _velocity_history := []
 func _physics_process(delta: float) -> void:
@@ -274,7 +273,7 @@ func _physics_process(delta: float) -> void:
 		print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
 		
 		if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-			print(multiplayer.get_unique_id() ," _update_position_with_input and _predict_and_set_network_player_position ", $MultiplayerSynchronizer.get_multiplayer_authority())
+			print(multiplayer.get_unique_id() ," _update_position_with_input and _predict_and_set_network_player_position ", $MultiplayerSynchronizer.get_multiplayer_authority()," _smoothed_input ", _smoothed_input)
 			# Update position with input
 			_update_position_with_input(delta, _smoothed_input)
 
@@ -282,20 +281,20 @@ func _physics_process(delta: float) -> void:
 			_predict_and_set_network_player_position(delta)
 			#return
 
-	  # Client-side processing
-		else:
-			print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority())
-			# Store previous predicted velocity
-			_predicted_velocity_previous = _predicted_velocity
+	# Client-side processing
+	else:
+		print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+		# Store previous predicted velocity
+		_predicted_velocity_previous = _predicted_velocity
 
-			# Update predicted velocity (client-side only)
-			_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
-			# Predict future positions (client-side only)
-			_predict_future_positions(delta)
+		# Update predicted velocity (client-side only)
+		_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+		# Predict future positions (client-side only)
+		_predict_future_positions(delta)
 
-			# Move client smoothly with collision detection
-			_move_client_smoothly(delta)
-			#return
+		# Move client smoothly with collision detection
+		_move_client_smoothly(delta)
+		#return
 
 	  # Store velocity history for client-side prediction
 		_velocity_history.append(velocity.normalized())
@@ -344,6 +343,49 @@ func _physics_process(delta: float) -> void:
 		if is_aiming:
 			_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 
+	# Set aiming camera and UI
+		if is_aiming:
+			_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
+			_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
+			_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
+			_ui_aim_recticle.visible = true
+		else:
+			_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
+			_grenade_aim_controller.throw_direction = _last_strong_direction
+			_grenade_aim_controller.from_look_position = global_position
+			_ui_aim_recticle.visible = false
+
+		# Update attack state and position
+
+		_shoot_cooldown_tick += delta
+		_grenade_cooldown_tick += delta
+		
+		if is_just_jumping:
+			velocity.y += jump_initial_impulse
+		elif is_air_boosting:
+			velocity.y += jump_additional_force * delta
+
+		# Set character animation
+		if is_just_jumping:
+			_character_skin.jump.rpc()
+			#_character_skin.jump()
+		elif not is_on_floor() and velocity.y < 0:
+			_character_skin.fall.rpc()
+			#_character_skin.fall()
+		elif is_on_floor():
+			var xz_velocity := Vector3(velocity.x, 0, velocity.z)
+			if xz_velocity.length() > stopping_speed:
+				_character_skin.set_moving.rpc(true)
+				#_character_skin.set_moving(true)
+				_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+			else:
+				_character_skin.set_moving.rpc(false)
+
+				#_character_skin.set_moving(false)
+
+		if is_just_on_floor:
+			_landing_sound.play()
+		
 		# Input smoothing using moving average
 		_input_buffer.append(_last_strong_direction)
 		while _input_buffer.size() > INPUT_BUFFER_SIZE:
@@ -370,22 +412,8 @@ func _physics_process(delta: float) -> void:
 					if _grenade_cooldown_tick > grenade_cooldown:
 						_grenade_cooldown_tick = 0.0
 						_grenade_aim_controller.throw_grenade()
-		var position_before := global_position
-		_position_before = position_before
-		move_and_slide()
-		var position_after := global_position
-		_position_after = position_after
-
-		# If velocity is not 0 but the difference of positions after move_and_slide is,
-		# character might be stuck somewhere!
-		var delta_position := position_after - position_before
-		var epsilon := 0.001
-		if delta_position.length() < epsilon and velocity.length() > epsilon:
-			global_position += get_wall_normal() * 0.1
-			
-		# smoothen rotation
-		current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-		_rotation_root.transform.basis = Basis(current_rotation_basis)
+		
+	
 
 		
 
