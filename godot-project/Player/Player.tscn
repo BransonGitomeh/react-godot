@@ -2697,14 +2697,19 @@ properties/10/replication_mode = 1
 properties/11/path = NodePath(".:_last_velocity_before")
 properties/11/spawn = true
 properties/11/replication_mode = 1
+properties/12/path = NodePath(".:_predicted_positions")
+properties/12/spawn = true
+properties/12/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_rvo1c")
+move_speed = 6.0
 bullet_speed = 14.0
-acceleration = 6.0
+acceleration = 1.0
+network_position_interpolation_duration = 60.0
 
 [node name="CharacterCollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

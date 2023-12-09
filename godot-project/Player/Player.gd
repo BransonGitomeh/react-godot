@@ -80,7 +80,7 @@ const INPUT_BUFFER_SIZE: int = 10
 @export var _predicted_position: Vector3
 
 # Constants for interpolation
-@export var network_position_interpolation_duration: float = 10.0
+@export var network_position_interpolation_duration: float = 1000.0
 
 # Flag to determine if the player has authority
 var has_authority: bool = false
@@ -89,6 +89,8 @@ var has_authority: bool = false
 @export var _smoothed_input: Vector3 = Vector3.ZERO
 
 @export var _last_velocity_before: Vector3
+
+@export var _predicted_positions : Array = []
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -118,6 +120,22 @@ func ease_out_quartic(t: float) -> float:
 func interpolate_quadratic(p0, p1, p2, t):
 	var u : float= 1.0 - t
 	return u * u * p0 + 2 * u * t * p1 + t * t * p2
+
+
+func interpolate_cubic(p0, p1, p2, p3, t):
+	var u : float= 1.0 - t
+	var tt : float= t * t
+	var uu : float= u * u
+	var uuu : float= uu * u
+	var ttt : float= tt * t
+
+	var p : Vector3 = uuu * p0  # (1-t)^3 * p0
+	p += 3 * uu * t * p1        # 3 * (1-t)^2 * t * p1
+	p += 3 * u * tt * p2        # 3 * (1-t) * t^2 * p2
+	p += ttt * p3               # t^3 * p3
+
+	return p
+
 
 var interpolated_position;
 var _velocity_history := []
@@ -220,45 +238,40 @@ func _physics_process(delta: float) -> void:
 		# Store last known velocity for extrapolation
 		_last_velocity_before = _velocity_before
 
-	 	# Handle input and update position
+		# Handle input and update position
 		_update_position_with_input(delta, _smoothed_input)
 
 		# Quadratic interpolation for position prediction
-		var t :float= clamp(delta / network_position_interpolation_duration, 0, 1)
+		var t : float = clamp(delta / network_position_interpolation_duration, 0, 1)
 		
 		var calculated_predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
 
 		if _predicted_position != Vector3.ZERO:
 			_predicted_position = calculated_predicted_position
-			
-
-			## Print statements for debugging
-			#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-			#print("Last Velocity Before:", _last_velocity_before)
-			#print("Global Position Before:", global_position)
-			#print("Delta:", delta)
-			#print("Predicted Position:", _predicted_position)
-			
-			
 			# Set the network player's position to the predicted position
 			global_position = _predicted_position
-			return;
-	
+
 	# Interpolation for smooth movement on the client
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
-		var t = clamp(delta / network_position_interpolation_duration*2, 0, 1)
-		t = 1 - pow(1 - t, 2)
-
+		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
+		t = 1 - pow(1 - t, network_position_interpolation_duration)
+		
 		# Quadratic interpolation between positions
 		interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
-		#print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
-		
+
 		if interpolated_position == Vector3.ZERO:
-			return;
-		# Set the client's position to the interpolated position
+			return
+
+		# Set the client's position to the interpolated position smoothly
 		global_position = interpolated_position
-		return;
+
+		# Predict the next positions on the client
+		_predicted_positions.clear()
+		for i in range(3):
+			t = clamp((delta * (i + 1)) / network_position_interpolation_duration, 0, 1)
+			_predicted_positions.append(interpolate_quadratic(_position_before, _predicted_position, _position_after, t))
+
 
 
 	# We separate out the y velocity to not interpolate on the gravity
