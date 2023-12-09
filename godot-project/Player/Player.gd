@@ -91,6 +91,8 @@ var has_authority: bool = false
 @export var _last_velocity_before: Vector3
 
 @export var _predicted_positions : Array = []
+# Add this variable to store predicted velocity
+@export var _predicted_velocity: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -140,6 +142,7 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 var interpolated_position;
 var _velocity_history := []
 func _physics_process(delta: float) -> void:
+	
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		if not multiplayer.is_server():
 			# This code only runs on the client side
@@ -251,12 +254,11 @@ func _physics_process(delta: float) -> void:
 			# Set the network player's position to the predicted position
 			move_and_collide(_predicted_position - global_position)
 			return
-
-	# Interpolation for smooth movement on the client
+			
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-		t = 1 - pow(1 - t, 10)  # Adjust the exponent for smoother interpolation
+		t = 1 - pow(1 - t, -10)  # Adjust the exponent for smoother interpolation
 		
 		# Quadratic interpolation between positions
 		interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
@@ -264,15 +266,23 @@ func _physics_process(delta: float) -> void:
 		if interpolated_position == Vector3.ZERO:
 			return
 
+		# Calculate constant acceleration
+		var acceleration = (_predicted_position - _position_before - (_predicted_position - _position_after)) / (2 * delta)
+
+		# Predict velocity based on constant acceleration
+		_predicted_velocity = _predicted_velocity + acceleration * delta
+
+		# Predict position based on constant velocity
+		_predicted_position = interpolated_position + _predicted_velocity * delta + 0.5 * acceleration * delta^2
+
 		# Move the client's position smoothly
-		move_and_collide(interpolated_position - global_position)
+		move_and_collide(_predicted_position - global_position)
 
 		# Predict the next positions on the client
 		_predicted_positions.clear()
-		for i in range(3):
+		for i in range(10):
 			t = clamp((delta * (i + 1)) / network_position_interpolation_duration, 0, 1)
 			_predicted_positions.append(interpolate_quadratic(_position_before, _predicted_position, _position_after, t))
-
 
 
 
