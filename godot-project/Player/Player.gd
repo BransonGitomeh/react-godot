@@ -176,6 +176,30 @@ func _physics_process(delta: float) -> void:
 		
 	_orient_character_to_direction(_smoothed_input, delta)
 	
+	# Extrapolation for predicting position on the server
+	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+		# Store last known velocity for extrapolation
+		var _last_velocity_before = _velocity_before
+
+		# Handle input and update position
+		_update_position_with_input(delta, _smoothed_input)
+
+		# Predict position using extrapolation based on the last known velocity
+		_predicted_position = global_position + _last_velocity_before * delta
+
+		# Print statements for debugging
+		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+		print("Last Velocity Before:", _last_velocity_before)
+		print("Global Position Before:", global_position)
+		print("Delta:", delta)
+		print("Predicted Position:", _predicted_position)
+
+		# Set the network player's position to the predicted position on the server
+		global_position = _predicted_position
+		
+		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
+	
+	
 	# Interpolation for smooth movement
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
@@ -185,6 +209,7 @@ func _physics_process(delta: float) -> void:
 		# Interpolate between positions using _predicted_position
 		print($MultiplayerSynchronizer.get_multiplayer_authority()," _predicted_position => ", _predicted_position)
 		global_position = _position_before.lerp(_predicted_position, t)
+		
 		return;
 
 	# We separate out the y velocity to not interpolate on the gravity
@@ -274,30 +299,29 @@ func _physics_process(delta: float) -> void:
 		_rotation_root.transform.basis = current_rotation_basis
 			# Extrapolation for predicting position
 	
-	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		# Store last known velocity for extrapolation
-		var _last_velocity_before = _velocity_before
-
-		# Handle input and update position
-		_update_position_with_input(delta, _smoothed_input)
-
-		# Predict position using extrapolation based on the last known velocity
-		_predicted_position = global_position + _last_velocity_before * delta
-
-		# Print statements for debugging
-		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
-		print("Last Velocity Before:", _last_velocity_before)
-		print("Global Position Before:", global_position)
-		print("Delta:", delta)
-		print("Predicted Position:", _predicted_position)
-
-		# Set the network player's position to the predicted position
-		global_position = _predicted_position
+	#if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+		## Store last known velocity for extrapolation
+		#var _last_velocity_before = _velocity_before
+#
+		## Handle input and update position
+		#_update_position_with_input(delta, _smoothed_input)
+#
+		## Predict position using extrapolation based on the last known velocity
+		#_predicted_position = global_position + _last_velocity_before * delta
+#
+		## Print statements for debugging
+		#print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
+		#print("Last Velocity Before:", _last_velocity_before)
+		#print("Global Position Before:", global_position)
+		#print("Delta:", delta)
+		#print("Predicted Position:", _predicted_position)
+#
+		## Set the network player's position to the predicted position
+		#global_position = _predicted_position
 
 
 		
-		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
-	
+
 
 @rpc
 func attack() -> void:
