@@ -85,6 +85,10 @@ var network_position_interpolation_duration: float = 0.1
 # Flag to determine if the player has authority
 var has_authority: bool = false
 
+# Declare predicted_position and smoothed_input at a higher scope
+var predicted_position: Vector3 = Vector3.ZERO
+var smoothed_input: Vector3 = Vector3.ZERO
+
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
@@ -111,7 +115,7 @@ func ease_out_quartic(t: float) -> float:
 
 func _physics_process(delta: float) -> void:
 	_velocity_before = velocity.normalized()
-	var smoothed_input = Vector3.ZERO
+	
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
 		for collision_result in _ground_shapecast.collision_result:
@@ -158,17 +162,17 @@ func _physics_process(delta: float) -> void:
 
 	
 	# Interpolation for smooth movement
-	# Calculate interpolation factor
+# Calculate interpolation factor
 	var t = clamp(delta / network_position_interpolation_duration, 0, 1)
 	t = 1 - pow(1 - t, 0.5)
 
-	# Interpolate between positions
-	global_position = _position_before.lerp(global_position, t)
+	# Interpolate between positions using _predicted_position
+	global_position = _position_before.lerp(predicted_position, t)
 
 	# Update rotation with interpolation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	current_rotation_basis.orthonormalized()
 	_rotation_root.transform.basis = current_rotation_basis
-	return;
 
 	# We separate out the y velocity to not interpolate on the gravity
 	var y_velocity := velocity.y
@@ -392,6 +396,12 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	move_and_slide()
 
 	# ... (Other parts of the function remain unchanged)
+	
+	# Set the global predicted_position variable
+	predicted_position = global_position + _velocity_before * delta
+	print("Predicted Position:", predicted_position)
+	print("Velocity Before:", _velocity_before)
+	print("Smoothed Input:", smoothed_input)
 
 
 ## Used to register required input actions when copying this character to a different project.
