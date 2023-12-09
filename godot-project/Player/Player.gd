@@ -143,8 +143,8 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 	
 func _predict_and_set_network_player_position(delta):
   # Log client and server timestamps, multiplayer ID
-	print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system(), "Position:", global_position)
-	print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
+	# print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system(), "Position:", global_position)
+	# print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
 
 	# Calculate time since last update
 	var time_since_update = delta
@@ -211,8 +211,9 @@ func _move_client_smoothly(delta):
 
 	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
-
-	velocity.y = y_velocity
+		
+	if(velocity.y != _predicted_velocity.y):
+		velocity.y = y_velocity
 
 	# Store the predicted position based on the client's input
 	_predicted_position = global_position + velocity * delta
@@ -234,23 +235,24 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	if move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
 
-	velocity.y = y_velocity
+	if(velocity.y != _predicted_velocity.y):
+		velocity.y = y_velocity
 
 	velocity.y += _gravity * delta
 
-	var position_before := global_position
+	_position_before = global_position
 
 	# Move and slide on the server side
 	move_and_slide()
 
-	var position_after := global_position
+	_position_after = global_position
 
 	# If there's a significant position change, adjust the predicted position on the client
-	var delta_position := position_after - position_before
+	var delta_position := _position_after - _position_before
 	var epsilon := 0.001
 	if delta_position.length() > epsilon:
 		# Notify the client about the authoritative position
-		_predicted_position = position_after
+		_predicted_position = _position_after
 
 	# Smoothen rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
@@ -274,7 +276,7 @@ func _physics_process(delta: float) -> void:
 
 		# Predict and set network player's position
 		_predict_and_set_network_player_position(delta)
-		#return
+		return
 
   # Client-side processing
 	else:
