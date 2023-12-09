@@ -174,6 +174,7 @@ func _physics_process(delta: float) -> void:
 		t = 1 - pow(1 - t, 2)
 
 		# Interpolate between positions using _predicted_position
+		print($MultiplayerSynchronizer.get_multiplayer_authority()," _predicted_position => ", _predicted_position)
 		global_position = _position_before.lerp(_predicted_position, t)
 		return;
 
@@ -276,6 +277,8 @@ func _physics_process(delta: float) -> void:
 
 		# Set the network player's position to the predicted position
 		global_position = _predicted_position
+		
+		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
 	
 
 @rpc
