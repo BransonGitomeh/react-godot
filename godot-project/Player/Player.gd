@@ -224,8 +224,7 @@ func _move_client_smoothly(delta):
 
 # On the server side
 func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		return
+	
 	# Apply input to movement
 	var move_direction = input_vector.normalized()
 
@@ -273,6 +272,8 @@ func _physics_process(delta: float) -> void:
 
   # Handle input and update position if server
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+		if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+			return
 		# Update position with input
 		_update_position_with_input(delta, _smoothed_input)
 
