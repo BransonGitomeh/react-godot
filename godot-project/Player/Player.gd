@@ -77,10 +77,10 @@ var current_position: Vector3 = Vector3.ZERO
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
 
-var _predicted_position: Vector3 = Vector3.ZERO
+@export var _predicted_position: Vector3 = Vector3.ZERO
 
 # Constants for interpolation
-var network_position_interpolation_duration: float = 0.1
+@export var network_position_interpolation_duration: float = 5.0
 
 # Flag to determine if the player has authority
 var has_authority: bool = false
@@ -167,14 +167,11 @@ func _physics_process(delta: float) -> void:
 		
 	_orient_character_to_direction(_smoothed_input, delta)
 	
-	var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
-
-	
 	# Interpolation for smooth movement
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-		t = 1 - pow(1 - t, 0.5)
+		t = 1 - pow(1 - t, 2)
 
 		# Interpolate between positions using _predicted_position
 		global_position = _position_before.lerp(_predicted_position, t)

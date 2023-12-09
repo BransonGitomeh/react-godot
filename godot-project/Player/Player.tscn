@@ -2691,6 +2691,9 @@ properties/8/replication_mode = 1
 properties/9/path = NodePath(".:_smoothed_input")
 properties/9/spawn = true
 properties/9/replication_mode = 1
+properties/10/path = NodePath(".:_predicted_position")
+properties/10/spawn = true
+properties/10/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
