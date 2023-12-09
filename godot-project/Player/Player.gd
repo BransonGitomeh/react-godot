@@ -288,8 +288,9 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	
 	return
 
-var time_since_update
+
 func _client_process(delta: float) -> void:
+	var time_since_update:=delta
 	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
 	_predicted_velocity_previous = _predicted_velocity
@@ -334,14 +335,18 @@ func _handle_local_input(delta: float) -> void:
 
 	_is_on_floor_buffer = is_on_floor()
 	_move_direction = _get_camera_oriented_input()
-
+	
+	print("_move_direction", _move_direction)
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
 	if _move_direction.length() > 0.2:
 		_last_strong_direction = _move_direction.normalized()
 	if is_aiming:
 		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
-
+	
+	_orient_character_to_direction(_last_strong_direction, delta)
+	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		return;
 	# Set aiming camera and UI
 	if is_aiming:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
@@ -411,7 +416,7 @@ func _handle_local_input(delta: float) -> void:
 				if _grenade_cooldown_tick > grenade_cooldown:
 					_grenade_cooldown_tick = 0.0
 					_grenade_aim_controller.throw_grenade()
-	time_since_update = delta
+	#time_since_update = delta
 	
 
 		
