@@ -114,6 +114,7 @@ func ease_out_quartic(t: float) -> float:
 
 func _physics_process(delta: float) -> void:
 	_velocity_before = velocity.normalized()
+	print("Client" + str($MultiplayerSynchronizer.get_multiplayer_authority()) +  " setting _velocity_before " + str(_velocity_before))
 	
 	# Calculate ground height for camera controller
 	if _ground_shapecast.get_collision_count() > 0:
