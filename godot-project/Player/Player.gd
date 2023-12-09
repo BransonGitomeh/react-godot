@@ -86,7 +86,7 @@ var network_position_interpolation_duration: float = 0.1
 var has_authority: bool = false
 
 # Declare predicted_position and smoothed_input at a higher scope
-var smoothed_input: Vector3 = Vector3.ZERO
+@export var _smoothed_input: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -146,32 +146,38 @@ func _physics_process(delta: float) -> void:
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
 	# Input smoothing using moving average
-	_input_buffer.append(_move_direction)
-	while _input_buffer.size() > INPUT_BUFFER_SIZE:
-		_input_buffer.pop_front()
-	for input_vector in _input_buffer:
-		smoothed_input += input_vector
-	if _input_buffer.size() > 0:
-		smoothed_input /= _input_buffer.size()
-
+	#_input_buffer.append(_move_direction)
+	#while _input_buffer.size() > INPUT_BUFFER_SIZE:
+		#_input_buffer.pop_front()
+	#for input_vector in _input_buffer:
+		#smoothed_input += input_vector
+	#if _input_buffer.size() > 0:
+		#smoothed_input /= _input_buffer.size()
+#
 	# Use smoothed input for orientation
-	_orient_character_to_direction(smoothed_input, delta)
+	#_orient_character_to_direction(smoothed_input, delta)
+	# To not orient quickly to the last input, we save a last strong direction,
+	# this also ensures a good normalized value for the rotation basis.
+	if _move_direction.length() > 0.2:
+		_last_strong_direction = _move_direction.normalized()
+	if is_aiming:
+		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+
+	_smoothed_input=_last_strong_direction
+	_orient_character_to_direction(_last_strong_direction, delta)
 	
 	var network_position_interpolation_duration: float = 1.0 # Adjust the duration based on your preference
 
 	
 	# Interpolation for smooth movement
-# Calculate interpolation factor
-	var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-	t = 1 - pow(1 - t, 0.5)
+	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		# Calculate interpolation factor
+		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
+		t = 1 - pow(1 - t, 0.5)
 
-	# Interpolate between positions using _predicted_position
-	global_position = _position_before.lerp(_predicted_position, t)
-
-	# Update rotation with interpolation
-	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	current_rotation_basis.orthonormalized()
-	_rotation_root.transform.basis = current_rotation_basis
+		# Interpolate between positions using _predicted_position
+		global_position = _position_before.lerp(_predicted_position, t)
+		return;
 
 	# We separate out the y velocity to not interpolate on the gravity
 	var y_velocity := velocity.y
@@ -264,7 +270,7 @@ func _physics_process(delta: float) -> void:
 		_velocity_before = velocity.normalized()
 
 		# Handle input and update position
-		_update_position_with_input(delta, smoothed_input)
+		_update_position_with_input(delta, _smoothed_input)
 
 		# Predict position using extrapolation
 		_predicted_position = global_position + _velocity_before * delta
@@ -400,7 +406,7 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	_predicted_position = global_position + _velocity_before * delta
 	print("Predicted Position:", _predicted_position)
 	print("Velocity Before:", _velocity_before)
-	print("Smoothed Input:", smoothed_input)
+	print("Smoothed Input:", _smoothed_input)
 
 
 ## Used to register required input actions when copying this character to a different project.
