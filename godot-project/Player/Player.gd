@@ -320,6 +320,10 @@ func _physics_process(delta: float) -> void:
 	
 	  # Handle local player input (client-side only)
 	else:
+		# server is not a player
+		if multiplayer.get_unique_id() == 1:
+			return;
+			
 		print("Handling Local Input For: ", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
 		# Get input and movement state
