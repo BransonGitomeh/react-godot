@@ -86,7 +86,6 @@ var network_position_interpolation_duration: float = 0.1
 var has_authority: bool = false
 
 # Declare predicted_position and smoothed_input at a higher scope
-var predicted_position: Vector3 = Vector3.ZERO
 var smoothed_input: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
@@ -167,7 +166,7 @@ func _physics_process(delta: float) -> void:
 	t = 1 - pow(1 - t, 0.5)
 
 	# Interpolate between positions using _predicted_position
-	global_position = _position_before.lerp(predicted_position, t)
+	global_position = _position_before.lerp(_predicted_position, t)
 
 	# Update rotation with interpolation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
@@ -268,10 +267,10 @@ func _physics_process(delta: float) -> void:
 		_update_position_with_input(delta, smoothed_input)
 
 		# Predict position using extrapolation
-		var predicted_position = global_position + _velocity_before * delta
+		_predicted_position = global_position + _velocity_before * delta
 
 		# Set the network player's position to the predicted position
-		global_position = predicted_position
+		global_position = _predicted_position
 	
 
 @rpc
@@ -398,8 +397,8 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	# ... (Other parts of the function remain unchanged)
 	
 	# Set the global predicted_position variable
-	predicted_position = global_position + _velocity_before * delta
-	print("Predicted Position:", predicted_position)
+	_predicted_position = global_position + _velocity_before * delta
+	print("Predicted Position:", _predicted_position)
 	print("Velocity Before:", _velocity_before)
 	print("Smoothed Input:", smoothed_input)
 
