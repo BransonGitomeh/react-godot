@@ -115,6 +115,11 @@ func ease_out_quartic(t: float) -> float:
 	return 1.0 - pow(1.0 - t, 0.1)
 
 
+func interpolate_quadratic(p0, p1, p2, t):
+	var u : float= 1.0 - t
+	return u * u * p0 + 2 * u * t * p1 + t * t * p2
+
+var interpolated_position;
 var _velocity_history := []
 func _physics_process(delta: float) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
@@ -198,16 +203,29 @@ func _physics_process(delta: float) -> void:
 		
 	_orient_character_to_direction(_smoothed_input, delta)
 	
+	## Interpolation for smooth movement on the client
+	#if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		## Calculate interpolation factor
+		#var t = clamp(delta / network_position_interpolation_duration, 0, 1)
+		#t = 1 - pow(1 - t, 2)
+#
+		## Interpolate between positions using _predicted_position
+		#interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
+		#print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
+		#global_position = interpolated_position
+		#return;
+	
 	# Extrapolation for predicting position on the server
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
 		# Store last known velocity for extrapolation
 		_last_velocity_before = _velocity_before
 
-		# Handle input and update position
+	 	# Handle input and update position
 		_update_position_with_input(delta, _smoothed_input)
 
-		# Predict position using extrapolation based on the last known velocity
-		_predicted_position = global_position + _last_velocity_before * delta
+		# Quadratic interpolation for position prediction
+		var t :float= clamp(delta / network_position_interpolation_duration, 0, 1)
+		_predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
 
 		# Print statements for debugging
 		print("Client Id:", $MultiplayerSynchronizer.get_multiplayer_authority())
@@ -216,23 +234,23 @@ func _physics_process(delta: float) -> void:
 		print("Delta:", delta)
 		print("Predicted Position:", _predicted_position)
 
-		# Set the network player's position to the predicted position on the server
+		# Set the network player's position to the predicted position
 		global_position = _predicted_position
-		
-		print(multiplayer.get_unique_id()," ... ", $MultiplayerSynchronizer.get_multiplayer_authority(), " server _predicted_position =>", _predicted_position)
 	
-	
-	# Interpolation for smooth movement
+	# Interpolation for smooth movement on the client
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		# Calculate interpolation factor
 		var t = clamp(delta / network_position_interpolation_duration, 0, 1)
 		t = 1 - pow(1 - t, 2)
 
-		# Interpolate between positions using _predicted_position
-		print($MultiplayerSynchronizer.get_multiplayer_authority()," _predicted_position => ", _predicted_position)
-		global_position = _position_before.lerp(_predicted_position, t)
+		# Quadratic interpolation between positions
+		interpolated_position = interpolate_quadratic(_position_before, _predicted_position, _position_after, t)
+		print($MultiplayerSynchronizer.get_multiplayer_authority(), " interpolated_position => ", interpolated_position)
 		
+		# Set the client's position to the interpolated position
+		global_position = interpolated_position
 		return;
+
 
 	# We separate out the y velocity to not interpolate on the gravity
 	var y_velocity := velocity.y
