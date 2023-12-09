@@ -88,13 +88,13 @@ var has_authority: bool = false
 # Declare predicted_position and smoothed_input at a higher scope
 @export var _smoothed_input: Vector3 = Vector3.ZERO
 
-@export var _last_velocity_before: Vector3
+@export var _last_velocity_before: Vector3 = Vector3.ZERO
 
 @export var _predicted_positions : Array = []
 # Add this variable to store predicted velocity
 @export var _predicted_velocity: Vector3 = Vector3.ZERO
-@export var _predicted_velocity_current: Vector3
-@export var _predicted_velocity_previous: Vector3
+@export var _predicted_velocity_current: Vector3 = Vector3.ZERO
+@export var _predicted_velocity_previous: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -142,33 +142,24 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 	
 	
 func _predict_and_set_network_player_position(delta):
-  # Log client and server timestamps, multiplayer ID
-	# print("Client:", $MultiplayerSynchronizer.get_multiplayer_authority(), "Timestamp:", Time.get_datetime_string_from_system(), "Position:", global_position)
-	# print("Server:", multiplayer.get_unique_id(), "Timestamp:", Time.get_datetime_string_from_system())
-
-	# Calculate time since last update
-	var time_since_update = delta
-
-	# Calculate t for interpolation
-	var t = clamp(delta / network_position_interpolation_duration, 0, 1)
-
-	# Calculate predicted position based on client input (if not server)
-	var predicted_position: Vector3
+	# Only predict on server if it's not the authoritative player
 	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
-		predicted_position = global_position + _last_velocity_before * delta
+		# Calculate time since last update
+		var time_since_update = delta
+
+		# Calculate predicted position
+		var predicted_position = global_position + _last_velocity_before * delta
+
+		# Set network player's position
+		global_position = predicted_position
+
+		# Save predicted position and velocity
+		_predicted_position = predicted_position
+		_predicted_velocity = (_position_after - _position_before) / time_since_update
 	else:
-		# Client prediction
-		predicted_position = interpolate_quadratic(global_position, global_position + _last_velocity_before * delta, global_position + _last_velocity_before * (delta * 2), t)
+		# No prediction needed on clients or server for authoritative player
+		pass
 
-	# Log predicted position
-	print("Predicted Position:", predicted_position)
-
-	# Set network player's position
-	global_position = predicted_position
-
-	# Save predicted position and velocity for future calculations
-	_predicted_position = predicted_position
-	_predicted_velocity = (_position_after - _position_before) / time_since_update
 
 
 func _update_predicted_velocity(time_since_update, _position_before, _position_after, delta):
