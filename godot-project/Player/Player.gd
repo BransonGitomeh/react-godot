@@ -196,58 +196,58 @@ func _get_latency_compensation() -> float:
 
 var _last_position_received_previous;	
 
+# Constants
+var INTERPOLATION_FACTOR: float = 0.1  # Adjust as needed
+var DEAD_RECKONING_FACTOR: float = 0.5  # Adjust as needed
+
+# Variables
+var _predicted_position_index: int = 0
+var _interpolation_start_position: Vector3 = Vector3.ZERO
+
 func _move_network_client_smoothly(delta: float) -> void:
-	# Calculate time since last update
-	_time_since_last_update += delta
-	var _target_position: Vector3
-	var movement_vector = Vector3.ZERO
-	
-	
-	# Check if there are predicted positions available
+	var time_since_update = delta
+
 	if _predicted_positions.size() > 0:
-		# Get the predicted position for the current time
-		var target_position = _predicted_positions[0]
+		var target_position = _predicted_positions[_predicted_position_index]
+		
+		
 
-		# Calculate the movement vector towards the target position
-		movement_vector = target_position - global_position
+		# Interpolate between current position and target position
+		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
+		global_position = interpolated_position
 
+		# Update the interpolation start position for the next frame
+		_interpolation_start_position = global_position
+
+		# Increment index for the next predicted position
+		_predicted_position_index = (_predicted_position_index + 1) % _predicted_positions.size()
 	else:
-		# No predicted positions, use dead reckoning
-		movement_vector = _velocity_before * _time_since_last_update
+		# Dead reckoning when no predicted positions are available
+		global_position += _velocity_before * DEAD_RECKONING_FACTOR * time_since_update
 
-	# Apply latency compensation
-	movement_vector *= _get_latency_compensation()
-	# Limit movement speed
-	movement_vector =  movement_vector.clamp(
-		Vector3.ZERO, movement_vector.normalized() * move_speed * _time_since_last_update
-	)
+		if _last_position_received != global_position:
+			# Client-side prediction error correction
+			var prediction_error = _last_position_received - global_position
+			global_position += prediction_error * 0.2  # Adjust the correction factor as needed
 
-	# Perform client-side prediction error correction
-	if _last_position_received != Vector3.ZERO:
-		movement_vector += _last_position_received - _target_position
+	# Calculate the movement vector towards the target position
+	var movement_vector = global_position - _interpolation_start_position
 
-	# Interpolate between current and target positions
-	global_position = lerp(global_position, _target_position, network_position_interpolation_duration)
+	if _velocity_before != Vector3.ZERO:
+		movement_vector = movement_vector.clamp(Vector3.ZERO, movement_vector.normalized() * move_speed * time_since_update)
 
-	# Move the client using KinematicCollision2D
+	# Latency compensation
+	movement_vector /= max(1.0, time_since_update)
 
 	var collision = move_and_collide(movement_vector)
 
-	# Update position based on the collision
 	if collision:
 		var travel = collision.get_travel()
 		global_position.x += travel.x
 		global_position.z += travel.z
 		global_position.y = 0.0
 
-	# Update last received position and velocity
-	_last_position_received = global_position
-	_velocity_before = movement_vector / _time_since_last_update
-
-	# Update predicted positions
-	#if _predicted_positions.size() > 0:
 	_predicted_positions.pop_front()
-		
 		
 # On the client side
 func _move_client_smoothly(delta):
@@ -348,11 +348,11 @@ func _server_process(delta: float, time_since_update: float) -> void:
 			has_velocity_changed = true
 			break
 		
-	if has_velocity_changed:
-		_velocity_before = velocity.normalized()
+	#if has_velocity_changed:
+	_velocity_before = velocity.normalized()
 
-		# Log updated _velocity_before
-		print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	# Log updated _velocity_before
+	print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 	
 	return
 
