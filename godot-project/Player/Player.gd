@@ -230,7 +230,7 @@ func _move_network_client_smoothly(delta: float) -> void:
 		var max_correction_distance = move_speed * _time_since_last_update
 
 		var desired_movement = prediction_error.normalized() * max_correction_distance
-		var actual_movement = desired_movement.clamped(Vector3.ZERO, desired_movement)
+		var actual_movement = desired_movement.clamp(Vector3.ZERO, desired_movement)
 
 		global_position += actual_movement
 		
