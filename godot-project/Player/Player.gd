@@ -285,6 +285,7 @@ func _move_client_smoothly(delta):
 	move_and_slide()
 
 	_position_after = global_position
+	_last_position_received = _position_after
 	
 	# Store the predicted position based on the client's input
 	_predicted_position = global_position + velocity * delta
