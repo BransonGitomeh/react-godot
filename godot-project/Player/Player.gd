@@ -208,26 +208,15 @@ var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
 
 func _move_network_client_smoothly(delta: float) -> void:
-	var time_since_update = delta
-	
-	var MAX_ALLOWED_DISTANCE: float = move_speed * INTERPOLATION_FACTOR
-
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
 		_predicted_position_index = _predicted_position_index % _predicted_positions.size()
 
 		var target_position = _predicted_positions[_predicted_position_index]
 
-		# Check if the change is too drastic
-		var distance_to_target = global_position.distance_to(target_position)
-		
-		if distance_to_target < MAX_ALLOWED_DISTANCE:
-			# Interpolate between current position and target position
-			var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
-			global_position = interpolated_position
-		else:
-			# Directly set the position if the change is too drastic
-			global_position = target_position
+		# Interpolate between current position and target position
+		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
+		global_position = interpolated_position
 
 		# Update the interpolation start position for the next frame
 		_interpolation_start_position = global_position
@@ -237,7 +226,7 @@ func _move_network_client_smoothly(delta: float) -> void:
 
 	else:
 		# Dead reckoning when no predicted positions are available
-		global_position += _velocity_before * DEAD_RECKONING_FACTOR * time_since_update
+		global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
 
 		if _last_position_received != global_position:
 			# Client-side prediction error correction
@@ -248,10 +237,10 @@ func _move_network_client_smoothly(delta: float) -> void:
 	var movement_vector = global_position - _interpolation_start_position
 
 	if _velocity_before != Vector3.ZERO:
-		movement_vector = movement_vector.clamp(Vector3.ZERO, movement_vector.normalized() * move_speed * time_since_update)
+		movement_vector = movement_vector.clamp(Vector3.ZERO, movement_vector.normalized() * move_speed * _time_since_last_update)
 
 	# Latency compensation
-	movement_vector /= max(1.0, time_since_update)
+	movement_vector /= max(1.0, _time_since_last_update)
 
 	var collision = move_and_collide(movement_vector)
 
