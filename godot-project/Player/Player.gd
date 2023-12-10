@@ -207,10 +207,10 @@ var DEAD_RECKONING_FACTOR: float = 0.5  # Adjust as needed
 var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
 
-const DISTANCE_MULTIPLIER = 1.5
+const DISTANCE_MULTIPLIER = .3
 const DEAD_RECKONING_VELOCITY_WEIGHT = 0.5
-const CORRECTION_FACTOR = 0.5
-const MAX_DISTANCE_FROM_RECEIVED = 0.5
+const CORRECTION_FACTOR = 0.2
+const MAX_DISTANCE_FROM_RECEIVED = 0.01
 
 func _move_network_client_smoothly(delta: float) -> void:
 	if _predicted_positions.size() > 0:
@@ -224,14 +224,14 @@ func _move_network_client_smoothly(delta: float) -> void:
 		 # Limit distance from origin
 		var distance_from_origin = global_position.distance_to(interpolated_position)
 		var MAX_DISTANCE_FROM_ORIGIN = distance_from_origin * DISTANCE_MULTIPLIER
-		if distance_from_origin > MAX_DISTANCE_FROM_ORIGIN:
+		if distance_from_origin < MAX_DISTANCE_FROM_ORIGIN:
 			var direction = interpolated_position - global_position
 			interpolated_position = global_position + direction.normalized() * MAX_DISTANCE_FROM_ORIGIN
+	
+			global_position = interpolated_position
 
-		global_position = interpolated_position
-
-		# Update the interpolation start position for the next frame
-		_interpolation_start_position = global_position
+			# Update the interpolation start position for the next frame
+			_interpolation_start_position = global_position
 
 		# Increment index for the next predicted position
 		_predicted_position_index += 1
@@ -259,7 +259,7 @@ func _move_network_client_smoothly(delta: float) -> void:
 			var distance_from_origin = global_position.distance_to(Vector3.ZERO)
 			var distance_from_received = global_position.distance_to(_last_position_received)
 
-			if distance_from_received > MAX_DISTANCE_FROM_RECEIVED:
+			if distance_from_received < MAX_DISTANCE_FROM_RECEIVED:
 				var direction = _last_position_received - global_position
 				global_position = _last_position_received + direction.normalized() * MAX_DISTANCE_FROM_RECEIVED
 		# Calculate the movement vector towards the target position
