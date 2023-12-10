@@ -226,15 +226,26 @@ func _move_network_client_smoothly(delta: float) -> void:
 		_predicted_position_index += 1
 		previous_predicted_positions = _predicted_positions
 	else:
-		#print("DEAD_RECKONING_FACTOR ==>",previous_predicted_positions, _time_since_last_update, _last_position_received)
-		# Dead reckoning when no predicted positions are available
-		global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
-
-		if _last_position_received != global_position:
-			# Client-side prediction error correction
-			var prediction_error = _last_position_received - global_position
-			global_position += prediction_error * 0.2  # Adjust the correction factor as needed
-
+		var prediction_error = _last_position_received - global_position
+		var smoothing_factor = 0.1 # adjust as needed
+		var blended_error = prediction_error * smoothing_factor + _velocity_before * _time_since_last_update
+		global_position += blended_error
+		##print("DEAD_RECKONING_FACTOR ==>",previous_predicted_positions, _time_since_last_update, _last_position_received)
+		## Dead reckoning when no predicted positions are available
+		#global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
+		#
+		#print(_last_position_received != global_position)
+		#if _last_position_received != global_position:
+			## Client-side prediction error correction
+			#var prediction_error = _last_position_received - global_position
+			#global_position += prediction_error * 1  # Adjust the correction factor as needed
+		## Update the interpolation start position for the next frame
+		#_interpolation_start_position = global_position
+#
+		## Increment index for the next predicted position
+		#_predicted_position_index += 1
+		
+		
 	# Calculate the movement vector towards the target position
 	var movement_vector = global_position - _interpolation_start_position
 
