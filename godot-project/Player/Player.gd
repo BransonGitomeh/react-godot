@@ -209,6 +209,8 @@ var _interpolation_start_position: Vector3 = Vector3.ZERO
 
 func _move_network_client_smoothly(delta: float) -> void:
 	var time_since_update = delta
+	
+	var MAX_ALLOWED_DISTANCE: float = move_speed * INTERPOLATION_FACTOR
 
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
@@ -216,9 +218,16 @@ func _move_network_client_smoothly(delta: float) -> void:
 
 		var target_position = _predicted_positions[_predicted_position_index]
 
-		# Interpolate between current position and target position
-		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
-		global_position = interpolated_position
+		# Check if the change is too drastic
+		var distance_to_target = global_position.distance_to(target_position)
+		
+		if distance_to_target < MAX_ALLOWED_DISTANCE:
+			# Interpolate between current position and target position
+			var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
+			global_position = interpolated_position
+		else:
+			# Directly set the position if the change is too drastic
+			global_position = target_position
 
 		# Update the interpolation start position for the next frame
 		_interpolation_start_position = global_position
