@@ -207,6 +207,11 @@ var DEAD_RECKONING_FACTOR: float = 0.5  # Adjust as needed
 var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
 
+const DISTANCE_MULTIPLIER = 1.5
+const DEAD_RECKONING_VELOCITY_WEIGHT = 0.5
+const CORRECTION_FACTOR = 0.5
+const MAX_DISTANCE_FROM_RECEIVED = 0.5
+
 func _move_network_client_smoothly(delta: float) -> void:
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
@@ -216,6 +221,13 @@ func _move_network_client_smoothly(delta: float) -> void:
 
 		# Interpolate between current position and target position
 		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
+		 # Limit distance from origin
+		var distance_from_origin = global_position.distance_to(interpolated_position)
+		var MAX_DISTANCE_FROM_ORIGIN = distance_from_origin * DISTANCE_MULTIPLIER
+		if distance_from_origin > MAX_DISTANCE_FROM_ORIGIN:
+			var direction = interpolated_position - global_position
+			interpolated_position = global_position + direction.normalized() * MAX_DISTANCE_FROM_ORIGIN
+
 		global_position = interpolated_position
 
 		# Update the interpolation start position for the next frame
@@ -225,18 +237,36 @@ func _move_network_client_smoothly(delta: float) -> void:
 		_predicted_position_index += 1
 
 	else:
+		# Dead reckoning with blended velocity
+		var blended_velocity = (
+		_velocity_before * DEAD_RECKONING_VELOCITY_WEIGHT +
+		_last_velocity_received * (1.0 - DEAD_RECKONING_VELOCITY_WEIGHT)
+		)
+
 		# Dead reckoning when no predicted positions are available
-		global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
+		global_position += blended_velocity * _time_since_last_update
 
+		# Client-side prediction error correction with position and velocity difference
 		if _last_position_received != global_position:
-			# Client-side prediction error correction
-			var prediction_error = _last_position_received - global_position
-			global_position += prediction_error * 0.2  # Adjust the correction factor as needed
+			var position_difference = _last_position_received - global_position
+			var velocity_difference = _last_velocity_received - blended_velocity
 
-	# Calculate the movement vector towards the target position
+			var combined_difference = position_difference + velocity_difference * _time_since_last_update
+
+			global_position += combined_difference * CORRECTION_FACTOR
+
+			# Limit distance from both origin and received position
+			var distance_from_origin = global_position.distance_to(Vector3.ZERO)
+			var distance_from_received = global_position.distance_to(_last_position_received)
+
+			if distance_from_received > MAX_DISTANCE_FROM_RECEIVED:
+				var direction = _last_position_received - global_position
+				global_position = _last_position_received + direction.normalized() * MAX_DISTANCE_FROM_RECEIVED
+		# Calculate the movement vector towards the target position
 	var movement_vector = global_position - _interpolation_start_position
 
 	if _velocity_before != Vector3.ZERO:
+		 #Limit movement speed
 		movement_vector = movement_vector.clamp(Vector3.ZERO, movement_vector.normalized() * move_speed * _time_since_last_update)
 
 	# Latency compensation
