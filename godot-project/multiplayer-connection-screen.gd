@@ -47,7 +47,7 @@ func peer_connected(id):
 	# Randomly select a spawn position
 	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
 
-	newPlayer.position = randomSpawnNode.position
+	
 	newPlayer.name = str(id)
 	print(get_parent())
 	
@@ -57,6 +57,7 @@ func peer_connected(id):
 	# Check if the "Playground" node was found
 	if playgroundNode:
 		playgroundNode.add_child(newPlayer)
+		newPlayer.position = randomSpawnNode.position
 	else:
 		print("Node not found: Playground")
 

@@ -230,7 +230,6 @@ func _move_network_client_smoothly(delta: float) -> void:
 		# Dead reckoning when no predicted positions are available
 		global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
 		
-		print(_last_position_received != global_position)
 		if _last_position_received != global_position:
 			# Client-side prediction error correction
 			var prediction_error = _last_position_received - global_position
