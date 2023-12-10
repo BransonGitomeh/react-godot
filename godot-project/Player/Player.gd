@@ -206,31 +206,17 @@ var DEAD_RECKONING_FACTOR: float = 0.5  # Adjust as needed
 # Variables
 var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
-
-const DISTANCE_MULTIPLIER = 1.5
-const DEAD_RECKONING_VELOCITY_WEIGHT = 0.5
-const CORRECTION_FACTOR = 0.5
-var MAX_DISTANCE_FROM_RECEIVED
-var RTT = 50 # network round trip time
-var SAFETY_FACTOR = 1.5
+var previous_predicted_positions
 func _move_network_client_smoothly(delta: float) -> void:
-	MAX_DISTANCE_FROM_RECEIVED = (move_speed * RTT + 0.5 * acceleration * RTT**2) * SAFETY_FACTOR
-
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
 		_predicted_position_index = _predicted_position_index % _predicted_positions.size()
 
 		var target_position = _predicted_positions[_predicted_position_index]
+		#print("target_position=>",target_position, _predicted_positions)
 
 		# Interpolate between current position and target position
 		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
-		 # Limit distance from origin
-		var distance_from_origin = global_position.distance_to(interpolated_position)
-		var MAX_DISTANCE_FROM_ORIGIN = distance_from_origin * DISTANCE_MULTIPLIER
-		if distance_from_origin > MAX_DISTANCE_FROM_ORIGIN:
-			var direction = interpolated_position - global_position
-			interpolated_position = global_position + direction.normalized() * MAX_DISTANCE_FROM_ORIGIN
-
 		global_position = interpolated_position
 
 		# Update the interpolation start position for the next frame
@@ -238,38 +224,21 @@ func _move_network_client_smoothly(delta: float) -> void:
 
 		# Increment index for the next predicted position
 		_predicted_position_index += 1
-
+		previous_predicted_positions = _predicted_positions
 	else:
-		# Dead reckoning with blended velocity
-		var blended_velocity = (
-		_velocity_before * DEAD_RECKONING_VELOCITY_WEIGHT +
-		_last_velocity_received * (1.0 - DEAD_RECKONING_VELOCITY_WEIGHT)
-		)
-
+		#print("DEAD_RECKONING_FACTOR ==>",previous_predicted_positions, _time_since_last_update, _last_position_received)
 		# Dead reckoning when no predicted positions are available
-		global_position += blended_velocity * _time_since_last_update
+		global_position += _velocity_before * DEAD_RECKONING_FACTOR * _time_since_last_update
 
-		# Client-side prediction error correction with position and velocity difference
 		if _last_position_received != global_position:
-			var position_difference = _last_position_received - global_position
-			var velocity_difference = _last_velocity_received - blended_velocity
+			# Client-side prediction error correction
+			var prediction_error = _last_position_received - global_position
+			global_position += prediction_error * 0.2  # Adjust the correction factor as needed
 
-			var combined_difference = position_difference + velocity_difference * _time_since_last_update
-
-			global_position += combined_difference * CORRECTION_FACTOR
-
-			# Limit distance from both origin and received position
-			var distance_from_origin = global_position.distance_to(Vector3.ZERO)
-			var distance_from_received = global_position.distance_to(_last_position_received)
-
-			if distance_from_received > MAX_DISTANCE_FROM_RECEIVED:
-				var direction = _last_position_received - global_position
-				global_position = _last_position_received + direction.normalized() * MAX_DISTANCE_FROM_RECEIVED
-		# Calculate the movement vector towards the target position
+	# Calculate the movement vector towards the target position
 	var movement_vector = global_position - _interpolation_start_position
 
 	if _velocity_before != Vector3.ZERO:
-		 #Limit movement speed
 		movement_vector = movement_vector.clamp(Vector3.ZERO, movement_vector.normalized() * move_speed * _time_since_last_update)
 
 	# Latency compensation
@@ -388,7 +357,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	_velocity_before = velocity.normalized()
 
 	# Log updated _velocity_before
-	print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	#print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 	
 	return
 
@@ -399,7 +368,7 @@ func _client_process(delta: float) -> void:
 		return;
 		
 	var time_since_update:=delta
-	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
 	_predicted_velocity_previous = _predicted_velocity
 	
@@ -431,7 +400,7 @@ func _handle_local_input(delta: float) -> void:
 			break
 
 
-	print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	#print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
 	# Get input and movement state
 	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
@@ -444,7 +413,7 @@ func _handle_local_input(delta: float) -> void:
 	_is_on_floor_buffer = is_on_floor()
 	_move_direction = _get_camera_oriented_input()
 	
-	print("_move_direction", _move_direction)
+	#print("_move_direction", _move_direction)
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
 	if _move_direction.length() > 0.2:
