@@ -167,21 +167,24 @@ func _update_predicted_velocity(time_since_update, _position_before, _position_a
 
 
 func _predict_future_positions(delta):
-	var time_since_update = delta
+	# Predict positions for the next few frames and keep existing predictions
+	var num_predictions_to_keep: int = 10
 	var acceleration = (_predicted_velocity_current - _predicted_velocity_previous) / delta
-	# Clear old predictions
-	_predicted_positions.clear()
+	# Ensure the size of _predicted_positions does not exceed num_predictions_to_keep
+	while _predicted_positions.size() > num_predictions_to_keep:
+		_predicted_positions.pop_front()
 
-	# Predict positions for the next few frames
-	for i in range(10):
-		var time_delta = time_since_update + i * delta
+	for i in range(num_predictions_to_keep):
+		var time_delta = _time_since_last_update + i * delta
 
 		# Correct the predicted position calculation
 		var velocity_term = _predicted_velocity * time_delta
 		var acceleration_term = 0.5 * acceleration * (time_delta * time_delta)
 		var predicted_position = _position_after + velocity_term + acceleration_term
 
+		# Append the new predicted position
 		_predicted_positions.append(predicted_position)
+
 
 
 func _get_latency_compensation() -> float:
@@ -208,9 +211,10 @@ func _move_network_client_smoothly(delta: float) -> void:
 	var time_since_update = delta
 
 	if _predicted_positions.size() > 0:
+		# Ensure _predicted_position_index is within bounds
+		_predicted_position_index = _predicted_position_index % _predicted_positions.size()
+
 		var target_position = _predicted_positions[_predicted_position_index]
-		
-		
 
 		# Interpolate between current position and target position
 		var interpolated_position = global_position.lerp(target_position, INTERPOLATION_FACTOR)
@@ -220,7 +224,8 @@ func _move_network_client_smoothly(delta: float) -> void:
 		_interpolation_start_position = global_position
 
 		# Increment index for the next predicted position
-		_predicted_position_index = (_predicted_position_index + 1) % _predicted_positions.size()
+		_predicted_position_index += 1
+
 	else:
 		# Dead reckoning when no predicted positions are available
 		global_position += _velocity_before * DEAD_RECKONING_FACTOR * time_since_update
