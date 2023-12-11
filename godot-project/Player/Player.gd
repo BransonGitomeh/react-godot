@@ -280,6 +280,7 @@ func _move_client_smoothly(delta):
 
 	_position_before = global_position
 
+	velocity.y += _gravity * delta
 	# Move and slide on the server side
 	move_and_slide()
 
@@ -329,6 +330,31 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	# Smoothen rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	
+		# Get input and movement state
+	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+	var is_just_attacking := Input.is_action_just_pressed("attack")
+	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
+	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
+	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
+	
+	# Set character animation
+	if is_just_jumping:
+		_character_skin.jump.rpc()
+		#_character_skin.jump()
+	elif not is_on_floor() and velocity.y < 0:
+		_character_skin.fall.rpc()
+		#_character_skin.fall()
+	elif is_on_floor():
+		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
+		#print("xz_velocity", xz_velocity, stopping_speed, xz_velocity.length() > stopping_speed)
+		if xz_velocity.length() > stopping_speed:
+			_character_skin.set_moving.rpc(true)
+			#_character_skin.set_moving(true)
+			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+		else:
+			_character_skin.set_moving.rpc(false)
 
 var interpolated_position;
 var _velocity_history := []
@@ -374,6 +400,7 @@ func _client_process(delta: float) -> void:
 		_move_network_client_smoothly(delta)
 		return;
 		
+	
 	var time_since_update:=delta
 	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
@@ -388,6 +415,8 @@ func _client_process(delta: float) -> void:
 	# Move client smoothly with collision detection
 	_move_client_smoothly(delta)
 	#return
+	
+	#_handle_local_input(delta)
 
   # Store velocity history for client-side prediction
 	_velocity_history.append(velocity.normalized())
@@ -395,8 +424,6 @@ func _client_process(delta: float) -> void:
   # Limit history size
 	while _velocity_history.size() > max_history_size:
 		_velocity_history.pop_front()
-	
-	_handle_local_input(delta)
 
 func _handle_local_input(delta: float) -> void:
   # Check if velocity changed
@@ -452,22 +479,7 @@ func _handle_local_input(delta: float) -> void:
 	elif is_air_boosting:
 		velocity.y += jump_additional_force * delta
 	
-	_character_skin.set_moving.rpc(true)
-	# Set character animation
-	if is_just_jumping:
-		_character_skin.jump.rpc()
-		#_character_skin.jump()
-	elif not is_on_floor() and velocity.y < 0:
-		_character_skin.fall.rpc()
-		#_character_skin.fall()
-	elif is_on_floor():
-		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
-		if xz_velocity.length() > stopping_speed:
-			_character_skin.set_moving.rpc(true)
-			#_character_skin.set_moving(true)
-			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
-		else:
-			_character_skin.set_moving.rpc(false)
+
 
 			#_character_skin.set_moving(false)
 
