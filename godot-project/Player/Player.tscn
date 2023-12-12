@@ -2788,7 +2788,7 @@ mesh = SubResource("QuadMesh_j8o5e")
 [node name="CameraRayCast" type="RayCast3D" parent="CameraController/PlayerCamera"]
 transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 target_position = Vector3(0, 0, -100)
-debug_shape_custom_color = Color(0, 0, 0, 0)
+debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
 
 [node name="GrenadeLauncher" parent="." instance=ExtResource("3_54qc4")]
 

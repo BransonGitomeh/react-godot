@@ -352,6 +352,7 @@ func _physics_process(delta: float) -> void:
 		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
+			print("_aim_direction ", _aim_direction)
 			_client_process(delta)
 	else:
 		_client_process(delta)
@@ -460,6 +461,7 @@ func _handle_local_input(delta: float) -> void:
 		var aim_target := _camera_controller.get_aim_target()
 		var origin := global_position + Vector3.UP
 		_aim_direction = (aim_target - origin).normalized()
+		print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
 	else:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
 		_grenade_aim_controller.throw_direction = _last_strong_direction
@@ -532,6 +534,7 @@ func attack() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot() -> void:
+	print(multiplayer.get_unique_id(), " from ","shoot _aim_direction ", _aim_direction)
 	var bullet := BULLET_SCENE.instantiate()
 	bullet.shooter = self
 	bullet.velocity = _aim_direction * bullet_speed
