@@ -11,7 +11,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 ## Character maximum run speed on the ground.
 @export var move_speed := 8.0
 ## Speed of shot bullets.
-@export var bullet_speed := 10.0
+@export var bullet_speed := 100.0
 ## Forward impulse after a melee attack.
 @export var attack_impulse := 10.0
 ## Movement acceleration (how fast character achieve maximum speed)
@@ -81,6 +81,7 @@ var current_position: Vector3 = Vector3.ZERO
 @export var _last_velocity_before: Vector3 = Vector3.ZERO
 @export var _smoothed_input: Vector3 = Vector3.ZERO
 @export  var _time_since_last_update: float = 0.0
+@export  var _aim_direction: Vector3
 
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
@@ -456,6 +457,9 @@ func _handle_local_input(delta: float) -> void:
 		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
 		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
 		_ui_aim_recticle.visible = true
+		var aim_target := _camera_controller.get_aim_target()
+		var origin := global_position + Vector3.UP
+		_aim_direction = (aim_target - origin).normalized()
 	else:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
 		_grenade_aim_controller.throw_direction = _last_strong_direction
@@ -530,12 +534,10 @@ func attack() -> void:
 func shoot() -> void:
 	var bullet := BULLET_SCENE.instantiate()
 	bullet.shooter = self
-	var origin := global_position + Vector3.UP
-	var aim_target := _camera_controller.get_aim_target()
-	var aim_direction := (aim_target - origin).normalized()
-	bullet.velocity = aim_direction * bullet_speed
-	bullet.distance_limit = 14.0
+	bullet.velocity = _aim_direction * bullet_speed
+	bullet.distance_limit = 6.0
 	get_parent().add_child(bullet)
+	var origin := global_position + Vector3.UP
 	bullet.global_position = origin
 
 

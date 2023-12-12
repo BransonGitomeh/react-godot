@@ -13,3 +13,4 @@ res://Player/model/materials/face_mat.tres
 res://Player/model/materials/heart_core_mat.tres
 res://Player/Player.gd
 res://Player/CameraController.gd
+res://Player/Bullet.tscn
