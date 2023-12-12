@@ -6,6 +6,7 @@ extends Area3D
 func _ready() -> void:
 	body_entered.connect(func(body):
 		if body is Player:
+			print("Jumping Pad velocity =>", (Vector3.UP * body.jump_initial_impulse) + (transform.basis * Vector3.UP * impulse_strenght))
 			body.velocity = (Vector3.UP * body.jump_initial_impulse) + (transform.basis * Vector3.UP * impulse_strenght)
 			
 			var tween := create_tween()

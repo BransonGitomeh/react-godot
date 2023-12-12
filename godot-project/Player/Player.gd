@@ -46,7 +46,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
 @onready var _last_strong_direction := Vector3.FORWARD
-@onready var _gravity: float = -30.0
+@onready var _gravity: float = 10.0
 @onready var _ground_height: float = 0.0
 @onready var _start_position := global_transform.origin
 @onready var _coins := 0
@@ -256,7 +256,7 @@ func _move_network_client_smoothly(delta: float) -> void:
 		var travel = collision.get_travel()
 		global_position.x += travel.x
 		global_position.z += travel.z
-		global_position.y = 0.0
+		#global_position.y = 0.0
 
 	_predicted_positions.pop_front()
 		
@@ -275,8 +275,8 @@ func _move_client_smoothly(delta):
 	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
 		
-	if(velocity.y != _predicted_velocity.y):
-		velocity.y = y_velocity
+	#if(velocity.y != _predicted_velocity.y):
+	velocity.y = y_velocity
 
 	_position_before = global_position
 
@@ -331,30 +331,6 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
 	
-		# Get input and movement state
-	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-	var is_just_attacking := Input.is_action_just_pressed("attack")
-	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
-	
-	# Set character animation
-	if is_just_jumping:
-		_character_skin.jump.rpc()
-		#_character_skin.jump()
-	elif not is_on_floor() and velocity.y < 0:
-		_character_skin.fall.rpc()
-		#_character_skin.fall()
-	elif is_on_floor():
-		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
-		#print("xz_velocity", xz_velocity, stopping_speed, xz_velocity.length() > stopping_speed)
-		if xz_velocity.length() > stopping_speed:
-			_character_skin.set_moving.rpc(true)
-			#_character_skin.set_moving(true)
-			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
-		else:
-			_character_skin.set_moving.rpc(false)
 
 var interpolated_position;
 var _velocity_history := []
@@ -416,7 +392,7 @@ func _client_process(delta: float) -> void:
 	_move_client_smoothly(delta)
 	#return
 	
-	#_handle_local_input(delta)
+	_handle_local_input(delta)
 
   # Store velocity history for client-side prediction
 	_velocity_history.append(velocity.normalized())
@@ -447,7 +423,7 @@ func _handle_local_input(delta: float) -> void:
 	_is_on_floor_buffer = is_on_floor()
 	_move_direction = _get_camera_oriented_input()
 	
-	#print("_move_direction", _move_direction)
+	#print("_move_direction", _move_direction, _is_on_floor_buffer)
 	# To not orient quickly to the last input, we save a last strong direction,
 	# this also ensures a good normalized value for the rotation basis.
 	if _move_direction.length() > 0.2:
@@ -456,7 +432,16 @@ func _handle_local_input(delta: float) -> void:
 		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
 	
 	
-	_orient_character_to_direction(_last_strong_direction, delta)
+		# Input smoothing using moving average
+	_input_buffer.append(_last_strong_direction)
+	while _input_buffer.size() > INPUT_BUFFER_SIZE:
+		_input_buffer.pop_front()
+	for input_vector in _input_buffer:
+		_smoothed_input += input_vector
+	if _input_buffer.size() > 0:
+		_smoothed_input /= _input_buffer.size()
+	
+	_orient_character_to_direction(_smoothed_input, delta)
 	# Set aiming camera and UI
 	if is_aiming:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
@@ -479,21 +464,29 @@ func _handle_local_input(delta: float) -> void:
 	elif is_air_boosting:
 		velocity.y += jump_additional_force * delta
 	
-
-
-			#_character_skin.set_moving(false)
+	# Set character animation
+	if is_just_jumping:
+		_character_skin.jump.rpc()
+		#_character_skin.jump()
+	elif not is_on_floor() and velocity.y < 0:
+		_character_skin.fall.rpc()
+		#_character_skin.fall()
+	elif is_on_floor():
+		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
+		#print("xz_velocity", xz_velocity, stopping_speed, xz_velocity.length() > stopping_speed)
+		if xz_velocity.length() > stopping_speed:
+			_character_skin.set_moving.rpc(true)
+			#_character_skin.set_moving(true)
+			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+		else:
+			_character_skin.set_moving.rpc(false)
+	
+	#_character_skin.set_moving(false)
 
 	if is_just_on_floor:
 		_landing_sound.play()
 	
-	# Input smoothing using moving average
-	_input_buffer.append(_last_strong_direction)
-	while _input_buffer.size() > INPUT_BUFFER_SIZE:
-		_input_buffer.pop_front()
-	for input_vector in _input_buffer:
-		_smoothed_input += input_vector
-	if _input_buffer.size() > 0:
-		_smoothed_input /= _input_buffer.size()
+
 	
 	# Update attack state and position (client-side only)
 	_shoot_cooldown_tick += delta

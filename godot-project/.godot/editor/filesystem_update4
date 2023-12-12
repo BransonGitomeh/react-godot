@@ -13,3 +13,4 @@ res://PossumLevel.tscn
 res://godot-simple-sky-project/main.tscn
 res://FogVolume.gdshader
 res://Player/Player.gd
+res://JumpingPad/JumpingPad.gd
