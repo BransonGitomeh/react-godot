@@ -17,16 +17,16 @@ enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
 @onready var _camera_raycast: RayCast3D = $PlayerCamera/CameraRayCast
 
 
-var _aim_target : Vector3
-var _aim_collider: Node
-var _pivot: Node3D
-var _current_pivot_type: CAMERA_PIVOT
-var _rotation_input: float
-var _tilt_input: float
-var _mouse_input := false
-var _offset: Vector3
-var _anchor: CharacterBody3D
-var _euler_rotation: Vector3
+@export var _aim_target : Vector3
+@export var _aim_collider: Node
+@export var _pivot: Node3D
+@export var _current_pivot_type: CAMERA_PIVOT
+@export var _rotation_input: float
+@export var _tilt_input: float
+@export var _mouse_input := false
+@export var _offset: Vector3
+@export var _anchor: CharacterBody3D
+@export var _euler_rotation: Vector3
 
 
 func _unhandled_input(event: InputEvent) -> void:

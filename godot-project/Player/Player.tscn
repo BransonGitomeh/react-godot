@@ -2723,6 +2723,24 @@ properties/15/replication_mode = 1
 properties/16/path = NodePath(".:_time_since_last_update")
 properties/16/spawn = true
 properties/16/replication_mode = 1
+properties/17/path = NodePath(".:is_attacking")
+properties/17/spawn = true
+properties/17/replication_mode = 1
+properties/18/path = NodePath(".:is_just_attacking")
+properties/18/spawn = true
+properties/18/replication_mode = 1
+properties/19/path = NodePath(".:is_aiming")
+properties/19/spawn = true
+properties/19/replication_mode = 1
+properties/20/path = NodePath(".:is_air_boosting")
+properties/20/spawn = true
+properties/20/replication_mode = 1
+properties/21/path = NodePath(".:is_just_on_floor")
+properties/21/spawn = true
+properties/21/replication_mode = 1
+properties/22/path = NodePath("CameraController:_aim_target")
+properties/22/spawn = true
+properties/22/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true

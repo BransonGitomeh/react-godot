@@ -90,7 +90,12 @@ const INPUT_BUFFER_SIZE: int = 10
 # Flag to determine if the player has authority
 var has_authority: bool = false
 
-
+@export var is_attacking:bool
+@export var is_just_attacking :bool
+@export var is_just_jumping :bool
+@export var is_aiming :bool
+@export var is_air_boosting:bool
+@export var is_just_on_floor :bool
 
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
@@ -416,12 +421,12 @@ func _handle_local_input(delta: float) -> void:
 	#print( multiplayer.get_unique_id(), "Handling Local Input - Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 
 	# Get input and movement state
-	var is_attacking := Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
-	var is_just_attacking := Input.is_action_just_pressed("attack")
-	var is_just_jumping := Input.is_action_just_pressed("jump") and is_on_floor()
-	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
-	var is_air_boosting := Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
-	var is_just_on_floor := is_on_floor() and not _is_on_floor_buffer
+	is_attacking = Input.is_action_pressed("attack") and not _attack_animation_player.is_playing()
+	is_just_attacking = Input.is_action_just_pressed("attack")
+	is_just_jumping = Input.is_action_just_pressed("jump") and is_on_floor()
+	is_aiming = Input.is_action_pressed("aim") and is_on_floor()
+	is_air_boosting = Input.is_action_pressed("jump") and not is_on_floor() and velocity.y > 0.0
+	is_just_on_floor = is_on_floor() and not _is_on_floor_buffer
 		
 	_is_on_floor_buffer = is_on_floor()
 	_move_direction = _get_camera_oriented_input()
