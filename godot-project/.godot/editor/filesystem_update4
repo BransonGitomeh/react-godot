@@ -1,4 +1,4 @@
-res://Player/Player.tscn
+res://PossumLevel.tscn
 res://Enemies/beetle_bot/beetlebot_skin.gd
 res://Player/BulletVisuals/bullet_trail_mat.tres
 res://Player/ExplosionVisuals/materials/shell_mat.tres
@@ -6,11 +6,9 @@ res://Player/ExplosionVisuals/materials/blast_mat.tres
 res://Player/ExplosionVisuals/materials/particles_mat.tres
 res://Enemies/smoke_puff/smoke_ball_middle_mat.tres
 res://Player/PlayerOutline.gdshader
+res://Player/model/character_blend_tree.tres
+res://FogVolume.gdshader
+res://Player/Player.tscn
 res://Player/model/materials/face_mat.tres
 res://Player/model/materials/heart_core_mat.tres
-res://Player/model/character_blend_tree.tres
-res://PossumLevel.tscn
-res://godot-simple-sky-project/main.tscn
-res://FogVolume.gdshader
 res://Player/Player.gd
-res://JumpingPad/JumpingPad.gd

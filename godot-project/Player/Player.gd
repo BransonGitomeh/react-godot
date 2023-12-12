@@ -46,7 +46,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
 @onready var _last_strong_direction := Vector3.FORWARD
-@onready var _gravity: float = 10.0
+@onready var _gravity: float = -30.0
 @onready var _ground_height: float = 0.0
 @onready var _start_position := global_transform.origin
 @onready var _coins := 0
@@ -269,23 +269,24 @@ func _move_client_smoothly(delta):
 
 	# Separate out the y velocity to not interpolate on gravity
 	var y_velocity := velocity.y
-	velocity.y = 0.0
+	#velocity.y = 0.0
 	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
 
 	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
 		
-	#if(velocity.y != _predicted_velocity.y):
-	velocity.y = y_velocity
+	
 
 	_position_before = global_position
 
-	velocity.y += _gravity * delta
+	
 	# Move and slide on the server side
 	move_and_slide()
 
 	_position_after = global_position
 	_last_position_received = _position_after
+	#if(velocity.y != _predicted_velocity.y):
+	
 	
 	# Store the predicted position based on the client's input
 	_predicted_position = global_position + velocity * delta
@@ -293,6 +294,8 @@ func _move_client_smoothly(delta):
 	# Smooth rotation
 	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
 	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	#velocity.y = 0.0
+	velocity.y += _gravity * delta
 
 # On the server side
 func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
@@ -511,14 +514,14 @@ func _handle_local_input(delta: float) -> void:
 		
 
 
-@rpc
+@rpc("any_peer", "call_local", "reliable")
 func attack() -> void:
 	_attack_animation_player.play("Attack")
 	_character_skin.punch.rpc()
 	#_character_skin.punch()
 	velocity = _rotation_root.transform.basis * Vector3.BACK * attack_impulse
 
-@rpc
+@rpc("any_peer", "call_local", "reliable")
 func shoot() -> void:
 	var bullet := BULLET_SCENE.instantiate()
 	bullet.shooter = self
@@ -534,7 +537,7 @@ func shoot() -> void:
 func reset_position() -> void:
 	transform.origin = _start_position
 
-
+@rpc("any_peer", "call_local", "reliable")
 func collect_coin() -> void:
 	_coins += 1
 	_ui_coins_container.update_coins_amount(_coins)
