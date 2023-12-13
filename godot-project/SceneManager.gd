@@ -25,7 +25,7 @@ func _ready():
 	# Randomly select a spawn position
 	var currentPlayerRandomSpawnNode = spawnLocations[randi() % spawnLocations.size()]
 	
-	print(currentPlayerRandomSpawnNode)
+	#print(currentPlayerRandomSpawnNode)
 	currentPlayer.position = currentPlayerRandomSpawnNode.position
 	currentPlayer.name = str(multiplayer.get_unique_id())
 	

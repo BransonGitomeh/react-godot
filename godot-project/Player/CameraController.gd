@@ -29,23 +29,175 @@ enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
 @export var _euler_rotation: Vector3
 
 
+# FOV Parameters
+var base_fov := 60
+var zoomed_fov := 45
+
+# Depth of Field Parameters
+var base_blur_distance : float = 10.0
+var focus_blur_distance : float = 2.0
+
+# Screen Shake Parameters
+var shake_intensity := 2.0
+
+# Lerp Camera Parameters
+var lerp_speed := 5.0
+
+# Clamp Camera Height Parameters
+var min_height := 2.0
+var max_height := 20.0
+
+# Zoom In/Out Parameters
+var min_zoom := -5.0
+var max_zoom := -15.0
+var zoom_speed := 0.5
+var zoom_factor := 0.0
+
+# Look Ahead Parameters
+var look_ahead_distance := 10.0
+
+# Vignette Parameters
+var base_vignette := 0.0
+var intense_vignette := 0.5
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		_handle_mouse_motion(event)
+	elif event is InputEventKey:
+		_handle_key_input(event)
+
+func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		_rotation_input = -event.relative.x * mouse_sensitivity
+		_tilt_input = -event.relative.y * mouse_sensitivity
+
+func _handle_key_input(event: InputEventKey) -> void:
+	if event.pressed:
+		if event.keycode == KEY_ESCAPE:
+			_toggle_mouse_capture()
+
+func _toggle_mouse_capture() -> void:
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		
+func _unhandled_input_old(event: InputEvent) -> void:
 	_mouse_input = event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
 	if _mouse_input:
 		_rotation_input = -event.relative.x * mouse_sensitivity
 		_tilt_input = -event.relative.y * mouse_sensitivity
 
 
+var base_arm_length := 6.0
+var max_speed_arm_length := 9.0
+var arm_length_lerp_speed := 3.0
+
+
+# Interpolate spring arm length
+func lerp_arm_length(target_length: float, delta) -> void:
+	var player := self.get_parent()
+	var camera_spring_arm := $CameraSpringArm
+
+	var new_length :float= lerp(camera_spring_arm.spring_length, target_length, arm_length_lerp_speed * delta)
+	camera_spring_arm.spring_length = new_length
+
+# Add a deadzone variable for both rotation and tilt inputs
+var deadzone_rotation: float = 0.1
+var deadzone_tilt: float = 0.1
+
+var rotation_input= 0.0
+var tilt_input= 0.0
+
+# Function to implement the "look ahead" system
+func _look_ahead():
+	# Assuming offset is a child of CharacterRotationRoot, adjust as needed
+	var offset_node = self.get_parent().get_node("CharacterRotationRoot").get_node("offset")
+
+	# Set the camera's rotation to face the look ahead position
+	camera.look_at(offset_node.global_transform.origin, Vector3.UP)
+	#camera.look_at(-offset_node.position, Vector3.UP)
+
+# Function to handle linear interpolation for camera movement
+func _handle_lerp_camera(delta: float):
+	# Set the lerp speed (adjust as needed)
+	var lerp_speed = 2.0
+
+	# Calculate the target position (in this example, it's the target_position)
+	var target_position : Vector3 = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
+	
+	print("_handle_lerp_camera", _handle_lerp_camera)
+	# Use lerp to smoothly move the camera towards the target position
+	global_position = global_position.lerp(target_position, lerp_speed * delta)
+
+# Function to calculate the distance between two points in 3D space
+func distance(point1: Vector3, point2: Vector3) -> float:
+	return (point1 - point2).length()
+
 func _physics_process(delta: float) -> void:
 	if not _anchor:
 		return
 
+	# Get the player's speed
+	var player_speed :float= self.get_parent().velocity.length()
+
+	# Map the player's speed to the arm length
+	var target_arm_length :float= lerp(base_arm_length, max_speed_arm_length, player_speed / self.get_parent().move_speed)
+
+	# Interpolate spring arm length
+	lerp_arm_length(target_arm_length, delta)
+
+	# Handle camera effects based on character's speed
+	_handle_speed_based_effects()
+
+	# Handle FOV changes
+	_handle_fov()
+
+	# Handle Depth of Field (DOF) effects
+	_handle_dof()
+
+	# Handle screen shake
+	_handle_screen_shake(delta)
+
+	# Handle zoom in/out
+	_handle_zoom()
+	
+	var target_position : Vector3 = self.get_parent().global_transform.origin
+
+	# Check deadzone
+	var deadzone_radius = 4  # Adjust this for your desired deadzone size
+
+	var player_world_pos = _anchor.global_position
+	var camera_offset = global_position - player_world_pos
+	
+	# Calculate the distance from the camera to the target position
+	var distance_to_target = distance(global_position, target_position)
+	
+	print("distance_to_target, deadzone_radius",distance_to_target, deadzone_radius, distance_to_target > deadzone_radius)
+	if distance_to_target > deadzone_radius:
+		# Lerp camera position only if outside deadzone
+		_handle_lerp_camera(delta)
+		_look_ahead()
+	else:
+		# Keep camera position fixed within dead zone
+		global_position = target_position + camera_offset
+	# Clamp camera height
+	_handle_clamp_camera_height()
+
+	# Check if the game is paused or stopped
+	if get_tree().paused or !is_instance_valid(self):
+		# Release the mouse when paused or stopped
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# Handle camera rotation
 	_rotation_input += Input.get_action_raw_strength("camera_left") - Input.get_action_raw_strength("camera_right")
 	_tilt_input += Input.get_action_raw_strength("camera_up") - Input.get_action_raw_strength("camera_down")
 
 	if invert_mouse_y:
 		_tilt_input *= -1
 
+	# Camera raycast and aim handling
 	if _camera_raycast.is_colliding():
 		_aim_target = _camera_raycast.get_collision_point()
 		_aim_collider = _camera_raycast.get_collider()
@@ -53,10 +205,8 @@ func _physics_process(delta: float) -> void:
 		_aim_target = _camera_raycast.global_transform * _camera_raycast.target_position
 		_aim_collider = null
 
-	# Set camera controller to current ground level for the character
-	var target_position := _anchor.global_position + _offset
-	target_position.y = lerp(global_position.y, _anchor._ground_height, 0.1)
-	global_position = target_position
+	# Update global position based on deadzone check
+	#global_position = target_position
 
 	# Rotates camera using euler rotation
 	_euler_rotation.x += _tilt_input * delta
@@ -70,6 +220,9 @@ func _physics_process(delta: float) -> void:
 
 	_rotation_input = 0.0
 	_tilt_input = 0.0
+
+
+
 
 
 func setup(anchor: CharacterBody3D) -> void:
@@ -104,3 +257,53 @@ func get_aim_collider() -> Node:
 		return _aim_collider
 	else:
 		return null
+
+
+# Handle FOV changes
+func _handle_fov() -> void:
+	camera.fov = lerp(base_fov, zoomed_fov, zoom_factor)
+
+# Handle Depth of Field (DOF) effects
+func _handle_dof() -> void:
+	#camera.attributes.dof_blur_far_size = lerp(base_blur_size, focus_blur_size, zoom_factor)
+	camera.attributes.set_dof_blur_far_distance(lerp(base_blur_distance, focus_blur_distance, zoom_factor))
+	#camera.dof_blur_far_size = lerp(base_blur_size, focus_blur_size, zoom_factor)
+
+# Handle screen shake in 3D
+func _handle_screen_shake(delta: float) -> void:
+	# Generate random offset for each axis
+	var shake_offset = Vector3(
+		randf_range(-shake_intensity, shake_intensity),
+		randf_range(-shake_intensity, shake_intensity),
+		randf_range(-shake_intensity, shake_intensity)
+	)
+	
+	# Apply the offset to the camera's global position
+	camera.global_transform.origin += shake_offset * delta
+
+
+# Clamp camera height
+func _handle_clamp_camera_height() -> void:
+	camera.global_transform.origin.y = clamp(camera.global_transform.origin.y, min_height, max_height)
+
+# Handle zoom in/out
+func _handle_zoom() -> void:
+	if Input.is_action_pressed("zoom_in"):
+		zoom_factor = clamp(zoom_factor - zoom_speed, 0.0, 1.0)
+	elif Input.is_action_pressed("zoom_out"):
+		zoom_factor = clamp(zoom_factor + zoom_speed, 0.0, 1.0)
+	else:
+		zoom_factor = lerp(zoom_factor, 0.0, zoom_speed * 2.0)
+
+
+# Handle camera effects based on character's speed
+func _handle_speed_based_effects() -> void:
+	# Assuming you have a variable for character speed (e.g., player.speed)
+	var speed_ratio :float= clamp(self.get_parent().velocity.length() / self.get_parent().move_speed, 0.0, 1.0)
+
+	# Adjust camera effects based on character speed
+	lerp_speed = lerp(5.0, 20.0, speed_ratio)
+	shake_intensity = lerp(2.0, 0.0, speed_ratio)
+	look_ahead_distance = lerp(5.0, 10.0, speed_ratio)
+	base_vignette = lerp(0.0, 0.2, speed_ratio)
+	intense_vignette = lerp(0.5, 0.8, speed_ratio)

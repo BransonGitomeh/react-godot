@@ -461,7 +461,7 @@ func _handle_local_input(delta: float) -> void:
 		var aim_target := _camera_controller.get_aim_target()
 		var origin := global_position + Vector3.UP
 		_aim_direction = (aim_target - origin).normalized()
-		print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
+		#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
 	else:
 		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
 		_grenade_aim_controller.throw_direction = _last_strong_direction
@@ -534,14 +534,15 @@ func attack() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot() -> void:
-	print(multiplayer.get_unique_id(), " from ","shoot _aim_direction ", _aim_direction)
-	var bullet := BULLET_SCENE.instantiate()
-	bullet.shooter = self
-	bullet.velocity = _aim_direction * bullet_speed
-	bullet.distance_limit = 6.0
-	get_parent().add_child(bullet)
-	var origin := global_position + Vector3.UP
-	bullet.global_position = origin
+	#print(multiplayer.get_unique_id(), " from ","shoot _aim_direction ", _aim_direction)
+	if _aim_direction.length() > 0.0:
+		var bullet := BULLET_SCENE.instantiate()
+		bullet.shooter = self
+		bullet.velocity = _aim_direction * bullet_speed
+		bullet.distance_limit = 6.0
+		get_parent().add_child(bullet)
+		var origin := global_position + Vector3.UP
+		bullet.global_position = origin
 
 
 func reset_position() -> void:
@@ -647,7 +648,7 @@ func _register_input_actions() -> void:
 
 
 func _on_multiplayer_synchronizer_delta_synchronized(delta_data):
-	# Capture and store delta_data, which may include position information
+	# Capture and store delta_data, whwich may include position information
 	# For example, you might capture the target position from delta_data
 	target_position = delta_data.get("position", Vector3.ZERO)
 	#print("target_position", target_position)

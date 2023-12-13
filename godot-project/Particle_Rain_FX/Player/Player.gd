@@ -11,13 +11,17 @@ const SPEED = 5.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+    Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
-	# Handle look controls
+    # Handle look controls
+
+    # Check if the "Escape" key is pressed
+    if Input.is_action_pressed("ui_cancel"):
+        # Release the mouse capture
+        Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
 
 
 func _physics_process(delta):
