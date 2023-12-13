@@ -31,10 +31,10 @@ enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
 
 # FOV Parameters
 var base_fov := 60
-var zoomed_fov := 45
+var zoomed_fov := 30
 
 # Depth of Field Parameters
-var base_blur_distance : float = 10.0
+var base_blur_distance : float = 30.0
 var focus_blur_distance : float = 2.0
 
 # Screen Shake Parameters
@@ -59,6 +59,9 @@ var look_ahead_distance := 10.0
 # Vignette Parameters
 var base_vignette := 0.0
 var intense_vignette := 0.5
+
+# Check deadzone
+var deadzone_radius = 15  # Adjust this for your desired deadzone size
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -90,9 +93,9 @@ func _unhandled_input_old(event: InputEvent) -> void:
 		_tilt_input = -event.relative.y * mouse_sensitivity
 
 
-var base_arm_length := 6.0
-var max_speed_arm_length := 9.0
-var arm_length_lerp_speed := 3.0
+var base_arm_length := 35.0
+var max_speed_arm_length := 40.0
+var arm_length_lerp_speed := 4.0
 
 
 # Interpolate spring arm length
@@ -110,13 +113,18 @@ var deadzone_tilt: float = 0.1
 var rotation_input= 0.0
 var tilt_input= 0.0
 
+var character_offset: Vector2 = Vector2(0, 0)
+
 # Function to implement the "look ahead" system
 func _look_ahead():
 	# Assuming offset is a child of CharacterRotationRoot, adjust as needed
-	var offset_node = self.get_parent().get_node("CharacterRotationRoot").get_node("offset")
+	var offset_node = self.get_parent()
+	
+	#.get_node("CharacterRotationRoot").get_node("offset")
+	#self.look_at(target_position, Vector3(0, 1, 0))  # The second parameter is the up vector (usually Y-axis)
 
 	# Set the camera's rotation to face the look ahead position
-	camera.look_at(offset_node.global_transform.origin, Vector3.UP)
+	self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
 	#camera.look_at(-offset_node.position, Vector3.UP)
 
 # Function to handle linear interpolation for camera movement
@@ -127,13 +135,77 @@ func _handle_lerp_camera(delta: float):
 	# Calculate the target position (in this example, it's the target_position)
 	var target_position : Vector3 = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
 	
-	print("_handle_lerp_camera", _handle_lerp_camera)
+	#print("_handle_lerp_camera", _handle_lerp_camera)
 	# Use lerp to smoothly move the camera towards the target position
 	global_position = global_position.lerp(target_position, lerp_speed * delta)
 
 # Function to calculate the distance between two points in 3D space
 func distance(point1: Vector3, point2: Vector3) -> float:
 	return (point1 - point2).length()
+
+func _ready():
+	_toggle_mouse_capture()
+
+
+var rule_of_thirds_size : Vector2 = Vector2(3, 3)
+var rule_of_thirds_lerp_speed: float = 2.0
+# Rotate the camera based on player input or other factors
+func rotate_camera(rotation_speed: float, delta: float) -> void:
+	var player_rotation = self.get_parent().get_rotation()
+	var new_camera_rotation = $CameraSpringArm.rotation
+	new_camera_rotation.y += Input.get_action_strength("turn_right") - Input.get_action_strength("turn_left") * rotation_speed * delta
+	$CameraSpringArm.rotation = new_camera_rotation
+
+# Interpolate camera position for Rule of Thirds
+func lerp_to_rule_of_thirds(target_position: Vector3, delta: float) -> void:
+	var current_position = global_transform.origin
+	var new_position = current_position.lerp(target_position, rule_of_thirds_lerp_speed * delta)
+	global_transform.origin = new_position
+
+func _handle_rule_of_thirds(delta):
+	var target_position: Vector3 = self.get_parent().global_transform.origin
+	var player_world_pos = _anchor.global_position
+	var camera_offset = global_position - player_world_pos
+
+	# Calculate the distance from the camera to the target position
+	var distance_to_target = distance(global_position, target_position)
+
+	# Check if the distance is greater than the deadzone_radius
+	if distance_to_target > deadzone_radius:
+		# Lerp camera position only if outside deadzone
+		_handle_lerp_camera(delta)
+		#_look_ahead()
+	else:
+		# Keep camera position fixed within dead zone
+		global_position = target_position + camera_offset
+
+	# Calculate the rule-of-thirds region
+	var rule_of_thirds_region = Rect2(
+		target_position.x - rule_of_thirds_size.x / 2,
+		target_position.y - rule_of_thirds_size.y / 2,
+		rule_of_thirds_size.x,
+		rule_of_thirds_size.y
+	)
+	
+	print(rule_of_thirds_region, Vector2(player_world_pos.x, player_world_pos.y))
+	# Ensure character placement within the central two squares with an additional offset
+	#if not rule_of_thirds_region.has_point(Vector2(player_world_pos.x, player_world_pos.y)):
+		# Character is outside the rule-of-thirds region, adjust camera
+	var new_camera_pos = Vector2(
+		clamp(player_world_pos.x, rule_of_thirds_region.position.x, rule_of_thirds_region.position.x + rule_of_thirds_region.size.x),
+		clamp(player_world_pos.y, rule_of_thirds_region.position.y, rule_of_thirds_region.position.y + rule_of_thirds_region.size.y)
+	)
+	# Apply additional offset
+	print("new_camera_pos", "Apply additional offset", new_camera_pos)
+	new_camera_pos += character_offset
+	global_position = Vector3(new_camera_pos.x, new_camera_pos.y, global_position.z)
+
+	# Use lerp to smoothly interpolate to the optimal camera position
+	#lerp_to_rule_of_thirds(target_position, delta)
+
+	# Clamp camera height
+	_handle_clamp_camera_height()
+
 
 func _physics_process(delta: float) -> void:
 	if not _anchor:
@@ -145,14 +217,13 @@ func _physics_process(delta: float) -> void:
 	# Map the player's speed to the arm length
 	var target_arm_length :float= lerp(base_arm_length, max_speed_arm_length, player_speed / self.get_parent().move_speed)
 
-	# Interpolate spring arm length
-	lerp_arm_length(target_arm_length, delta)
+	
 
 	# Handle camera effects based on character's speed
 	_handle_speed_based_effects()
 
 	# Handle FOV changes
-	_handle_fov()
+	#_handle_fov()
 
 	# Handle Depth of Field (DOF) effects
 	_handle_dof()
@@ -165,8 +236,6 @@ func _physics_process(delta: float) -> void:
 	
 	var target_position : Vector3 = self.get_parent().global_transform.origin
 
-	# Check deadzone
-	var deadzone_radius = 4  # Adjust this for your desired deadzone size
 
 	var player_world_pos = _anchor.global_position
 	var camera_offset = global_position - player_world_pos
@@ -174,7 +243,10 @@ func _physics_process(delta: float) -> void:
 	# Calculate the distance from the camera to the target position
 	var distance_to_target = distance(global_position, target_position)
 	
-	print("distance_to_target, deadzone_radius",distance_to_target, deadzone_radius, distance_to_target > deadzone_radius)
+	# Interpolate spring arm length
+	lerp_arm_length(target_arm_length, delta)
+	
+	#print("distance_to_target, deadzone_radius",distance_to_target, deadzone_radius, distance_to_target > deadzone_radius)
 	if distance_to_target > deadzone_radius:
 		# Lerp camera position only if outside deadzone
 		_handle_lerp_camera(delta)
@@ -182,8 +254,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		# Keep camera position fixed within dead zone
 		global_position = target_position + camera_offset
-	# Clamp camera height
-	_handle_clamp_camera_height()
+	
+	_handle_rule_of_thirds(delta)
 
 	# Check if the game is paused or stopped
 	if get_tree().paused or !is_instance_valid(self):
@@ -259,9 +331,19 @@ func get_aim_collider() -> Node:
 		return null
 
 
-# Handle FOV changes
+# Handle FOV changes based on parent node's velocity
 func _handle_fov() -> void:
-	camera.fov = lerp(base_fov, zoomed_fov, zoom_factor)
+	# Assuming the parent node has a "velocity" property
+	var parent_velocity : Vector3 = get_parent().velocity
+	
+	# Calculate the speed (magnitude of velocity) to determine the zoom factor
+	var speed : float = parent_velocity.length()
+
+	# Normalize the speed to a range between 0 and 1
+	var normalized_speed : float = speed / get_parent().move_speed  # Assuming max_speed is the maximum speed the parent can achieve
+
+	# Using linear interpolation (lerp) to smoothly transition between base and zoomed FOV based on speed
+	camera.fov = lerp(base_fov, zoomed_fov, -normalized_speed)
 
 # Handle Depth of Field (DOF) effects
 func _handle_dof() -> void:

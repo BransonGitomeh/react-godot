@@ -2749,9 +2749,8 @@ axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_rvo1c")
-move_speed = 20.0
+move_speed = 14.0
 bullet_speed = 14.0
-acceleration = 3.0
 jump_initial_impulse = 34.0
 network_position_interpolation_duration = 60.0
 
@@ -2759,13 +2758,14 @@ network_position_interpolation_duration = 60.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8x2xm")
 
-[node name="CameraController" type="Node3D" parent="." node_paths=PackedStringArray("_anchor")]
+[node name="CameraController" type="Node3D" parent="." node_paths=PackedStringArray("_pivot", "_anchor")]
 top_level = true
 script = ExtResource("3_qrkly")
 player_path = NodePath("..")
 invert_mouse_y = true
 tilt_upper_limit = 0.48
 tilt_lower_limit = -0.8
+_pivot = NodePath("../CharacterRotationRoot/offset")
 _anchor = NodePath("..")
 
 [node name="CameraOverShoulderPivot" type="Marker3D" parent="CameraController"]
@@ -2808,10 +2808,9 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 [node name="CharacterRotationRoot" type="Node3D" parent="."]
 
 [node name="offset" type="Node3D" parent="CharacterRotationRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.70872)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
-visible = false
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 
