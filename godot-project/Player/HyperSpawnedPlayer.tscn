@@ -1,22 +1,22 @@
-[gd_scene load_steps=40 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=40 format=3 uid="uid://ctb5dos0fnymc"]
 
-[ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
-[ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
-[ext_resource type="Script" path="res://Player/CameraController.gd" id="3_qrkly"]
-[ext_resource type="Shader" path="res://Player/PlayerOutline.gdshader" id="3_tjk7l"]
-[ext_resource type="Script" path="res://Player/MeleeAttackArea.gd" id="3_v1vve"]
-[ext_resource type="Script" path="res://Player/CharacterSkin.gd" id="5_45tqe"]
-[ext_resource type="PackedScene" uid="uid://db7wkegkjmixy" path="res://Player/model/gdbot.glb" id="6_yyejb"]
-[ext_resource type="Script" path="res://Player/CoinsContainer.gd" id="7_8eehq"]
-[ext_resource type="Material" uid="uid://dh42cdejchkr3" path="res://Player/model/materials/face_mat.tres" id="7_md0bq"]
-[ext_resource type="PackedScene" uid="uid://cqw64w6kb0fyg" path="res://Player/Coin/CoinVisuals/CoinModel.tscn" id="8_6qxxt"]
-[ext_resource type="Material" uid="uid://cq6bdna8ieu87" path="res://Player/model/materials/heart_core_mat.tres" id="8_no6g8"]
-[ext_resource type="Material" uid="uid://4ugdxr58llu8" path="res://Player/model/materials/glass_mat.tres" id="9_3u4qp"]
-[ext_resource type="Animation" uid="uid://b627b68jhaqwt" path="res://Player/model/custom_animations/default_heartbeat.tres" id="10_gxwha"]
-[ext_resource type="AudioStream" uid="uid://bx0t7f2nuk2lr" path="res://Player/Sounds/03_Step_grass_03.wav" id="10_wx4h4"]
-[ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="11_3s4i7"]
-[ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
-[ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
+[ext_resource type="Script" path="res://Player/Player.gd" id="1_t46em"]
+[ext_resource type="Script" path="res://Player/CameraController.gd" id="2_lewn1"]
+[ext_resource type="Shader" path="res://Player/PlayerOutline.gdshader" id="3_7g28s"]
+[ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="4_1gqka"]
+[ext_resource type="Script" path="res://Player/MeleeAttackArea.gd" id="5_jt6wr"]
+[ext_resource type="Script" path="res://Player/CharacterSkin.gd" id="6_02y5x"]
+[ext_resource type="PackedScene" uid="uid://db7wkegkjmixy" path="res://Player/model/gdbot.glb" id="7_e4nvu"]
+[ext_resource type="Material" uid="uid://dh42cdejchkr3" path="res://Player/model/materials/face_mat.tres" id="8_uebg2"]
+[ext_resource type="Material" uid="uid://cq6bdna8ieu87" path="res://Player/model/materials/heart_core_mat.tres" id="9_0eban"]
+[ext_resource type="Material" uid="uid://4ugdxr58llu8" path="res://Player/model/materials/glass_mat.tres" id="10_jtv6a"]
+[ext_resource type="Animation" uid="uid://b627b68jhaqwt" path="res://Player/model/custom_animations/default_heartbeat.tres" id="11_6mj4r"]
+[ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="12_44257"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="13_13mir"]
+[ext_resource type="Script" path="res://Player/CoinsContainer.gd" id="14_60xei"]
+[ext_resource type="PackedScene" uid="uid://cqw64w6kb0fyg" path="res://Player/Coin/CoinVisuals/CoinModel.tscn" id="15_2jfnd"]
+[ext_resource type="AudioStream" uid="uid://bx0t7f2nuk2lr" path="res://Player/Sounds/03_Step_grass_03.wav" id="16_1eghb"]
+[ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="17_75exq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
 
@@ -24,11 +24,11 @@
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_2ooex"]
 dof_blur_far_enabled = true
-dof_blur_far_distance = 76.0
+dof_blur_far_distance = 45.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ba4x5"]
 render_priority = 0
-shader = ExtResource("3_tjk7l")
+shader = ExtResource("3_7g28s")
 shader_parameter/shadow_color = Color(0, 0, 0, 1)
 shader_parameter/shadow_thickness = 2.0
 shader_parameter/min_edge_distance = 0.005
@@ -2669,8 +2669,8 @@ _data = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8q8s6"]
 _data = {
-"default_heartbeat": ExtResource("10_gxwha"),
-"simple_blink": ExtResource("11_dfucc")
+"default_heartbeat": ExtResource("11_6mj4r"),
+"simple_blink": ExtResource("12_44257")
 }
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dtgvc"]
@@ -2744,57 +2744,61 @@ properties/22/path = NodePath("CameraController:_aim_target")
 properties/22/spawn = true
 properties/22/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" groups=["damageables"]]
+[node name="Node3D" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="." groups=["damageables"]]
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
-script = ExtResource("1_rvo1c")
+script = ExtResource("1_t46em")
 move_speed = 14.0
 bullet_speed = 14.0
 jump_initial_impulse = 34.0
 network_position_interpolation_duration = 60.0
 
-[node name="CharacterCollisionShape" type="CollisionShape3D" parent="."]
+[node name="CharacterCollisionShape" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8x2xm")
 
-[node name="CameraController" type="Node3D" parent="."]
+[node name="CameraController" type="Node3D" parent="Player"]
 top_level = true
-script = ExtResource("3_qrkly")
+script = ExtResource("2_lewn1")
+player_path = NodePath("..")
 invert_mouse_y = true
 tilt_upper_limit = 0.48
 tilt_lower_limit = -0.8
 
-[node name="CameraOverShoulderPivot" type="Marker3D" parent="CameraController"]
+[node name="CameraOverShoulderPivot" type="Marker3D" parent="Player/CameraController"]
 transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
 
-[node name="CameraSpringArm" type="SpringArm3D" parent="CameraController"]
+[node name="CameraSpringArm" type="SpringArm3D" parent="Player/CameraController"]
 transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
 shape = SubResource("SeparationRayShape3D_gqx4v")
-spring_length = 75.0
+spring_length = 8.0
 
-[node name="CameraThirdPersonPivot" type="Marker3D" parent="CameraController/CameraSpringArm"]
+[node name="CameraThirdPersonPivot" type="Marker3D" parent="Player/CameraController/CameraSpringArm"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 
-[node name="PlayerCamera" type="Camera3D" parent="CameraController"]
+[node name="PlayerCamera" type="Camera3D" parent="Player/CameraController"]
 transform = Transform3D(-1, -3.71248e-14, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, -8.74228e-07, 6.04006, -9.29023)
 top_level = true
 attributes = SubResource("CameraAttributesPractical_2ooex")
+projection = 1
 fov = 50.0
 
-[node name="PostProcess" type="MeshInstance3D" parent="CameraController/PlayerCamera"]
+[node name="PostProcess" type="MeshInstance3D" parent="Player/CameraController/PlayerCamera"]
 transform = Transform3D(2.2262, 1.77636e-14, -1.49214e-13, 0, 1.52689, 2.98023e-08, -4.26326e-14, -2.98023e-07, 1.20986, 5.55754e-08, -0.107898, -0.635699)
 material_override = SubResource("ShaderMaterial_ba4x5")
 mesh = SubResource("QuadMesh_j8o5e")
 
-[node name="CameraRayCast" type="RayCast3D" parent="CameraController/PlayerCamera"]
+[node name="CameraRayCast" type="RayCast3D" parent="Player/CameraController/PlayerCamera"]
 transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 target_position = Vector3(0, 0, -100)
 debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
 
-[node name="GrenadeLauncher" parent="." instance=ExtResource("3_54qc4")]
+[node name="GrenadeLauncher" parent="Player" instance=ExtResource("4_1gqka")]
 
-[node name="GroundShapeCast" type="ShapeCast3D" parent="."]
+[node name="GroundShapeCast" type="ShapeCast3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_s5n07")
 target_position = Vector3(0, -2.6, 0)
@@ -2802,46 +2806,46 @@ margin = 0.5
 max_results = 1
 debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 
-[node name="CharacterRotationRoot" type="Node3D" parent="."]
+[node name="CharacterRotationRoot" type="Node3D" parent="Player"]
 
-[node name="offset" type="Node3D" parent="CharacterRotationRoot"]
+[node name="offset" type="Node3D" parent="Player/CharacterRotationRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/CharacterRotationRoot/offset"]
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 
-[node name="MeleeAnchor" type="Node3D" parent="CharacterRotationRoot"]
+[node name="MeleeAnchor" type="Node3D" parent="Player/CharacterRotationRoot"]
 
-[node name="MeleeSphere" type="MeshInstance3D" parent="CharacterRotationRoot/MeleeAnchor"]
+[node name="MeleeSphere" type="MeshInstance3D" parent="Player/CharacterRotationRoot/MeleeAnchor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
 visible = false
 mesh = SubResource("SphereMesh_uex0s")
 skeleton = NodePath("../../..")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterRotationRoot/MeleeAnchor"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/CharacterRotationRoot/MeleeAnchor"]
 root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_xvsui")
 }
 
-[node name="MeleeAttackArea" type="Area3D" parent="CharacterRotationRoot"]
+[node name="MeleeAttackArea" type="Area3D" parent="Player/CharacterRotationRoot"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.959482, 1.0525)
-script = ExtResource("3_v1vve")
+script = ExtResource("5_jt6wr")
 
-[node name="CollisionShape3d" type="CollisionShape3D" parent="CharacterRotationRoot/MeleeAttackArea"]
+[node name="CollisionShape3d" type="CollisionShape3D" parent="Player/CharacterRotationRoot/MeleeAttackArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.246944)
 shape = SubResource("CapsuleShape3D_pcytg")
 disabled = true
 
-[node name="CharacterSkin" type="Node3D" parent="CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
+[node name="CharacterSkin" type="Node3D" parent="Player/CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-script = ExtResource("5_45tqe")
+script = ExtResource("6_02y5x")
 main_animation_player = NodePath("gdbot/AnimationPlayer")
 
-[node name="gdbot" parent="CharacterRotationRoot/CharacterSkin" instance=ExtResource("6_yyejb")]
+[node name="gdbot" parent="Player/CharacterRotationRoot/CharacterSkin" instance=ExtResource("7_e4nvu")]
 
-[node name="Skeleton3D" parent="CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
+[node name="Skeleton3D" parent="Player/CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
 bones/2/rotation = Quaternion(3.09086e-08, 0.707107, 0.707107, 3.09086e-08)
 bones/4/rotation = Quaternion(-0.115911, -2.57656e-08, 5.29041e-08, 0.99326)
 bones/5/rotation = Quaternion(0.198843, 5.30058e-08, -5.38571e-08, 0.980031)
@@ -2874,25 +2878,25 @@ bones/51/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
 bones/56/rotation = Quaternion(0, 0, 1, 0)
 bones/60/rotation = Quaternion(0, 0, 1, 0)
 
-[node name="gdbot_mesh" parent="CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
-surface_material_override/1 = ExtResource("7_md0bq")
-surface_material_override/2 = ExtResource("8_no6g8")
-surface_material_override/3 = ExtResource("9_3u4qp")
+[node name="gdbot_mesh" parent="Player/CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
+surface_material_override/1 = ExtResource("8_uebg2")
+surface_material_override/2 = ExtResource("9_0eban")
+surface_material_override/3 = ExtResource("10_jtv6a")
 
-[node name="AnimationPlayer" parent="CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+[node name="AnimationPlayer" parent="Player/CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
 libraries = {
 "": SubResource("AnimationLibrary_c1lpt"),
 "Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
 }
 playback_default_blend_time = 0.1
 
-[node name="AnimationTree" type="AnimationTree" parent="CharacterRotationRoot/CharacterSkin"]
+[node name="AnimationTree" type="AnimationTree" parent="Player/CharacterRotationRoot/CharacterSkin"]
 root_node = NodePath("../gdbot")
 libraries = {
 "": SubResource("AnimationLibrary_c1lpt"),
 "Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
 }
-tree_root = ExtResource("12_ohjne")
+tree_root = ExtResource("13_13mir")
 anim_player = NodePath("../gdbot/AnimationPlayer")
 parameters/Add2/add_amount = 1.0
 "parameters/Add2 2/add_amount" = 1.0
@@ -2901,7 +2905,7 @@ parameters/PunchOneShot/internal_active = false
 parameters/PunchOneShot/request = 0
 parameters/StateMachine/move/blend_position = 0
 
-[node name="PlayerUI" type="Control" parent="." groups=["camera_mode_toggle"]]
+[node name="PlayerUI" type="Control" parent="Player" groups=["camera_mode_toggle"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -2910,7 +2914,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="AimRecticle" type="ColorRect" parent="PlayerUI"]
+[node name="AimRecticle" type="ColorRect" parent="Player/PlayerUI"]
 unique_name_in_owner = true
 layout_mode = 0
 anchor_left = 0.5
@@ -2926,7 +2930,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.290196)
 
-[node name="CoinsContainer" type="HBoxContainer" parent="PlayerUI"]
+[node name="CoinsContainer" type="HBoxContainer" parent="Player/PlayerUI"]
 unique_name_in_owner = true
 layout_mode = 0
 anchor_left = 1.0
@@ -2939,15 +2943,15 @@ grow_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 30
 alignment = 2
-script = ExtResource("7_8eehq")
+script = ExtResource("14_60xei")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="PlayerUI/CoinsContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Player/PlayerUI/CoinsContainer"]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_horizontal = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="PlayerUI/CoinsContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="Player/PlayerUI/CoinsContainer/SubViewportContainer"]
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
@@ -2955,43 +2959,796 @@ gui_disable_input = true
 size = Vector2i(96, 96)
 render_target_update_mode = 4
 
-[node name="Coin" parent="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("8_6qxxt")]
+[node name="Coin" parent="Player/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("15_2jfnd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.812403)
 
-[node name="godot_coin" parent="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
+[node name="godot_coin" parent="Player/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
 transform = Transform3D(0.278847, 0, 0.960336, 0, 1, 0, -0.960336, 0, 0.278847, 0, 0, 0)
 script = null
 
-[node name="Camera3D" type="Camera3D" parent="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+[node name="Camera3D" type="Camera3D" parent="Player/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.604131)
 current = true
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Player/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
 
-[node name="CoinsLabel" type="Label" parent="PlayerUI/CoinsContainer"]
+[node name="CoinsLabel" type="Label" parent="Player/PlayerUI/CoinsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 64
 text = "0"
 
-[node name="Timer" type="Timer" parent="PlayerUI/CoinsContainer"]
+[node name="Timer" type="Timer" parent="Player/PlayerUI/CoinsContainer"]
 wait_time = 3.0
 one_shot = true
 
-[node name="StepSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("10_wx4h4")
+[node name="StepSound" type="AudioStreamPlayer3D" parent="Player"]
+stream = ExtResource("16_1eghb")
 volume_db = 1.0
 
-[node name="LandingSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("11_3s4i7")
+[node name="LandingSound" type="AudioStreamPlayer3D" parent="Player"]
+stream = ExtResource("17_75exq")
 volume_db = 1.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Player"]
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
-[connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
-[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
+[node name="Player2" type="CharacterBody3D" parent="." groups=["damageables"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4754, 0, 0)
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_t46em")
+move_speed = 14.0
+bullet_speed = 14.0
+jump_initial_impulse = 34.0
+network_position_interpolation_duration = 60.0
 
-[editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
-[editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[node name="CharacterCollisionShape" type="CollisionShape3D" parent="Player2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_8x2xm")
+
+[node name="CameraController" type="Node3D" parent="Player2"]
+top_level = true
+script = ExtResource("2_lewn1")
+player_path = NodePath("..")
+invert_mouse_y = true
+tilt_upper_limit = 0.48
+tilt_lower_limit = -0.8
+
+[node name="CameraOverShoulderPivot" type="Marker3D" parent="Player2/CameraController"]
+transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="Player2/CameraController"]
+transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
+shape = SubResource("SeparationRayShape3D_gqx4v")
+spring_length = 8.0
+
+[node name="CameraThirdPersonPivot" type="Marker3D" parent="Player2/CameraController/CameraSpringArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="PlayerCamera" type="Camera3D" parent="Player2/CameraController"]
+transform = Transform3D(-1, -3.71248e-14, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, -8.74228e-07, 6.04006, -9.29023)
+top_level = true
+attributes = SubResource("CameraAttributesPractical_2ooex")
+projection = 1
+fov = 50.0
+
+[node name="PostProcess" type="MeshInstance3D" parent="Player2/CameraController/PlayerCamera"]
+transform = Transform3D(2.2262, 1.77636e-14, -1.49214e-13, 0, 1.52689, 2.98023e-08, -4.26326e-14, -2.98023e-07, 1.20986, 5.55754e-08, -0.107898, -0.635699)
+material_override = SubResource("ShaderMaterial_ba4x5")
+mesh = SubResource("QuadMesh_j8o5e")
+
+[node name="CameraRayCast" type="RayCast3D" parent="Player2/CameraController/PlayerCamera"]
+transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+target_position = Vector3(0, 0, -100)
+debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
+
+[node name="GrenadeLauncher" parent="Player2" instance=ExtResource("4_1gqka")]
+
+[node name="GroundShapeCast" type="ShapeCast3D" parent="Player2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_s5n07")
+target_position = Vector3(0, -2.6, 0)
+margin = 0.5
+max_results = 1
+debug_shape_custom_color = Color(0.658824, 1, 0, 1)
+
+[node name="CharacterRotationRoot" type="Node3D" parent="Player2"]
+
+[node name="offset" type="Node3D" parent="Player2/CharacterRotationRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player2/CharacterRotationRoot/offset"]
+mesh = SubResource("BoxMesh_o6lug")
+skeleton = NodePath("../../..")
+
+[node name="MeleeAnchor" type="Node3D" parent="Player2/CharacterRotationRoot"]
+
+[node name="MeleeSphere" type="MeshInstance3D" parent="Player2/CharacterRotationRoot/MeleeAnchor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
+visible = false
+mesh = SubResource("SphereMesh_uex0s")
+skeleton = NodePath("../../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player2/CharacterRotationRoot/MeleeAnchor"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_xvsui")
+}
+
+[node name="MeleeAttackArea" type="Area3D" parent="Player2/CharacterRotationRoot"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.959482, 1.0525)
+script = ExtResource("5_jt6wr")
+
+[node name="CollisionShape3d" type="CollisionShape3D" parent="Player2/CharacterRotationRoot/MeleeAttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.246944)
+shape = SubResource("CapsuleShape3D_pcytg")
+disabled = true
+
+[node name="CharacterSkin" type="Node3D" parent="Player2/CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+script = ExtResource("6_02y5x")
+main_animation_player = NodePath("../../../Player/CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer")
+
+[node name="gdbot" parent="Player2/CharacterRotationRoot/CharacterSkin" instance=ExtResource("7_e4nvu")]
+
+[node name="Skeleton3D" parent="Player2/CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
+bones/2/rotation = Quaternion(3.09086e-08, 0.707107, 0.707107, 3.09086e-08)
+bones/4/rotation = Quaternion(-0.115911, -2.57656e-08, 5.29041e-08, 0.99326)
+bones/5/rotation = Quaternion(0.198843, 5.30058e-08, -5.38571e-08, 0.980031)
+bones/7/rotation = Quaternion(-0.115911, 8.72134e-08, -6.00749e-08, 0.99326)
+bones/8/rotation = Quaternion(0.198843, -5.00951e-08, 6.82031e-08, 0.980031)
+bones/10/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/11/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/13/rotation = Quaternion(0.0819346, 1.62373e-07, 6.18589e-09, 0.996638)
+bones/14/rotation = Quaternion(-0.0819346, 0, -1.95347e-08, 0.996638)
+bones/16/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/17/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/19/rotation = Quaternion(-0.120361, -0.00802529, 0.000973064, 0.992697)
+bones/21/rotation = Quaternion(-0.116368, -0.124403, 0.0384288, 0.984635)
+bones/22/rotation = Quaternion(6.38189e-07, 6.45407e-07, -2.47732e-07, 1)
+bones/25/rotation = Quaternion(-0.116986, 0.0758535, -0.0455612, 0.989184)
+bones/26/rotation = Quaternion(8.61473e-09, -1.58325e-08, -7.35745e-08, 1)
+bones/29/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/30/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/33/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/34/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/37/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/38/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/40/rotation = Quaternion(-0.120361, 0.00802529, -0.000973064, 0.992697)
+bones/42/rotation = Quaternion(-0.116368, 0.124403, -0.0384288, 0.984635)
+bones/43/rotation = Quaternion(6.37723e-07, -6.44941e-07, 2.47732e-07, 1)
+bones/46/rotation = Quaternion(-0.116986, -0.0758535, 0.0455612, 0.989184)
+bones/47/rotation = Quaternion(9.31322e-09, 1.67638e-08, 7.54371e-08, 1)
+bones/50/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/51/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/56/rotation = Quaternion(0, 0, 1, 0)
+bones/60/rotation = Quaternion(0, 0, 1, 0)
+
+[node name="gdbot_mesh" parent="Player2/CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
+surface_material_override/1 = ExtResource("8_uebg2")
+surface_material_override/2 = ExtResource("9_0eban")
+surface_material_override/3 = ExtResource("10_jtv6a")
+
+[node name="AnimationPlayer" parent="Player2/CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+playback_default_blend_time = 0.1
+
+[node name="AnimationTree" type="AnimationTree" parent="Player2/CharacterRotationRoot/CharacterSkin"]
+root_node = NodePath("../gdbot")
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+tree_root = ExtResource("13_13mir")
+anim_player = NodePath("../gdbot/AnimationPlayer")
+parameters/Add2/add_amount = 1.0
+"parameters/Add2 2/add_amount" = 1.0
+parameters/PunchOneShot/active = false
+parameters/PunchOneShot/internal_active = false
+parameters/PunchOneShot/request = 0
+parameters/StateMachine/move/blend_position = 0
+
+[node name="PlayerUI" type="Control" parent="Player2" groups=["camera_mode_toggle"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AimRecticle" type="ColorRect" parent="Player2/PlayerUI"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -3.5
+offset_right = 3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.290196)
+
+[node name="CoinsContainer" type="HBoxContainer" parent="Player2/PlayerUI"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -336.0
+offset_top = -100.0
+offset_right = -80.0
+offset_bottom = -4.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 30
+alignment = 2
+script = ExtResource("14_60xei")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Player2/PlayerUI/CoinsContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Player2/PlayerUI/CoinsContainer/SubViewportContainer"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(96, 96)
+render_target_update_mode = 4
+
+[node name="Coin" parent="Player2/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("15_2jfnd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.812403)
+
+[node name="godot_coin" parent="Player2/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
+transform = Transform3D(0.278847, 0, 0.960336, 0, 1, 0, -0.960336, 0, 0.278847, 0, 0, 0)
+script = null
+
+[node name="Camera3D" type="Camera3D" parent="Player2/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.604131)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Player2/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+
+[node name="CoinsLabel" type="Label" parent="Player2/PlayerUI/CoinsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 64
+text = "0"
+
+[node name="Timer" type="Timer" parent="Player2/PlayerUI/CoinsContainer"]
+wait_time = 3.0
+one_shot = true
+
+[node name="StepSound" type="AudioStreamPlayer3D" parent="Player2"]
+stream = ExtResource("16_1eghb")
+volume_db = 1.0
+
+[node name="LandingSound" type="AudioStreamPlayer3D" parent="Player2"]
+stream = ExtResource("17_75exq")
+volume_db = 1.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Player2"]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_dtgvc")
+
+[node name="Player3" type="CharacterBody3D" parent="." groups=["damageables"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4754, 0, -4.33991)
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_t46em")
+move_speed = 14.0
+bullet_speed = 14.0
+jump_initial_impulse = 34.0
+network_position_interpolation_duration = 60.0
+
+[node name="CharacterCollisionShape" type="CollisionShape3D" parent="Player3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_8x2xm")
+
+[node name="CameraController" type="Node3D" parent="Player3"]
+top_level = true
+script = ExtResource("2_lewn1")
+player_path = NodePath("..")
+invert_mouse_y = true
+tilt_upper_limit = 0.48
+tilt_lower_limit = -0.8
+
+[node name="CameraOverShoulderPivot" type="Marker3D" parent="Player3/CameraController"]
+transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="Player3/CameraController"]
+transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
+shape = SubResource("SeparationRayShape3D_gqx4v")
+spring_length = 8.0
+
+[node name="CameraThirdPersonPivot" type="Marker3D" parent="Player3/CameraController/CameraSpringArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="PlayerCamera" type="Camera3D" parent="Player3/CameraController"]
+transform = Transform3D(-1, -3.71248e-14, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, -8.74228e-07, 6.04006, -9.29023)
+top_level = true
+attributes = SubResource("CameraAttributesPractical_2ooex")
+projection = 1
+fov = 50.0
+
+[node name="PostProcess" type="MeshInstance3D" parent="Player3/CameraController/PlayerCamera"]
+transform = Transform3D(2.2262, 1.77636e-14, -1.49214e-13, 0, 1.52689, 2.98023e-08, -4.26326e-14, -2.98023e-07, 1.20986, 5.55754e-08, -0.107898, -0.635699)
+material_override = SubResource("ShaderMaterial_ba4x5")
+mesh = SubResource("QuadMesh_j8o5e")
+
+[node name="CameraRayCast" type="RayCast3D" parent="Player3/CameraController/PlayerCamera"]
+transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+target_position = Vector3(0, 0, -100)
+debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
+
+[node name="GrenadeLauncher" parent="Player3" instance=ExtResource("4_1gqka")]
+
+[node name="GroundShapeCast" type="ShapeCast3D" parent="Player3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_s5n07")
+target_position = Vector3(0, -2.6, 0)
+margin = 0.5
+max_results = 1
+debug_shape_custom_color = Color(0.658824, 1, 0, 1)
+
+[node name="CharacterRotationRoot" type="Node3D" parent="Player3"]
+
+[node name="offset" type="Node3D" parent="Player3/CharacterRotationRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player3/CharacterRotationRoot/offset"]
+mesh = SubResource("BoxMesh_o6lug")
+skeleton = NodePath("../../..")
+
+[node name="MeleeAnchor" type="Node3D" parent="Player3/CharacterRotationRoot"]
+
+[node name="MeleeSphere" type="MeshInstance3D" parent="Player3/CharacterRotationRoot/MeleeAnchor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
+visible = false
+mesh = SubResource("SphereMesh_uex0s")
+skeleton = NodePath("../../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player3/CharacterRotationRoot/MeleeAnchor"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_xvsui")
+}
+
+[node name="MeleeAttackArea" type="Area3D" parent="Player3/CharacterRotationRoot"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.959482, 1.0525)
+script = ExtResource("5_jt6wr")
+
+[node name="CollisionShape3d" type="CollisionShape3D" parent="Player3/CharacterRotationRoot/MeleeAttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.246944)
+shape = SubResource("CapsuleShape3D_pcytg")
+disabled = true
+
+[node name="CharacterSkin" type="Node3D" parent="Player3/CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+script = ExtResource("6_02y5x")
+main_animation_player = NodePath("../../../Player/CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer")
+
+[node name="gdbot" parent="Player3/CharacterRotationRoot/CharacterSkin" instance=ExtResource("7_e4nvu")]
+
+[node name="Skeleton3D" parent="Player3/CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
+bones/2/rotation = Quaternion(3.09086e-08, 0.707107, 0.707107, 3.09086e-08)
+bones/4/rotation = Quaternion(-0.115911, -2.57656e-08, 5.29041e-08, 0.99326)
+bones/5/rotation = Quaternion(0.198843, 5.30058e-08, -5.38571e-08, 0.980031)
+bones/7/rotation = Quaternion(-0.115911, 8.72134e-08, -6.00749e-08, 0.99326)
+bones/8/rotation = Quaternion(0.198843, -5.00951e-08, 6.82031e-08, 0.980031)
+bones/10/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/11/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/13/rotation = Quaternion(0.0819346, 1.62373e-07, 6.18589e-09, 0.996638)
+bones/14/rotation = Quaternion(-0.0819346, 0, -1.95347e-08, 0.996638)
+bones/16/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/17/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/19/rotation = Quaternion(-0.120361, -0.00802529, 0.000973064, 0.992697)
+bones/21/rotation = Quaternion(-0.116368, -0.124403, 0.0384288, 0.984635)
+bones/22/rotation = Quaternion(6.38189e-07, 6.45407e-07, -2.47732e-07, 1)
+bones/25/rotation = Quaternion(-0.116986, 0.0758535, -0.0455612, 0.989184)
+bones/26/rotation = Quaternion(8.61473e-09, -1.58325e-08, -7.35745e-08, 1)
+bones/29/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/30/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/33/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/34/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/37/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/38/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/40/rotation = Quaternion(-0.120361, 0.00802529, -0.000973064, 0.992697)
+bones/42/rotation = Quaternion(-0.116368, 0.124403, -0.0384288, 0.984635)
+bones/43/rotation = Quaternion(6.37723e-07, -6.44941e-07, 2.47732e-07, 1)
+bones/46/rotation = Quaternion(-0.116986, -0.0758535, 0.0455612, 0.989184)
+bones/47/rotation = Quaternion(9.31322e-09, 1.67638e-08, 7.54371e-08, 1)
+bones/50/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/51/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/56/rotation = Quaternion(0, 0, 1, 0)
+bones/60/rotation = Quaternion(0, 0, 1, 0)
+
+[node name="gdbot_mesh" parent="Player3/CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
+surface_material_override/1 = ExtResource("8_uebg2")
+surface_material_override/2 = ExtResource("9_0eban")
+surface_material_override/3 = ExtResource("10_jtv6a")
+
+[node name="AnimationPlayer" parent="Player3/CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+playback_default_blend_time = 0.1
+
+[node name="AnimationTree" type="AnimationTree" parent="Player3/CharacterRotationRoot/CharacterSkin"]
+root_node = NodePath("../gdbot")
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+tree_root = ExtResource("13_13mir")
+anim_player = NodePath("../gdbot/AnimationPlayer")
+parameters/Add2/add_amount = 1.0
+"parameters/Add2 2/add_amount" = 1.0
+parameters/PunchOneShot/active = false
+parameters/PunchOneShot/internal_active = false
+parameters/PunchOneShot/request = 0
+parameters/StateMachine/move/blend_position = 0
+
+[node name="PlayerUI" type="Control" parent="Player3" groups=["camera_mode_toggle"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AimRecticle" type="ColorRect" parent="Player3/PlayerUI"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -3.5
+offset_right = 3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.290196)
+
+[node name="CoinsContainer" type="HBoxContainer" parent="Player3/PlayerUI"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -336.0
+offset_top = -100.0
+offset_right = -80.0
+offset_bottom = -4.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 30
+alignment = 2
+script = ExtResource("14_60xei")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Player3/PlayerUI/CoinsContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Player3/PlayerUI/CoinsContainer/SubViewportContainer"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(96, 96)
+render_target_update_mode = 4
+
+[node name="Coin" parent="Player3/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("15_2jfnd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.812403)
+
+[node name="godot_coin" parent="Player3/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
+transform = Transform3D(0.278847, 0, 0.960336, 0, 1, 0, -0.960336, 0, 0.278847, 0, 0, 0)
+script = null
+
+[node name="Camera3D" type="Camera3D" parent="Player3/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.604131)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Player3/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+
+[node name="CoinsLabel" type="Label" parent="Player3/PlayerUI/CoinsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 64
+text = "0"
+
+[node name="Timer" type="Timer" parent="Player3/PlayerUI/CoinsContainer"]
+wait_time = 3.0
+one_shot = true
+
+[node name="StepSound" type="AudioStreamPlayer3D" parent="Player3"]
+stream = ExtResource("16_1eghb")
+volume_db = 1.0
+
+[node name="LandingSound" type="AudioStreamPlayer3D" parent="Player3"]
+stream = ExtResource("17_75exq")
+volume_db = 1.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Player3"]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_dtgvc")
+
+[node name="Player4" type="CharacterBody3D" parent="." groups=["damageables"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.413574, 0, -4.33991)
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_t46em")
+move_speed = 14.0
+bullet_speed = 14.0
+jump_initial_impulse = 34.0
+network_position_interpolation_duration = 60.0
+
+[node name="CharacterCollisionShape" type="CollisionShape3D" parent="Player4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_8x2xm")
+
+[node name="CameraController" type="Node3D" parent="Player4"]
+top_level = true
+script = ExtResource("2_lewn1")
+player_path = NodePath("..")
+invert_mouse_y = true
+tilt_upper_limit = 0.48
+tilt_lower_limit = -0.8
+
+[node name="CameraOverShoulderPivot" type="Marker3D" parent="Player4/CameraController"]
+transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="Player4/CameraController"]
+transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
+shape = SubResource("SeparationRayShape3D_gqx4v")
+spring_length = 8.0
+
+[node name="CameraThirdPersonPivot" type="Marker3D" parent="Player4/CameraController/CameraSpringArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="PlayerCamera" type="Camera3D" parent="Player4/CameraController"]
+transform = Transform3D(-1, -3.71248e-14, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, -8.74228e-07, 6.04006, -9.29023)
+top_level = true
+attributes = SubResource("CameraAttributesPractical_2ooex")
+projection = 1
+fov = 50.0
+
+[node name="PostProcess" type="MeshInstance3D" parent="Player4/CameraController/PlayerCamera"]
+transform = Transform3D(2.2262, 1.77636e-14, -1.49214e-13, 0, 1.52689, 2.98023e-08, -4.26326e-14, -2.98023e-07, 1.20986, 5.55754e-08, -0.107898, -0.635699)
+material_override = SubResource("ShaderMaterial_ba4x5")
+mesh = SubResource("QuadMesh_j8o5e")
+
+[node name="CameraRayCast" type="RayCast3D" parent="Player4/CameraController/PlayerCamera"]
+transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+target_position = Vector3(0, 0, -100)
+debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
+
+[node name="GrenadeLauncher" parent="Player4" instance=ExtResource("4_1gqka")]
+
+[node name="GroundShapeCast" type="ShapeCast3D" parent="Player4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_s5n07")
+target_position = Vector3(0, -2.6, 0)
+margin = 0.5
+max_results = 1
+debug_shape_custom_color = Color(0.658824, 1, 0, 1)
+
+[node name="CharacterRotationRoot" type="Node3D" parent="Player4"]
+
+[node name="offset" type="Node3D" parent="Player4/CharacterRotationRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player4/CharacterRotationRoot/offset"]
+mesh = SubResource("BoxMesh_o6lug")
+skeleton = NodePath("../../..")
+
+[node name="MeleeAnchor" type="Node3D" parent="Player4/CharacterRotationRoot"]
+
+[node name="MeleeSphere" type="MeshInstance3D" parent="Player4/CharacterRotationRoot/MeleeAnchor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
+visible = false
+mesh = SubResource("SphereMesh_uex0s")
+skeleton = NodePath("../../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player4/CharacterRotationRoot/MeleeAnchor"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_xvsui")
+}
+
+[node name="MeleeAttackArea" type="Area3D" parent="Player4/CharacterRotationRoot"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.959482, 1.0525)
+script = ExtResource("5_jt6wr")
+
+[node name="CollisionShape3d" type="CollisionShape3D" parent="Player4/CharacterRotationRoot/MeleeAttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.246944)
+shape = SubResource("CapsuleShape3D_pcytg")
+disabled = true
+
+[node name="CharacterSkin" type="Node3D" parent="Player4/CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+script = ExtResource("6_02y5x")
+main_animation_player = NodePath("../../../Player/CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer")
+
+[node name="gdbot" parent="Player4/CharacterRotationRoot/CharacterSkin" instance=ExtResource("7_e4nvu")]
+
+[node name="Skeleton3D" parent="Player4/CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
+bones/2/rotation = Quaternion(3.09086e-08, 0.707107, 0.707107, 3.09086e-08)
+bones/4/rotation = Quaternion(-0.115911, -2.57656e-08, 5.29041e-08, 0.99326)
+bones/5/rotation = Quaternion(0.198843, 5.30058e-08, -5.38571e-08, 0.980031)
+bones/7/rotation = Quaternion(-0.115911, 8.72134e-08, -6.00749e-08, 0.99326)
+bones/8/rotation = Quaternion(0.198843, -5.00951e-08, 6.82031e-08, 0.980031)
+bones/10/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/11/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/13/rotation = Quaternion(0.0819346, 1.62373e-07, 6.18589e-09, 0.996638)
+bones/14/rotation = Quaternion(-0.0819346, 0, -1.95347e-08, 0.996638)
+bones/16/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/17/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/19/rotation = Quaternion(-0.120361, -0.00802529, 0.000973064, 0.992697)
+bones/21/rotation = Quaternion(-0.116368, -0.124403, 0.0384288, 0.984635)
+bones/22/rotation = Quaternion(6.38189e-07, 6.45407e-07, -2.47732e-07, 1)
+bones/25/rotation = Quaternion(-0.116986, 0.0758535, -0.0455612, 0.989184)
+bones/26/rotation = Quaternion(8.61473e-09, -1.58325e-08, -7.35745e-08, 1)
+bones/29/rotation = Quaternion(-0.505414, -0.494527, -0.494527, 0.505414)
+bones/30/rotation = Quaternion(-5.46012e-10, 2.14316e-08, -0.0279458, 0.999609)
+bones/33/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/34/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/37/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/38/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/40/rotation = Quaternion(-0.120361, 0.00802529, -0.000973064, 0.992697)
+bones/42/rotation = Quaternion(-0.116368, 0.124403, -0.0384288, 0.984635)
+bones/43/rotation = Quaternion(6.37723e-07, -6.44941e-07, 2.47732e-07, 1)
+bones/46/rotation = Quaternion(-0.116986, -0.0758535, 0.0455612, 0.989184)
+bones/47/rotation = Quaternion(9.31322e-09, 1.67638e-08, 7.54371e-08, 1)
+bones/50/rotation = Quaternion(-0.505414, 0.494527, 0.494527, 0.505414)
+bones/51/rotation = Quaternion(2.08907e-10, 5.56092e-09, 0.0279458, 0.999609)
+bones/56/rotation = Quaternion(0, 0, 1, 0)
+bones/60/rotation = Quaternion(0, 0, 1, 0)
+
+[node name="gdbot_mesh" parent="Player4/CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
+surface_material_override/1 = ExtResource("8_uebg2")
+surface_material_override/2 = ExtResource("9_0eban")
+surface_material_override/3 = ExtResource("10_jtv6a")
+
+[node name="AnimationPlayer" parent="Player4/CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+playback_default_blend_time = 0.1
+
+[node name="AnimationTree" type="AnimationTree" parent="Player4/CharacterRotationRoot/CharacterSkin"]
+root_node = NodePath("../gdbot")
+libraries = {
+"": SubResource("AnimationLibrary_c1lpt"),
+"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
+}
+tree_root = ExtResource("13_13mir")
+anim_player = NodePath("../gdbot/AnimationPlayer")
+parameters/Add2/add_amount = 1.0
+"parameters/Add2 2/add_amount" = 1.0
+parameters/PunchOneShot/active = false
+parameters/PunchOneShot/internal_active = false
+parameters/PunchOneShot/request = 0
+parameters/StateMachine/move/blend_position = 0
+
+[node name="PlayerUI" type="Control" parent="Player4" groups=["camera_mode_toggle"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AimRecticle" type="ColorRect" parent="Player4/PlayerUI"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -3.5
+offset_right = 3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.290196)
+
+[node name="CoinsContainer" type="HBoxContainer" parent="Player4/PlayerUI"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -336.0
+offset_top = -100.0
+offset_right = -80.0
+offset_bottom = -4.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 30
+alignment = 2
+script = ExtResource("14_60xei")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Player4/PlayerUI/CoinsContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Player4/PlayerUI/CoinsContainer/SubViewportContainer"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+size = Vector2i(96, 96)
+render_target_update_mode = 4
+
+[node name="Coin" parent="Player4/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("15_2jfnd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.812403)
+
+[node name="godot_coin" parent="Player4/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
+transform = Transform3D(0.278847, 0, 0.960336, 0, 1, 0, -0.960336, 0, 0.278847, 0, 0, 0)
+script = null
+
+[node name="Camera3D" type="Camera3D" parent="Player4/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.604131)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Player4/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+
+[node name="CoinsLabel" type="Label" parent="Player4/PlayerUI/CoinsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 64
+text = "0"
+
+[node name="Timer" type="Timer" parent="Player4/PlayerUI/CoinsContainer"]
+wait_time = 3.0
+one_shot = true
+
+[node name="StepSound" type="AudioStreamPlayer3D" parent="Player4"]
+stream = ExtResource("16_1eghb")
+volume_db = 1.0
+
+[node name="LandingSound" type="AudioStreamPlayer3D" parent="Player4"]
+stream = ExtResource("17_75exq")
+volume_db = 1.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Player4"]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_dtgvc")
+
+[connection signal="foot_step" from="Player/CharacterRotationRoot/CharacterSkin" to="Player" method="play_foot_step_sound"]
+[connection signal="synchronized" from="Player/MultiplayerSynchronizer" to="Player" method="_on_multiplayer_synchronizer_synchronized"]
+[connection signal="foot_step" from="Player2/CharacterRotationRoot/CharacterSkin" to="Player2" method="play_foot_step_sound"]
+[connection signal="synchronized" from="Player2/MultiplayerSynchronizer" to="Player2" method="_on_multiplayer_synchronizer_synchronized"]
+[connection signal="foot_step" from="Player3/CharacterRotationRoot/CharacterSkin" to="Player3" method="play_foot_step_sound"]
+[connection signal="synchronized" from="Player3/MultiplayerSynchronizer" to="Player3" method="_on_multiplayer_synchronizer_synchronized"]
+[connection signal="foot_step" from="Player4/CharacterRotationRoot/CharacterSkin" to="Player4" method="play_foot_step_sound"]
+[connection signal="synchronized" from="Player4/MultiplayerSynchronizer" to="Player4" method="_on_multiplayer_synchronizer_synchronized"]
+
+[editable path="Player/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="Player/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[editable path="Player2/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="Player2/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[editable path="Player3/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="Player3/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[editable path="Player4/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="Player4/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]

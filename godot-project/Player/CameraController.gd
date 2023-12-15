@@ -124,8 +124,8 @@ func _look_ahead():
 	#self.look_at(target_position, Vector3(0, 1, 0))  # The second parameter is the up vector (usually Y-axis)
 
 	# Set the camera's rotation to face the look ahead position
-	self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
-	#camera.look_at(-offset_node.position, Vector3.UP)
+	#self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
+	camera.look_at(-offset_node.position, Vector3.UP)
 
 # Function to handle linear interpolation for camera movement
 func _handle_lerp_camera(delta: float):
@@ -187,7 +187,7 @@ func _handle_rule_of_thirds(delta):
 		rule_of_thirds_size.y
 	)
 	
-	print(rule_of_thirds_region, Vector2(player_world_pos.x, player_world_pos.y))
+	#print(rule_of_thirds_region, Vector2(player_world_pos.x, player_world_pos.y))
 	# Ensure character placement within the central two squares with an additional offset
 	#if not rule_of_thirds_region.has_point(Vector2(player_world_pos.x, player_world_pos.y)):
 		# Character is outside the rule-of-thirds region, adjust camera
@@ -196,7 +196,7 @@ func _handle_rule_of_thirds(delta):
 		clamp(player_world_pos.y, rule_of_thirds_region.position.y, rule_of_thirds_region.position.y + rule_of_thirds_region.size.y)
 	)
 	# Apply additional offset
-	print("new_camera_pos", "Apply additional offset", new_camera_pos)
+	#print("new_camera_pos", "Apply additional offset", new_camera_pos)
 	new_camera_pos += character_offset
 	global_position = Vector3(new_camera_pos.x, new_camera_pos.y, global_position.z)
 
@@ -255,7 +255,7 @@ func _physics_process(delta: float) -> void:
 		# Keep camera position fixed within dead zone
 		global_position = target_position + camera_offset
 	
-	_handle_rule_of_thirds(delta)
+	#_handle_rule_of_thirds(delta)
 
 	# Check if the game is paused or stopped
 	if get_tree().paused or !is_instance_valid(self):

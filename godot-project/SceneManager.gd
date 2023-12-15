@@ -10,9 +10,6 @@ func find_and_print_node_path(node, target_name, current_path=""):
 	for child in node.get_children():
 		find_and_print_node_path(child, target_name, current_path + node.get_name() + "/")
 
-
-
-
 func _ready():
 	# Assuming you are calling this function in the root of your scene
 	find_and_print_node_path(self, "CharacterSkin")
