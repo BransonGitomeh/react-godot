@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn7yhxnr3q5o3"]
+
+[ext_resource type="Script" path="res://effect.gd" id="1_x7nfi"]
+
+[sub_resource type="EffekseerEffect" id="EffekseerEffect_bbuqy"]
+
+[node name="Effect" type="EffekseerEmitter3D"]
+effect = SubResource("EffekseerEffect_bbuqy")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_x7nfi")

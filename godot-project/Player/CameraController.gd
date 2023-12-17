@@ -164,6 +164,7 @@ func _handle_rule_of_thirds(delta):
 		# Lerp camera position only if outside deadzone
 		_handle_lerp_camera(delta)
 		_look_ahead()
+		pass;
 	else:
 		pass
 		# Keep camera position fixed within dead zone

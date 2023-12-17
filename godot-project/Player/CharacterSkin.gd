@@ -45,4 +45,17 @@ func fall():
 @rpc("any_peer", "call_local", "reliable")
 func punch():
 	animation_tree["parameters/PunchOneShot/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
+			#add effekseer effect here
+	# Create a new instance of the effect
+	var effect_instance = preload("res://effect.tscn").instantiate()
+
+	# Set position in the grid
+	effect_instance.transform.origin = self.transform.origin
+
+	# Add the effect as a child of the current scene
+	add_child(effect_instance)
+	
+	effect_instance.effect = load("res://effects/sample-material3/ef_fire01.efkefc")
+	
+	effect_instance.play()
 

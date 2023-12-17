@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=41 format=3 uid="uid://ciqrpd5675boy"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
@@ -17,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="11_3s4i7"]
 [ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
+[ext_resource type="PackedScene" uid="uid://dn7yhxnr3q5o3" path="res://effect.tscn" id="18_ge2id"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
 
@@ -2676,73 +2677,96 @@ _data = {
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dtgvc"]
 properties/0/path = NodePath("CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer:current_animation")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/sync = true
+properties/0/watch = false
 properties/1/path = NodePath(".:_position_before")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/sync = true
+properties/1/watch = false
 properties/2/path = NodePath(".:_position_after")
 properties/2/spawn = true
-properties/2/replication_mode = 1
+properties/2/sync = true
+properties/2/watch = false
 properties/3/path = NodePath("CharacterRotationRoot:rotation")
 properties/3/spawn = true
-properties/3/replication_mode = 1
+properties/3/sync = true
+properties/3/watch = false
 properties/4/path = NodePath(".:_move_direction")
 properties/4/spawn = true
-properties/4/replication_mode = 1
+properties/4/sync = true
+properties/4/watch = false
 properties/5/path = NodePath(".:_velocity_before")
 properties/5/spawn = true
-properties/5/replication_mode = 1
+properties/5/sync = true
+properties/5/watch = false
 properties/6/path = NodePath(".:_last_position_received")
 properties/6/spawn = true
-properties/6/replication_mode = 1
+properties/6/sync = true
+properties/6/watch = false
 properties/7/path = NodePath(".:_last_velocity_received")
 properties/7/spawn = true
-properties/7/replication_mode = 1
+properties/7/sync = true
+properties/7/watch = false
 properties/8/path = NodePath(".:_last_update_time")
 properties/8/spawn = true
-properties/8/replication_mode = 1
+properties/8/sync = true
+properties/8/watch = false
 properties/9/path = NodePath(".:_smoothed_input")
 properties/9/spawn = true
-properties/9/replication_mode = 1
+properties/9/sync = true
+properties/9/watch = false
 properties/10/path = NodePath(".:_predicted_position")
 properties/10/spawn = true
-properties/10/replication_mode = 1
+properties/10/sync = true
+properties/10/watch = false
 properties/11/path = NodePath(".:_last_velocity_before")
 properties/11/spawn = true
-properties/11/replication_mode = 1
+properties/11/sync = true
+properties/11/watch = false
 properties/12/path = NodePath(".:_predicted_positions")
 properties/12/spawn = true
-properties/12/replication_mode = 1
+properties/12/sync = true
+properties/12/watch = false
 properties/13/path = NodePath(".:_predicted_velocity")
 properties/13/spawn = true
-properties/13/replication_mode = 1
+properties/13/sync = true
+properties/13/watch = false
 properties/14/path = NodePath(".:_predicted_velocity_current")
 properties/14/spawn = true
-properties/14/replication_mode = 1
+properties/14/sync = true
+properties/14/watch = false
 properties/15/path = NodePath(".:_predicted_velocity_previous")
 properties/15/spawn = true
-properties/15/replication_mode = 1
+properties/15/sync = true
+properties/15/watch = false
 properties/16/path = NodePath(".:_time_since_last_update")
 properties/16/spawn = true
-properties/16/replication_mode = 1
+properties/16/sync = true
+properties/16/watch = false
 properties/17/path = NodePath(".:is_attacking")
 properties/17/spawn = true
-properties/17/replication_mode = 1
+properties/17/sync = true
+properties/17/watch = false
 properties/18/path = NodePath(".:is_just_attacking")
 properties/18/spawn = true
-properties/18/replication_mode = 1
+properties/18/sync = true
+properties/18/watch = false
 properties/19/path = NodePath(".:is_aiming")
 properties/19/spawn = true
-properties/19/replication_mode = 1
+properties/19/sync = true
+properties/19/watch = false
 properties/20/path = NodePath(".:is_air_boosting")
 properties/20/spawn = true
-properties/20/replication_mode = 1
+properties/20/sync = true
+properties/20/watch = false
 properties/21/path = NodePath(".:is_just_on_floor")
 properties/21/spawn = true
-properties/21/replication_mode = 1
+properties/21/sync = true
+properties/21/watch = false
 properties/22/path = NodePath("CameraController:_aim_target")
 properties/22/spawn = true
-properties/22/replication_mode = 1
+properties/22/sync = true
+properties/22/watch = false
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
@@ -2759,13 +2783,12 @@ network_position_interpolation_duration = 60.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8x2xm")
 
-[node name="CameraController" type="Node3D" parent="." node_paths=PackedStringArray("_pivot")]
+[node name="CameraController" type="Node3D" parent="."]
 top_level = true
 script = ExtResource("3_qrkly")
 invert_mouse_y = true
 tilt_upper_limit = 0.48
 tilt_lower_limit = -0.8
-_pivot = NodePath("CameraSpringArm/CameraThirdPersonPivot")
 
 [node name="CameraOverShoulderPivot" type="Marker3D" parent="CameraController"]
 transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
@@ -2810,6 +2833,7 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.9005)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
+visible = false
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 
@@ -2882,18 +2906,13 @@ surface_material_override/2 = ExtResource("8_no6g8")
 surface_material_override/3 = ExtResource("9_3u4qp")
 
 [node name="AnimationPlayer" parent="CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+playback_default_blend_time = 0.1
 libraries = {
 "": SubResource("AnimationLibrary_c1lpt"),
 "Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
 }
-playback_default_blend_time = 0.1
 
 [node name="AnimationTree" type="AnimationTree" parent="CharacterRotationRoot/CharacterSkin"]
-root_node = NodePath("../gdbot")
-libraries = {
-"": SubResource("AnimationLibrary_c1lpt"),
-"Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
-}
 tree_root = ExtResource("12_ohjne")
 anim_player = NodePath("../gdbot/AnimationPlayer")
 parameters/Add2/add_amount = 1.0
@@ -2991,6 +3010,8 @@ volume_db = 1.0
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
+
+[node name="Effect" parent="." instance=ExtResource("18_ge2id")]
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]

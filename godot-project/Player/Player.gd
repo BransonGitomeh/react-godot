@@ -33,7 +33,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @export var grenade_cooldown := 0.5
 
 @onready var _rotation_root: Node3D = $CharacterRotationRoot
-@onready var _camera_controller: CameraController = $CameraController
+@onready var _camera_controller: Node3D = $CameraController
 @onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
 @onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
 @onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
@@ -114,6 +114,8 @@ func _ready() -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		$CameraController/PlayerCamera.current = true
 		return;
+		
+
 
 
 func ease_out_cubic(t: float) -> float:
@@ -352,7 +354,7 @@ func _physics_process(delta: float) -> void:
 		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
-			print("_aim_direction ", _aim_direction)
+			#print("_aim_direction ", _aim_direction)
 			_client_process(delta)
 	else:
 		_client_process(delta)
@@ -458,7 +460,7 @@ func _handle_local_input(delta: float) -> void:
 		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
 		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
 		_ui_aim_recticle.visible = true
-		var aim_target := _camera_controller.get_aim_target()
+		var aim_target :Vector3= _camera_controller.get_aim_target()
 		var origin := global_position + Vector3.UP
 		_aim_direction = (aim_target - origin).normalized()
 		#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
@@ -531,6 +533,9 @@ func attack() -> void:
 	_character_skin.punch.rpc()
 	#_character_skin.punch()
 	velocity = _rotation_root.transform.basis * Vector3.BACK * attack_impulse
+
+	
+
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot() -> void:

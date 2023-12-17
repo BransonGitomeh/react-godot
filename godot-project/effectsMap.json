@@ -1,0 +1,352 @@
+{
+    "Effekseer":[
+        {
+            "name": "RampMap.efkefc",
+            "path": "res://effects/sample-material1/RampMap.efkefc"
+        },
+        {
+            "name": "Falloff.efkefc",
+            "path": "res://effects/sample-material1/Falloff.efkefc"
+        },
+        {
+            "name": "ImageDistortion.efkefc",
+            "path": "res://effects/sample-material1/ImageDistortion.efkefc"
+        },
+        {
+            "name": "PolarCoords.efkefc",
+            "path": "res://effects/sample-material1/PolarCoords.efkefc"
+        },
+        {
+            "name": "Unlit.efkefc",
+            "path": "res://effects/sample-material1/Unlit.efkefc"
+        },
+        {
+            "name": "Dissolve.efkefc",
+            "path": "res://effects/sample-material1/Dissolve.efkefc"
+        },
+        {
+            "name": "VertexTransform.efkefc",
+            "path": "res://effects/sample-material1/VertexTransform.efkefc"
+        },
+        {
+            "name": "AlphaCutoff.efkefc",
+            "path": "res://effects/sample-material1/AlphaCutoff.efkefc"
+        },
+        {
+            "name": "sprite_lighting.efkefc.efkefc",
+            "path": "res://effects/tests/sprite_lighting.efkefc.efkefc"
+        },
+        {
+            "name": "model_instanced.efkefc",
+            "path": "res://effects/tests/model_instanced.efkefc"
+        },
+        {
+            "name": "EdgeFallOff01.efkefc",
+            "path": "res://effects/tests/16/EdgeFallOff01.efkefc"
+        },
+        {
+            "name": "AlphaCutoffEdgeColor01.efkefc",
+            "path": "res://effects/tests/16/AlphaCutoffEdgeColor01.efkefc"
+        },
+        {
+            "name": "SoftParticle01.efkefc",
+            "path": "res://effects/tests/16/SoftParticle01.efkefc"
+        },
+        {
+            "name": "TGA01.efkefc",
+            "path": "res://effects/tests/16/TGA01.efkefc"
+        },
+        {
+            "name": "AlphaBlendTexture01.efkefc",
+            "path": "res://effects/tests/16/AlphaBlendTexture01.efkefc"
+        },
+        {
+            "name": "Flip01.efkefc",
+            "path": "res://effects/tests/16/Flip01.efkefc"
+        },
+        {
+            "name": "Noise.efkefc",
+            "path": "res://effects/tests/17/Noise.efkefc"
+        },
+        {
+            "name": "SimpleLODs.efkefc",
+            "path": "res://effects/tests/17/SimpleLODs.efkefc"
+        },
+        {
+            "name": "LocalTime.efkefc",
+            "path": "res://effects/tests/17/LocalTime.efkefc"
+        },
+        {
+            "name": "Gradient.efkefc",
+            "path": "res://effects/tests/17/Gradient.efkefc"
+        },
+        {
+            "name": "Lighting.efkefc",
+            "path": "res://effects/tests/17/Lighting.efkefc"
+        },
+        {
+            "name": "Lighting2.efkefc",
+            "path": "res://effects/tests/17/Lighting2.efkefc"
+        },
+        {
+            "name": "model_lighting.efkefc.efkefc",
+            "path": "res://effects/tests/model_lighting.efkefc.efkefc"
+        },
+        {
+            "name": "texture_clamped.efkefc",
+            "path": "res://effects/tests/texture_clamped.efkefc"
+        },
+        {
+            "name": "model_lighting_normalmap.efkefc.efkefc",
+            "path": "res://effects/tests/model_lighting_normalmap.efkefc.efkefc"
+        },
+        {
+            "name": "Material_Normal.efkefc",
+            "path": "res://effects/tests/15/Material_Normal.efkefc"
+        },
+        {
+            "name": "ForceFieldLocal_Turbulence1.efkefc",
+            "path": "res://effects/tests/15/ForceFieldLocal_Turbulence1.efkefc"
+        },
+        {
+            "name": "Lighing_Parameters1.efkefc",
+            "path": "res://effects/tests/15/Lighing_Parameters1.efkefc"
+        },
+        {
+            "name": "Update_Easing.efkefc",
+            "path": "res://effects/tests/15/Update_Easing.efkefc"
+        },
+        {
+            "name": "BasicRenderSettings_Blend.efkefc",
+            "path": "res://effects/tests/15/BasicRenderSettings_Blend.efkefc"
+        },
+        {
+            "name": "SpawnMethodParameter1.efkefc",
+            "path": "res://effects/tests/15/SpawnMethodParameter1.efkefc"
+        },
+        {
+            "name": "Material_CustomDataMax.efkefc",
+            "path": "res://effects/tests/15/Material_CustomDataMax.efkefc"
+        },
+        {
+            "name": "Material_Parameter23.efkefc",
+            "path": "res://effects/tests/15/Material_Parameter23.efkefc"
+        },
+        {
+            "name": "Material_CustomData2.efkefc",
+            "path": "res://effects/tests/15/Material_CustomData2.efkefc"
+        },
+        {
+            "name": "Material_FresnelRotatorPolarCoords.efkefc",
+            "path": "res://effects/tests/15/Material_FresnelRotatorPolarCoords.efkefc"
+        },
+        {
+            "name": "Material_Math.efkefc",
+            "path": "res://effects/tests/15/Material_Math.efkefc"
+        },
+        {
+            "name": "Material_FresnelLike.efkefc",
+            "path": "res://effects/tests/15/Material_FresnelLike.efkefc"
+        },
+        {
+            "name": "Material_CustomData1.efkefc",
+            "path": "res://effects/tests/15/Material_CustomData1.efkefc"
+        },
+        {
+            "name": "ForceFieldLocal_Old.efkefc",
+            "path": "res://effects/tests/15/ForceFieldLocal_Old.efkefc"
+        },
+        {
+            "name": "Material_Sampler1.efkefc",
+            "path": "res://effects/tests/15/Material_Sampler1.efkefc"
+        },
+        {
+            "name": "Material_VertexColor.efkefc",
+            "path": "res://effects/tests/15/Material_VertexColor.efkefc"
+        },
+        {
+            "name": "Material_Lighting.efkefc",
+            "path": "res://effects/tests/15/Material_Lighting.efkefc"
+        },
+        {
+            "name": "Depth_Parameter1.efkefc",
+            "path": "res://effects/tests/15/Depth_Parameter1.efkefc"
+        },
+        {
+            "name": "Material_CustomDataMulti.efkefc",
+            "path": "res://effects/tests/15/Material_CustomDataMulti.efkefc"
+        },
+        {
+            "name": "Material_UV2.efkefc",
+            "path": "res://effects/tests/15/Material_UV2.efkefc"
+        },
+        {
+            "name": "Material_UV1.efkefc",
+            "path": "res://effects/tests/15/Material_UV1.efkefc"
+        },
+        {
+            "name": "Model_Culling.efkefc",
+            "path": "res://effects/tests/15/Model_Culling.efkefc"
+        },
+        {
+            "name": "Update_MultiModel.efkefc",
+            "path": "res://effects/tests/15/Update_MultiModel.efkefc"
+        },
+        {
+            "name": "Material_Img6.efkefc",
+            "path": "res://effects/tests/15/Material_Img6.efkefc"
+        },
+        {
+            "name": "DynamicParameter1.efkefc",
+            "path": "res://effects/tests/15/DynamicParameter1.efkefc"
+        },
+        {
+            "name": "Material_Refraction.efkefc",
+            "path": "res://effects/tests/15/Material_Refraction.efkefc"
+        },
+        {
+            "name": "Material_Refraction_Lighting.efkefc",
+            "path": "res://effects/tests/15/Material_Refraction_Lighting.efkefc"
+        },
+        {
+            "name": "Material_WorldPositionOffset.efkefc",
+            "path": "res://effects/tests/15/Material_WorldPositionOffset.efkefc"
+        },
+        {
+            "name": "sprite_lighting_normalmap.efkefc.efkefc",
+            "path": "res://effects/tests/sprite_lighting_normalmap.efkefc.efkefc"
+        },
+        {
+            "name": "Laser01_SoftParticle.efkefc",
+            "path": "res://effects/samples/Laser01_SoftParticle.efkefc"
+        },
+        {
+            "name": "Simple_Turbulence_Particles.efkefc",
+            "path": "res://effects/samples/Simple_Turbulence_Particles.efkefc"
+        },
+        {
+            "name": "Simple_Distortion.efkefc",
+            "path": "res://effects/samples/Simple_Distortion.efkefc"
+        },
+        {
+            "name": "Laser03.efkefc",
+            "path": "res://effects/samples/Laser03.efkefc"
+        },
+        {
+            "name": "Simple_Sprite_BillBoard.efkefc",
+            "path": "res://effects/samples/Simple_Sprite_BillBoard.efkefc"
+        },
+        {
+            "name": "Homing_Laser01.efkefc",
+            "path": "res://effects/samples/Homing_Laser01.efkefc"
+        },
+        {
+            "name": "Laser01_Sound.efkefc",
+            "path": "res://effects/samples/Laser01_Sound.efkefc"
+        },
+        {
+            "name": "Simple_Sprite_Fixed.efkefc",
+            "path": "res://effects/samples/Simple_Sprite_Fixed.efkefc"
+        },
+        {
+            "name": "Simple_Model_UV.efkefc",
+            "path": "res://effects/samples/Simple_Model_UV.efkefc"
+        },
+        {
+            "name": "Simple_GeneratingPosition1.efkefc",
+            "path": "res://effects/samples/Simple_GeneratingPosition1.efkefc"
+        },
+        {
+            "name": "Simple_Turbulence_Fireworks.efkefc",
+            "path": "res://effects/samples/Simple_Turbulence_Fireworks.efkefc"
+        },
+        {
+            "name": "TriggerLaser.efkefc",
+            "path": "res://effects/samples/TriggerLaser.efkefc"
+        },
+        {
+            "name": "Plane.efkefc",
+            "path": "res://effects/samples/Plane.efkefc"
+        },
+        {
+            "name": "Simple_Sprite_FixedYAxis.efkefc",
+            "path": "res://effects/samples/Simple_Sprite_FixedYAxis.efkefc"
+        },
+        {
+            "name": "Simple_Ribbon_Sword.efkefc",
+            "path": "res://effects/samples/Simple_Ribbon_Sword.efkefc"
+        },
+        {
+            "name": "Laser02.efkefc",
+            "path": "res://effects/samples/Laser02.efkefc"
+        },
+        {
+            "name": "Simple_Ring_Shape2.efkefc",
+            "path": "res://effects/samples/Simple_Ring_Shape2.efkefc"
+        },
+        {
+            "name": "Simple_Track1.efkefc",
+            "path": "res://effects/samples/Simple_Track1.efkefc"
+        },
+        {
+            "name": "Laser01.efkefc",
+            "path": "res://effects/samples/Laser01.efkefc"
+        },
+        {
+            "name": "Particles.efkefc",
+            "path": "res://effects/samples/Particles.efkefc"
+        },
+        {
+            "name": "Simple_Ribbon_Parent.efkefc",
+            "path": "res://effects/samples/Simple_Ribbon_Parent.efkefc"
+        },
+        {
+            "name": "Simple_Ring_Shape1.efkefc",
+            "path": "res://effects/samples/Simple_Ring_Shape1.efkefc"
+        },
+        {
+            "name": "Magic1.efkefc",
+            "path": "res://effects/tktk01/Magic1.efkefc"
+        },
+        {
+            "name": "ef_fire01_throw.efkefc",
+            "path": "res://effects/sample-material3/ef_fire01_throw.efkefc"
+        },
+        {
+            "name": "ef_fire03.efkefc",
+            "path": "res://effects/sample-material3/ef_fire03.efkefc"
+        },
+        {
+            "name": "ef_ice03.efkefc",
+            "path": "res://effects/sample-material3/ef_ice03.efkefc"
+        },
+        {
+            "name": "ef_ice02.efkefc",
+            "path": "res://effects/sample-material3/ef_ice02.efkefc"
+        },
+        {
+            "name": "ef_ice01.efkefc",
+            "path": "res://effects/sample-material3/ef_ice01.efkefc"
+        },
+        {
+            "name": "ef_fire02.efkefc",
+            "path": "res://effects/sample-material3/ef_fire02.efkefc"
+        },
+        {
+            "name": "ef_fire01.efkefc",
+            "path": "res://effects/sample-material3/ef_fire01.efkefc"
+        },
+        {
+            "name": "ToonWater.efkefc",
+            "path": "res://effects/sample-material2/ToonWater.efkefc"
+        },
+        {
+            "name": "Light.efkefc",
+            "path": "res://effects/sample-material2/Light.efkefc"
+        },
+        {
+            "name": "ToonHit.efkefc",
+            "path": "res://effects/sample-material2/ToonHit.efkefc"
+        }
+    ]
+}
