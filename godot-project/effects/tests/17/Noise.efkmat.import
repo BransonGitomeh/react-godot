@@ -1,0 +1,15 @@
+[remap]
+
+importer="effekseer.resource"
+type="Resource"
+uid="uid://c657rodsdyqt6"
+path="res://.godot/imported/Noise.efkmat-b57c968a26be0826cd94fb250031ca02.res"
+
+[deps]
+
+source_file="res://effects/tests/17/Noise.efkmat"
+dest_files=["res://.godot/imported/Noise.efkmat-b57c968a26be0826cd94fb250031ca02.res"]
+
+[params]
+
+compress=true

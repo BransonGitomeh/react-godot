@@ -34,7 +34,7 @@ var base_fov := 60
 var zoomed_fov := 30
 
 # Depth of Field Parameters
-var base_blur_distance : float = 30.0
+var base_blur_distance : float = 74.0
 var focus_blur_distance : float = 2.0
 
 # Screen Shake Parameters
@@ -54,14 +54,14 @@ var zoom_speed := 0.5
 var zoom_factor := 0.0
 
 # Look Ahead Parameters
-var look_ahead_distance := 10.0
+var look_ahead_distance := 5.0
 
 # Vignette Parameters
 var base_vignette := 0.0
 var intense_vignette := 0.5
 
 # Check deadzone
-var deadzone_radius = 15  # Adjust this for your desired deadzone size
+var deadzone_radius = 5  # Adjust this for your desired deadzone size
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -93,7 +93,7 @@ func _unhandled_input_old(event: InputEvent) -> void:
 		_tilt_input = -event.relative.y * mouse_sensitivity
 
 
-var base_arm_length := 35.0
+var base_arm_length := 20.0
 var max_speed_arm_length := 40.0
 var arm_length_lerp_speed := 4.0
 
@@ -127,17 +127,6 @@ func _look_ahead():
 	#self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
 	camera.look_at(-offset_node.position, Vector3.UP)
 
-# Function to handle linear interpolation for camera movement
-func _handle_lerp_camera(delta: float):
-	# Set the lerp speed (adjust as needed)
-	var lerp_speed = 2.0
-
-	# Calculate the target position (in this example, it's the target_position)
-	var target_position : Vector3 = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
-	
-	#print("_handle_lerp_camera", _handle_lerp_camera)
-	# Use lerp to smoothly move the camera towards the target position
-	global_position = global_position.lerp(target_position, lerp_speed * delta)
 
 # Function to calculate the distance between two points in 3D space
 func distance(point1: Vector3, point2: Vector3) -> float:
@@ -163,7 +152,7 @@ func lerp_to_rule_of_thirds(target_position: Vector3, delta: float) -> void:
 	global_transform.origin = new_position
 
 func _handle_rule_of_thirds(delta):
-	var target_position: Vector3 = self.get_parent().global_transform.origin
+	var target_position: Vector3 = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
 	var player_world_pos = _anchor.global_position
 	var camera_offset = global_position - player_world_pos
 
@@ -174,10 +163,11 @@ func _handle_rule_of_thirds(delta):
 	if distance_to_target > deadzone_radius:
 		# Lerp camera position only if outside deadzone
 		_handle_lerp_camera(delta)
-		#_look_ahead()
+		_look_ahead()
 	else:
+		pass
 		# Keep camera position fixed within dead zone
-		global_position = target_position + camera_offset
+		#global_position = target_position + camera_offset
 
 	# Calculate the rule-of-thirds region
 	var rule_of_thirds_region = Rect2(
@@ -197,8 +187,8 @@ func _handle_rule_of_thirds(delta):
 	)
 	# Apply additional offset
 	#print("new_camera_pos", "Apply additional offset", new_camera_pos)
-	new_camera_pos += character_offset
-	global_position = Vector3(new_camera_pos.x, new_camera_pos.y, global_position.z)
+	#new_camera_pos += character_offset
+	#global_position = Vector3(new_camera_pos.x, new_camera_pos.y, global_position.z)
 
 	# Use lerp to smoothly interpolate to the optimal camera position
 	#lerp_to_rule_of_thirds(target_position, delta)
@@ -220,7 +210,7 @@ func _physics_process(delta: float) -> void:
 	
 
 	# Handle camera effects based on character's speed
-	_handle_speed_based_effects()
+	#_handle_speed_based_effects()
 
 	# Handle FOV changes
 	#_handle_fov()
@@ -229,33 +219,33 @@ func _physics_process(delta: float) -> void:
 	_handle_dof()
 
 	# Handle screen shake
-	_handle_screen_shake(delta)
+	#_handle_screen_shake(delta)
 
 	# Handle zoom in/out
-	_handle_zoom()
+	#_handle_zoom()
 	
-	var target_position : Vector3 = self.get_parent().global_transform.origin
-
-
-	var player_world_pos = _anchor.global_position
-	var camera_offset = global_position - player_world_pos
-	
-	# Calculate the distance from the camera to the target position
-	var distance_to_target = distance(global_position, target_position)
+	#var target_position : Vector3 = self.get_parent().global_transform.origin
+#
+#
+	#var player_world_pos = _anchor.global_position
+	#var camera_offset = global_position - player_world_pos
+	#
+	## Calculate the distance from the camera to the target position
+	#var distance_to_target = distance(global_position, target_position)
 	
 	# Interpolate spring arm length
-	lerp_arm_length(target_arm_length, delta)
+	#lerp_arm_length(target_arm_length, delta)
 	
 	#print("distance_to_target, deadzone_radius",distance_to_target, deadzone_radius, distance_to_target > deadzone_radius)
-	if distance_to_target > deadzone_radius:
-		# Lerp camera position only if outside deadzone
-		_handle_lerp_camera(delta)
-		_look_ahead()
-	else:
-		# Keep camera position fixed within dead zone
-		global_position = target_position + camera_offset
+	#if distance_to_target > deadzone_radius:
+		## Lerp camera position only if outside deadzone
+		#_handle_lerp_camera(delta)
+		#_look_ahead()
+	#else:
+		## Keep camera position fixed within dead zone
+		#global_position = target_position + camera_offset
 	
-	#_handle_rule_of_thirds(delta)
+	_handle_rule_of_thirds(delta)
 
 	# Check if the game is paused or stopped
 	if get_tree().paused or !is_instance_valid(self):
@@ -287,15 +277,54 @@ func _physics_process(delta: float) -> void:
 
 	transform.basis = Basis.from_euler(_euler_rotation)
 
-	camera.global_transform = _pivot.global_transform
-	camera.rotation.z = 0
+	if camera.global_transform != _pivot.global_transform:
+		camera.global_transform = _pivot.global_transform
+		camera.rotation.z = 0
 
-	_rotation_input = 0.0
-	_tilt_input = 0.0
+		_rotation_input = 0.0
+		_tilt_input = 0.0
 
 
+func _handle_lerp_camera(delta: float):
+	# Set lerp speeds
+	var position_lerp_speed = .7
+	var rotation_lerp_speed = 0.004  # Adjust this value to control rotation speed
+
+	var target_position = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
+
+	# Lerp camera position
+	global_position = global_position.lerp(target_position, position_lerp_speed * delta)
+
+	# Calculate the rotated offset based on the player's rotation
+	var player_rotation_y = self.get_parent().global_transform.basis.get_euler().y
+	var rotated_offset = _offset.rotated(Vector3(0, 1, 0), player_rotation_y)
+
+	# Lerp camera rotation
+	var target_rotation = Basis().rotated(Vector3(0, 1, 0), player_rotation_y)
+	_pivot.global_transform.origin = _pivot.global_transform.origin.lerp(target_position + rotated_offset, position_lerp_speed * delta)
+	
+	print(self.get_parent().velocity)
+	if self.get_parent().velocity > Vector3.ZERO:
+		# Player is moving, update target_position based on velocity
+		_pivot.look_at(_pivot.global_transform.origin.lerp(target_position, rotation_lerp_speed * delta))
+	else:
+		# Player is not moving, set target_position to the player's current position
+		_pivot.look_at(_pivot.global_transform.origin.lerp(self.get_parent().global_transform.origin, rotation_lerp_speed * delta))
+	# Use a separate lerp for look-at rotation
+	
 
 
+# Function to handle linear interpolation for camera movement
+func _handle_lerp_camera_old(delta: float):
+	# Set the lerp speed (adjust as needed)
+	var lerp_speed = .1
+
+	# Calculate the target position (in this example, it's the target_position)
+	var target_position : Vector3 = self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin
+	
+	#print("_handle_lerp_camera", _handle_lerp_camera)
+	# Use lerp to smoothly move the camera towards the target position
+	global_position = global_position.lerp(target_position, lerp_speed * delta)
 
 func setup(anchor: CharacterBody3D) -> void:
 	_anchor = anchor

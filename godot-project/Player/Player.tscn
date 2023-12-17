@@ -2752,18 +2752,20 @@ script = ExtResource("1_rvo1c")
 move_speed = 14.0
 bullet_speed = 14.0
 jump_initial_impulse = 34.0
+rotation_speed = 1.0
 network_position_interpolation_duration = 60.0
 
 [node name="CharacterCollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8x2xm")
 
-[node name="CameraController" type="Node3D" parent="."]
+[node name="CameraController" type="Node3D" parent="." node_paths=PackedStringArray("_pivot")]
 top_level = true
 script = ExtResource("3_qrkly")
 invert_mouse_y = true
 tilt_upper_limit = 0.48
 tilt_lower_limit = -0.8
+_pivot = NodePath("CameraSpringArm/CameraThirdPersonPivot")
 
 [node name="CameraOverShoulderPivot" type="Marker3D" parent="CameraController"]
 transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
@@ -2771,7 +2773,7 @@ transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 
 [node name="CameraSpringArm" type="SpringArm3D" parent="CameraController"]
 transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
 shape = SubResource("SeparationRayShape3D_gqx4v")
-spring_length = 75.0
+spring_length = 30.0
 
 [node name="CameraThirdPersonPivot" type="Marker3D" parent="CameraController/CameraSpringArm"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
@@ -2805,7 +2807,7 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 [node name="CharacterRotationRoot" type="Node3D" parent="."]
 
 [node name="offset" type="Node3D" parent="CharacterRotationRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.9005)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
 mesh = SubResource("BoxMesh_o6lug")
