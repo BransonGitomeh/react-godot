@@ -1,13 +1,19 @@
-[gd_scene load_steps=41 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=56 format=3 uid="uid://ciqrpd5675boy"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
+[ext_resource type="Script" path="res://Player/Area3DInteractor.gd" id="2_udgcm"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
+[ext_resource type="PackedScene" uid="uid://dsoiq0u4jfsqb" path="res://example/src/inventory_menu.tscn" id="3_a8mn3"]
 [ext_resource type="Script" path="res://Player/CameraController.gd" id="3_qrkly"]
 [ext_resource type="Shader" path="res://Player/PlayerOutline.gdshader" id="3_tjk7l"]
 [ext_resource type="Script" path="res://Player/MeleeAttackArea.gd" id="3_v1vve"]
+[ext_resource type="PackedScene" uid="uid://co5ok1mm2s7vu" path="res://exports/addons/wyvernbox_prefabs/item_stack_view.tscn" id="4_73k3s"]
+[ext_resource type="Script" path="res://addons/wyvernbox/view_extra/grabbed_item_stack.gd" id="5_6ux1b"]
 [ext_resource type="Script" path="res://Player/CharacterSkin.gd" id="5_45tqe"]
+[ext_resource type="PackedScene" uid="uid://cqa45c6lfsffv" path="res://exports/addons/wyvernbox_prefabs/tooltip.tscn" id="6_ewl78"]
 [ext_resource type="PackedScene" uid="uid://db7wkegkjmixy" path="res://Player/model/gdbot.glb" id="6_yyejb"]
 [ext_resource type="Script" path="res://Player/CoinsContainer.gd" id="7_8eehq"]
+[ext_resource type="Theme" uid="uid://75b71yv7xu1e" path="res://example/theme/default.tres" id="7_dp1pd"]
 [ext_resource type="Material" uid="uid://dh42cdejchkr3" path="res://Player/model/materials/face_mat.tres" id="7_md0bq"]
 [ext_resource type="PackedScene" uid="uid://cqw64w6kb0fyg" path="res://Player/Coin/CoinVisuals/CoinModel.tscn" id="8_6qxxt"]
 [ext_resource type="Material" uid="uid://cq6bdna8ieu87" path="res://Player/model/materials/heart_core_mat.tres" id="8_no6g8"]
@@ -18,8 +24,16 @@
 [ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
 [ext_resource type="PackedScene" uid="uid://dn7yhxnr3q5o3" path="res://effect.tscn" id="18_ge2id"]
+[ext_resource type="PackedScene" uid="uid://bfuapdb4wsbi1" path="res://ground_items.tscn" id="24_x2y8m"]
+[ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="25_6q7pi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
+
+[sub_resource type="CylinderShape3D" id="8"]
+height = 3.02818
+radius = 0.805338
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_roadh"]
 
 [sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_gqx4v"]
 
@@ -2768,11 +2782,37 @@ properties/22/spawn = true
 properties/22/sync = true
 properties/22/watch = false
 
-[node name="Player" type="CharacterBody3D" groups=["damageables"]]
+[sub_resource type="BoxShape3D" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1865"]
+albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
+
+[sub_resource type="BoxMesh" id="3"]
+material = SubResource("StandardMaterial3D_i1865")
+
+[sub_resource type="Resource" id="Resource_e3x14"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("25_6q7pi")
+height = 12
+width = 8
+
+[sub_resource type="Resource" id="Resource_vf78y"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("25_6q7pi")
+height = 12
+width = 8
+
+[node name="Player" type="CharacterBody3D" groups=["damageables", "hero"]]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_rvo1c")
+inventory_menu = NodePath("Node/Inventory/InventoryMenu")
+inventory_tooltip = NodePath("Node/Inventory/Tooltip")
+ground_items = NodePath("Node/Node3D/Node3D/Items")
 move_speed = 14.0
 bullet_speed = 14.0
 jump_initial_impulse = 34.0
@@ -2783,7 +2823,24 @@ network_position_interpolation_duration = 60.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8x2xm")
 
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54807, 0)
+input_ray_pickable = false
+script = ExtResource("2_udgcm")
+inventory_menu = NodePath("../Node/Inventory/InventoryMenu")
+ground_items = NodePath("../Node/Node3D/Node3D/Items")
+
+[node name="Shape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.470862, 0)
+shape = SubResource("8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D/Shape3D"]
+transform = Transform3D(1.59758, 0, 0, 0, 1, 0, 0, 0, 1.50508, 0, 0, 0)
+visible = false
+mesh = SubResource("CylinderMesh_roadh")
+
 [node name="CameraController" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.985984, 0.166838, 0, -0.166838, 0.985984, 0, 3.39961, 0)
 top_level = true
 script = ExtResource("3_qrkly")
 invert_mouse_y = true
@@ -2830,10 +2887,10 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 [node name="CharacterRotationRoot" type="Node3D" parent="."]
 
 [node name="offset" type="Node3D" parent="CharacterRotationRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.9005)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.37307, 1.31863)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
-visible = false
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 
@@ -3013,8 +3070,97 @@ replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
 [node name="Effect" parent="." instance=ExtResource("18_ge2id")]
 
+[node name="Node" type="Node" parent="."]
+
+[node name="Node3D" type="Node3D" parent="Node"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 147.626, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Node/Node3D"]
+transform = Transform3D(88.5146, 0, 0, 0, 1, 0, 0, 0, 88.5146, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node/Node3D/StaticBody3D"]
+shape = SubResource("2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node/Node3D/StaticBody3D"]
+mesh = SubResource("3")
+
+[node name="Camera3D" type="Camera3D" parent="Node/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0.584391, 0.811472, 0, -0.811472, 0.584391, -0.0395966, 14.83, 12.56)
+
+[node name="Node3D" parent="Node/Node3D" instance=ExtResource("24_x2y8m")]
+
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest" index="3"]
+inventory = SubResource("Resource_e3x14")
+
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest2" index="3"]
+inventory = SubResource("Resource_vf78y")
+
+[node name="Inventory" type="CanvasLayer" parent="Node"]
+
+[node name="Generator" type="Button" parent="Node/Inventory"]
+offset_left = 286.0
+offset_top = 290.0
+offset_right = 342.0
+offset_bottom = 310.0
+focus_mode = 0
+
+[node name="Label" type="Label" parent="Node/Inventory/Generator"]
+layout_mode = 0
+offset_left = -78.0
+offset_top = 25.0
+offset_right = 134.0
+offset_bottom = 39.0
+text = "(Press Tab or I to open inventory)"
+
+[node name="Label2" type="Label" parent="Node/Inventory/Generator"]
+layout_mode = 0
+offset_left = -78.0
+offset_top = 40.0
+offset_right = 136.0
+offset_bottom = 54.0
+text = "(Hold Alt to highlight items)"
+
+[node name="InventoryMenu" parent="Node/Inventory" instance=ExtResource("3_a8mn3")]
+
+[node name="GrabbedItem" parent="Node/Inventory/InventoryMenu" groups=["grabbed_item"] instance=ExtResource("4_73k3s")]
+visible = false
+offset_left = 220.787
+offset_top = 69.0519
+offset_right = 220.787
+offset_bottom = 69.0519
+scale = Vector2(1.5, 1.5)
+mouse_filter = 2
+script = ExtResource("5_6ux1b")
+drop_at_node = NodePath("../../../Node3D/StaticBody3D")
+drop_ground_item_manager = NodePath("../../../Node3D/Node3D/Items")
+drop_max_distance = 8.0
+drop_camera_3d = NodePath("../../../Node3D/Camera3D")
+drop_ray_mask = 1
+unit_size = Vector2(14, 14)
+hide_cursor = false
+
+[node name="InworlnventoriesTutorial" type="AcceptDialog" parent="Node/Inventory/InventoryMenu"]
+dialog_text = "This inventory has random stuff! An ItemInstantiator put them here.
+These can also drop items to the ground.
+
+The chest's contents are displayed here by just duplicating the chest's
+InventoryView. Not just the Inventory resource - that way custom
+inventory layouts and extra nodes (like this ? button) can be used!"
+
+[node name="Tooltip" parent="Node/Inventory" instance=ExtResource("6_ewl78")]
+visible = false
+offset_left = 198.0
+offset_top = -23.0
+offset_right = 358.0
+offset_bottom = 52.0
+theme = ExtResource("7_dp1pd")
+compare_to_inventory = NodePath("../InventoryMenu/CenterContainer/TabContainer/Equip/Control/Equip")
+color_neutral = Color(0.376471, 0.376471, 0.376471, 1)
+
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 
 [editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
 [editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[editable path="Node/Node3D/Node3D"]

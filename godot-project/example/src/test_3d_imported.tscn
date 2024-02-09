@@ -1,0 +1,290 @@
+[gd_scene load_steps=27 format=3 uid="uid://5xfrjy82ydyt"]
+
+[ext_resource type="Resource" path="res://example/wyvernbox/item_generators/basic_loot.tres" id="2_y7b3c"]
+[ext_resource type="Script" path="res://addons/wyvernbox/ground/ground_items_manager.gd" id="3_pey0q"]
+[ext_resource type="PackedScene" uid="uid://cesxtk10fira3" path="res://exports/addons/wyvernbox_prefabs/ground_item_stack_view_3d.tscn" id="4_k7exy"]
+[ext_resource type="Script" path="res://example/src/world/touch_dropper.gd" id="5_slm5j"]
+[ext_resource type="Resource" uid="uid://ba1ie6jofkmu8" path="res://example/wyvernbox/item_types/consumable/coin_gold.tres" id="6_g48kr"]
+[ext_resource type="Resource" uid="uid://bdo8mj57sn4es" path="res://example/wyvernbox/item_types/consumable/coin_purple.tres" id="7_ft54f"]
+[ext_resource type="Script" path="res://addons/wyvernbox/item_instantiator.gd" id="8_qspid"]
+[ext_resource type="PackedScene" uid="uid://e8rkhrvavj7l" path="res://example/src/world/inworld_container.tscn" id="9_1myhm"]
+[ext_resource type="PackedScene" uid="uid://dk2b3ordhblc2" path="res://exports/addons/wyvernbox_prefabs/inventories/grid_inventory.tscn" id="10_hgige"]
+[ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="11_y8kwq"]
+[ext_resource type="Resource" uid="uid://bc5mn5etsfr76" path="res://example/wyvernbox/item_generators/random_enchanted_equip.tres" id="12_khtyr"]
+[ext_resource type="StyleBox" uid="uid://cqx3opxr50d2o" path="res://exports/addons/wyvernbox_prefabs/graphics/selected_cell.tres" id="13_pxcsn"]
+[ext_resource type="PackedScene" uid="uid://b30gwgejq8g4p" path="res://inventory-hero.tscn" id="13_s7p0o"]
+[ext_resource type="PackedScene" uid="uid://drr6vj6w0bti7" path="res://inventory-ui.tscn" id="14_8oxhf"]
+
+[sub_resource type="BoxShape3D" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1865"]
+albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
+
+[sub_resource type="BoxMesh" id="3"]
+material = SubResource("StandardMaterial3D_i1865")
+
+[sub_resource type="Resource" id="22"]
+resource_name = "Drop Chaotically"
+script = ExtResource("8_qspid")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("6_g48kr"), ExtResource("7_ft54f"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c")])
+item_repeat_ranges = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(5, 100), Vector2(5, 100), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+item_chances = Array[float]([100.0, 50.0, 50.0, 50.0, 100.0, 20.0, 50.0, 50.0, 50.0, 50.0, 50.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.1
+spread_distance = 4.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="SphereShape3D" id="14"]
+
+[sub_resource type="SphereMesh" id="15"]
+
+[sub_resource type="Resource" id="21"]
+resource_name = "Drop In Circle"
+script = ExtResource("8_qspid")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("6_g48kr"), ExtResource("7_ft54f"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c"), ExtResource("2_y7b3c")])
+item_repeat_ranges = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(5, 100), Vector2(5, 100), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+item_chances = Array[float]([100.0, 50.0, 50.0, 50.0, 100.0, 20.0, 50.0, 50.0, 50.0, 50.0, 50.0])
+repeat_post_chance = true
+randomize_locations = false
+delay_between_items = 0.1
+spread_distance = 4.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_6jpv0"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("11_y8kwq")
+height = 12
+width = 8
+
+[sub_resource type="Resource" id="12"]
+resource_name = "Random Equips"
+script = ExtResource("8_qspid")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("12_khtyr"), ExtResource("7_ft54f"), ExtResource("7_ft54f"), ExtResource("6_g48kr"), ExtResource("6_g48kr"), ExtResource("6_g48kr"), ExtResource("6_g48kr")])
+item_repeat_ranges = Array[Vector2]([Vector2(8, 8), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100)])
+item_chances = Array[float]([100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.0
+spread_distance = 32.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_127bh"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("11_y8kwq")
+height = 12
+width = 8
+
+[sub_resource type="Sky" id="6"]
+
+[sub_resource type="Environment" id="5"]
+background_mode = 2
+sky = SubResource("6")
+ambient_light_sky_contribution = 0.0
+
+[node name="Node" type="Node"]
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 147.626, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Node3D"]
+transform = Transform3D(88.5146, 0, 0, 0, 1, 0, 0, 0, 88.5146, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/StaticBody3D"]
+shape = SubResource("2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/StaticBody3D"]
+mesh = SubResource("3")
+
+[node name="Items" type="Node3D" parent="Node3D"]
+script = ExtResource("3_pey0q")
+autosave_file_path = "items/ground/area2.dat"
+item_scene = ExtResource("4_k7exy")
+spawn_jump_length_range = Vector2(2, 3)
+
+[node name="Loot" type="Node3D" parent="Node3D"]
+
+[node name="Area3D" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -8.01845, 1.79794, -1.61708)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area3D"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area3D"]
+mesh = SubResource("15")
+
+[node name="Area2" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -5.04234, 1.79794, 1.98245)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area2"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area2"]
+mesh = SubResource("15")
+
+[node name="Area3" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -12.0175, 1.79794, 1.15324)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area3"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area3"]
+mesh = SubResource("15")
+
+[node name="Area4" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -8.97924, 1.79794, 4.98049)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area4"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area4"]
+mesh = SubResource("15")
+
+[node name="Area5" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 10.0848, 1.79794, -0.164448)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area5"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area5"]
+mesh = SubResource("15")
+
+[node name="Area6" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 5.96548, 1.79794, 2.08864)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area6"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area6"]
+mesh = SubResource("15")
+
+[node name="Area7" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 8.21325, 1.79794, 5.13328)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area7"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area7"]
+mesh = SubResource("15")
+
+[node name="Area8" type="Area3D" parent="Node3D/Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 12.5391, 1.79794, 2.88898)
+script = ExtResource("5_slm5j")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Loot/Area8"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Loot/Area8"]
+mesh = SubResource("15")
+
+[node name="Openable" type="Node3D" parent="Node3D"]
+
+[node name="Chest" parent="Node3D/Openable" instance=ExtResource("9_1myhm")]
+transform = Transform3D(0.413263, 0, -0.910612, 0, 1, 0, 0.910612, 0, 0.413263, -2.5152, 1.34766, -4.27634)
+
+[node name="Inventory" parent="Node3D/Openable/Chest" instance=ExtResource("10_hgige")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -313.0
+offset_top = -39.0
+offset_right = -201.0
+offset_bottom = 129.0
+inventory = SubResource("Resource_6jpv0")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("13_pxcsn")
+autosave_file_path = "items/world/chest1.dat"
+
+[node name="Control2" type="Control" parent="Node3D/Openable/Chest/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Node3D/Openable/Chest/Inventory/Control2"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"
+
+[node name="Chest2" parent="Node3D/Openable" instance=ExtResource("9_1myhm")]
+transform = Transform3D(-0.645324, 0, -0.763909, 0, 1, 0, 0.763909, 0, -0.645324, 4.40275, 1.34766, -3.99078)
+
+[node name="Inventory" parent="Node3D/Openable/Chest2" instance=ExtResource("10_hgige")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -201.0
+offset_top = 20.0
+offset_right = -89.0
+offset_bottom = 188.0
+inventory = SubResource("Resource_127bh")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("13_pxcsn")
+autosave_file_path = "items/world/chest2.dat"
+
+[node name="Control" type="Control" parent="Node3D/Openable/Chest2/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Node3D/Openable/Chest2/Inventory/Control"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node3D"]
+environment = SubResource("5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Node3D"]
+transform = Transform3D(1.91069e-15, -1, -4.37114e-08, -0.522647, -3.72661e-08, 0.852549, -0.852549, 2.28456e-08, -0.522647, -9.53674e-07, 10.1265, -8.46388)
+directional_shadow_mode = 0
+
+[node name="Camera3D" type="Camera3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0.584391, 0.811472, 0, -0.811472, 0.584391, -0.0395966, 14.83, 12.56)
+
+[node name="Hero" parent="Node3D" instance=ExtResource("13_s7p0o")]
+
+[node name="Inventory" parent="." instance=ExtResource("14_8oxhf")]

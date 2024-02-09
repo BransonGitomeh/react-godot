@@ -75,23 +75,20 @@ func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
 		_rotation_input = -event.relative.x * mouse_sensitivity
 		_tilt_input = -event.relative.y * mouse_sensitivity
 
-func _handle_key_input(event: InputEventKey) -> void:
-	if event.pressed:
-		if event.keycode == KEY_ESCAPE:
-			_toggle_mouse_capture()
-
 func _toggle_mouse_capture() -> void:
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		
-func _unhandled_input_old(event: InputEvent) -> void:
+func _handle_key_input(event: InputEvent) -> void:
 	_mouse_input = event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
 	if _mouse_input:
 		_rotation_input = -event.relative.x * mouse_sensitivity
 		_tilt_input = -event.relative.y * mouse_sensitivity
-
+		
+	if event.keycode == KEY_ESCAPE:
+		_toggle_mouse_capture()
 
 var base_arm_length := 20.0
 var max_speed_arm_length := 40.0
@@ -118,14 +115,12 @@ var character_offset: Vector2 = Vector2(0, 0)
 # Function to implement the "look ahead" system
 func _look_ahead():
 	# Assuming offset is a child of CharacterRotationRoot, adjust as needed
-	var offset_node = self.get_parent()
-	
-	#.get_node("CharacterRotationRoot").get_node("offset")
+	var offset_node = self.get_parent().get_node("CharacterRotationRoot").get_node("offset")
 	#self.look_at(target_position, Vector3(0, 1, 0))  # The second parameter is the up vector (usually Y-axis)
 
 	# Set the camera's rotation to face the look ahead position
-	#self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
-	camera.look_at(-offset_node.position, Vector3.UP)
+	self.look_at(self.get_parent().get_node("CharacterRotationRoot").get_node("offset").global_transform.origin, Vector3.UP)
+	#camera.look_at(-offset_node.position, Vector3.UP)
 
 
 # Function to calculate the distance between two points in 3D space
@@ -160,13 +155,13 @@ func _handle_rule_of_thirds(delta):
 	var distance_to_target = distance(global_position, target_position)
 
 	# Check if the distance is greater than the deadzone_radius
-	if distance_to_target > deadzone_radius:
-		# Lerp camera position only if outside deadzone
-		_handle_lerp_camera(delta)
-		_look_ahead()
-		pass;
-	else:
-		pass
+#	if distance_to_target > deadzone_radius:
+#		# Lerp camera position only if outside deadzone
+	_handle_lerp_camera(delta)
+	#_look_ahead()
+#		pass;
+#	else:
+#		pass
 		# Keep camera position fixed within dead zone
 		#global_position = target_position + camera_offset
 
@@ -254,8 +249,8 @@ func _physics_process(delta: float) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	# Handle camera rotation
-	_rotation_input += Input.get_action_raw_strength("camera_left") - Input.get_action_raw_strength("camera_right")
-	_tilt_input += Input.get_action_raw_strength("camera_up") - Input.get_action_raw_strength("camera_down")
+	_rotation_input += Input.get_action_raw_strength("ui_left") - Input.get_action_raw_strength("ui_right")
+	_tilt_input += Input.get_action_raw_strength("ui_up") - Input.get_action_raw_strength("ui_down")
 
 	if invert_mouse_y:
 		_tilt_input *= -1
@@ -301,16 +296,16 @@ func _handle_lerp_camera(delta: float):
 	var rotated_offset = _offset.rotated(Vector3(0, 1, 0), player_rotation_y)
 
 	# Lerp camera rotation
-	var target_rotation = Basis().rotated(Vector3(0, 1, 0), player_rotation_y)
-	_pivot.global_transform.origin = _pivot.global_transform.origin.lerp(target_position + rotated_offset, position_lerp_speed * delta)
+	#var target_rotation = Basis().rotated(Vector3(0, 1, 0), player_rotation_y)
+	#_pivot.global_transform.origin = _pivot.global_transform.origin.lerp(target_position + rotated_offset, position_lerp_speed * delta)
 	
-	print(self.get_parent().velocity)
-	if self.get_parent().velocity > Vector3.ZERO:
+	# print(self.get_parent().velocity)
+	#if self.get_parent().velocity > Vector3.ZERO:
 		# Player is moving, update target_position based on velocity
-		_pivot.look_at(_pivot.global_transform.origin.lerp(target_position, rotation_lerp_speed * delta))
-	else:
+	_pivot.look_at(_pivot.global_transform.origin.lerp(target_position, rotation_lerp_speed * delta))
+	#else:
 		# Player is not moving, set target_position to the player's current position
-		_pivot.look_at(_pivot.global_transform.origin.lerp(self.get_parent().global_transform.origin, rotation_lerp_speed * delta))
+	#_pivot.look_at(_pivot.global_transform.origin.lerp(self.get_parent().global_transform.origin, rotation_lerp_speed * delta))
 	# Use a separate lerp for look-at rotation
 	
 

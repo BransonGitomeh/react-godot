@@ -1,0 +1,247 @@
+[gd_scene load_steps=20 format=3 uid="uid://bfuapdb4wsbi1"]
+
+[ext_resource type="Script" path="res://addons/wyvernbox/ground/ground_items_manager.gd" id="1_lydea"]
+[ext_resource type="PackedScene" uid="uid://cesxtk10fira3" path="res://exports/addons/wyvernbox_prefabs/ground_item_stack_view_3d.tscn" id="2_led0o"]
+[ext_resource type="Script" path="res://example/src/world/touch_dropper.gd" id="3_874hj"]
+[ext_resource type="Resource" path="res://example/wyvernbox/item_generators/basic_loot.tres" id="4_m4ate"]
+[ext_resource type="Resource" uid="uid://ba1ie6jofkmu8" path="res://example/wyvernbox/item_types/consumable/coin_gold.tres" id="5_d30vx"]
+[ext_resource type="Resource" uid="uid://bdo8mj57sn4es" path="res://example/wyvernbox/item_types/consumable/coin_purple.tres" id="6_37apo"]
+[ext_resource type="Script" path="res://addons/wyvernbox/item_instantiator.gd" id="7_3uogw"]
+[ext_resource type="PackedScene" uid="uid://e8rkhrvavj7l" path="res://example/src/world/inworld_container.tscn" id="8_ln8sv"]
+[ext_resource type="PackedScene" uid="uid://dk2b3ordhblc2" path="res://exports/addons/wyvernbox_prefabs/inventories/grid_inventory.tscn" id="9_p3qfw"]
+[ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="10_kswq5"]
+[ext_resource type="Resource" uid="uid://bc5mn5etsfr76" path="res://example/wyvernbox/item_generators/random_enchanted_equip.tres" id="11_8jq15"]
+[ext_resource type="StyleBox" uid="uid://cqx3opxr50d2o" path="res://addons/wyvernbox_prefabs/graphics/selected_cell.tres" id="12_ib4gj"]
+
+[sub_resource type="Resource" id="22"]
+resource_name = "Drop Chaotically"
+script = ExtResource("7_3uogw")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("5_d30vx"), ExtResource("6_37apo"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate")])
+item_repeat_ranges = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(5, 100), Vector2(5, 100), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+item_chances = Array[float]([100.0, 50.0, 50.0, 50.0, 100.0, 20.0, 50.0, 50.0, 50.0, 50.0, 50.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.1
+spread_distance = 4.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="SphereShape3D" id="14"]
+
+[sub_resource type="SphereMesh" id="15"]
+
+[sub_resource type="Resource" id="21"]
+resource_name = "Drop In Circle"
+script = ExtResource("7_3uogw")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("5_d30vx"), ExtResource("6_37apo"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate"), ExtResource("4_m4ate")])
+item_repeat_ranges = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(5, 100), Vector2(5, 100), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+item_chances = Array[float]([100.0, 50.0, 50.0, 50.0, 100.0, 20.0, 50.0, 50.0, 50.0, 50.0, 50.0])
+repeat_post_chance = true
+randomize_locations = false
+delay_between_items = 0.1
+spread_distance = 4.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_t82gk"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("10_kswq5")
+height = 12
+width = 8
+
+[sub_resource type="Resource" id="12"]
+resource_name = "Random Equips"
+script = ExtResource("7_3uogw")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("11_8jq15"), ExtResource("6_37apo"), ExtResource("6_37apo"), ExtResource("5_d30vx"), ExtResource("5_d30vx"), ExtResource("5_d30vx"), ExtResource("5_d30vx")])
+item_repeat_ranges = Array[Vector2]([Vector2(8, 8), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100)])
+item_chances = Array[float]([100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.0
+spread_distance = 32.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_ay2tu"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("10_kswq5")
+height = 12
+width = 8
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Items" type="Node3D" parent="."]
+script = ExtResource("1_lydea")
+autosave_file_path = "items/ground/area2.dat"
+item_scene = ExtResource("2_led0o")
+spawn_jump_length_range = Vector2(2, 3)
+
+[node name="Loot" type="Node3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -8.01845, 1.79794, -1.61708)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area3D"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area3D"]
+mesh = SubResource("15")
+
+[node name="Area2" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -5.04234, 1.79794, 1.98245)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area2"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area2"]
+mesh = SubResource("15")
+
+[node name="Area3" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -12.0175, 1.79794, 1.15324)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area3"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area3"]
+mesh = SubResource("15")
+
+[node name="Area4" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -8.97924, 1.79794, 4.98049)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area4"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area4"]
+mesh = SubResource("15")
+
+[node name="Area5" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 10.0848, 1.79794, -0.164448)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area5"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area5"]
+mesh = SubResource("15")
+
+[node name="Area6" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 5.96548, 1.79794, 2.08864)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area6"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area6"]
+mesh = SubResource("15")
+
+[node name="Area7" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 8.21325, 1.79794, 5.13328)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area7"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area7"]
+mesh = SubResource("15")
+
+[node name="Area8" type="Area3D" parent="Loot"]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 12.5391, 1.79794, 2.88898)
+script = ExtResource("3_874hj")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("21")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Loot/Area8"]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Loot/Area8"]
+mesh = SubResource("15")
+
+[node name="Openable" type="Node3D" parent="."]
+
+[node name="Chest" parent="Openable" instance=ExtResource("8_ln8sv")]
+transform = Transform3D(0.413263, 0, -0.910612, 0, 1, 0, 0.910612, 0, 0.413263, -2.5152, 1.34766, -4.27634)
+
+[node name="Inventory" parent="Openable/Chest" instance=ExtResource("9_p3qfw")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -313.0
+offset_top = -39.0
+offset_right = -201.0
+offset_bottom = 129.0
+inventory = SubResource("Resource_t82gk")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("12_ib4gj")
+autosave_file_path = "items/world/chest1.dat"
+
+[node name="Control2" type="Control" parent="Openable/Chest/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Openable/Chest/Inventory/Control2"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"
+
+[node name="Chest2" parent="Openable" instance=ExtResource("8_ln8sv")]
+transform = Transform3D(-0.645324, 0, -0.763909, 0, 1, 0, 0.763909, 0, -0.645324, 4.40275, 1.34766, -3.99078)
+
+[node name="Inventory" parent="Openable/Chest2" instance=ExtResource("9_p3qfw")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -201.0
+offset_top = 20.0
+offset_right = -89.0
+offset_bottom = 188.0
+inventory = SubResource("Resource_ay2tu")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("12_ib4gj")
+autosave_file_path = "items/world/chest2.dat"
+
+[node name="Control" type="Control" parent="Openable/Chest2/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Openable/Chest2/Inventory/Control"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"

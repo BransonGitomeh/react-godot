@@ -8,6 +8,10 @@ const COIN_SCENE := preload("Coin/Coin.tscn")
 
 enum WEAPON_TYPE { DEFAULT, GRENADE }
 
+@export var inventory_menu := NodePath()
+@export var inventory_tooltip := NodePath()
+@export var ground_items := NodePath()
+
 ## Character maximum run speed on the ground.
 @export var move_speed := 8.0
 ## Speed of shot bullets.
@@ -101,7 +105,7 @@ var has_authority: bool = false
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_camera_controller.setup(self)
 	_grenade_aim_controller.visible = false
 	emit_signal("weapon_switched", WEAPON_TYPE.keys()[0])
@@ -637,10 +641,10 @@ func _register_input_actions() -> void:
 		"aim": MOUSE_BUTTON_RIGHT,
 		"swap_weapons": KEY_TAB,
 		"pause": KEY_ESCAPE,
-		"camera_left": KEY_Q,
-		"camera_right": KEY_E,
-		"camera_up": KEY_R,
-		"camera_down": KEY_F,
+		"ui_left": KEY_Q,
+		"ui_right": KEY_E,
+		"ui_up": KEY_R,
+		"ui_down": KEY_F,
 	}
 	for action in INPUT_ACTIONS:
 		if InputMap.has_action(action):

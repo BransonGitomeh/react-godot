@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=3 uid="uid://didrvxrxwou5s"]
+
+[ext_resource type="PackedScene" uid="uid://dsoiq0u4jfsqb" path="res://example/src/inventory_menu.tscn" id="1_8pgpk"]
+[ext_resource type="PackedScene" uid="uid://co5ok1mm2s7vu" path="res://exports/addons/wyvernbox_prefabs/item_stack_view.tscn" id="2_xiyb1"]
+[ext_resource type="Script" path="res://addons/wyvernbox/view_extra/grabbed_item_stack.gd" id="3_7k7iq"]
+[ext_resource type="PackedScene" uid="uid://cqa45c6lfsffv" path="res://exports/addons/wyvernbox_prefabs/tooltip.tscn" id="4_vqala"]
+[ext_resource type="Theme" uid="uid://75b71yv7xu1e" path="res://example/theme/default.tres" id="5_h8xjf"]
+
+[node name="Inventory" type="CanvasLayer"]
+
+[node name="Generator" type="Button" parent="."]
+offset_left = 286.0
+offset_top = 290.0
+offset_right = 342.0
+offset_bottom = 310.0
+focus_mode = 0
+
+[node name="Label" type="Label" parent="Generator"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 22.0
+offset_right = 255.0
+offset_bottom = 48.0
+text = "(Press Tab or I to open inventory)"
+
+[node name="Label2" type="Label" parent="Generator"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 47.0
+offset_right = 213.0
+offset_bottom = 73.0
+text = "(Hold Alt to highlight items)"
+
+[node name="InventoryMenu" parent="." instance=ExtResource("1_8pgpk")]
+
+[node name="GrabbedItem" parent="InventoryMenu" groups=["grabbed_item"] instance=ExtResource("2_xiyb1")]
+visible = false
+offset_left = 220.787
+offset_top = 69.0519
+offset_right = 220.787
+offset_bottom = 69.0519
+scale = Vector2(1.5, 1.5)
+mouse_filter = 2
+script = ExtResource("3_7k7iq")
+drop_at_node = NodePath("")
+drop_ground_item_manager = NodePath("../../../Node3D/Items")
+drop_max_distance = 8.0
+drop_camera_3d = NodePath("../../../Node3D/Camera3D")
+drop_ray_mask = 1
+unit_size = Vector2(14, 14)
+hide_cursor = false
+
+[node name="InworlnventoriesTutorial" type="AcceptDialog" parent="InventoryMenu"]
+dialog_text = "This inventory has random stuff! An ItemInstantiator put them here.
+These can also drop items to the ground.
+
+The chest's contents are displayed here by just duplicating the chest's
+InventoryView. Not just the Inventory resource - that way custom
+inventory layouts and extra nodes (like this ? button) can be used!"
+
+[node name="Tooltip" parent="." instance=ExtResource("4_vqala")]
+visible = false
+offset_left = 198.0
+offset_top = -23.0
+offset_right = 358.0
+offset_bottom = 52.0
+theme = ExtResource("5_h8xjf")
+compare_to_inventory = NodePath("../InventoryMenu/CenterContainer/TabContainer/Equip/Control/Equip")
+color_neutral = Color(0.376471, 0.376471, 0.376471, 1)

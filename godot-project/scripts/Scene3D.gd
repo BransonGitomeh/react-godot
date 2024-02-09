@@ -23,7 +23,7 @@ func _ready():
 	var file_count = setup_effects(directory_path)
 	
 	# Print the array to check the result
-	print(effect_data)
+	# print(effect_data)
 	
 	# Define the grid parameters
 	var grid_spacing = Vector2(20, 20)  # Adjust as needed
@@ -49,7 +49,7 @@ func _ready():
 		
 		# Load effect and start playing
 		effect_instance.effect = load(effect_data[i].path)
-		print(effect_data[i].path)
+		# print(effect_data[i].path)
 		
 		var _on_finished = func ():
 			# Create a new instance of the effect
@@ -63,7 +63,7 @@ func _ready():
 			
 			# Load effect and start playing
 			effect_instance2.effect = load(effect_data[i].path)
-			print(effect_data[i].path)
+			# print(effect_data[i].path)
 			
 			#effect_instance.connect("on_finished", _on_finished)
 			effect_instance.play()

@@ -16,7 +16,7 @@ func _ready():
 
 	var spawnLocations = $spawnLocations.get_children()
 	
-	print(multiplayer.get_unique_id()," Spawning in current player ")
+	# print(multiplayer.get_unique_id()," Spawning in current player ")
 	var currentPlayer = PlayerScene.instantiate()
 	
 	# Randomly select a spawn position

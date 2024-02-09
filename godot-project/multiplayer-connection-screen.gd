@@ -49,7 +49,7 @@ func peer_connected(id):
 
 	
 	newPlayer.name = str(id)
-	print(get_parent())
+	# print(get_parent())
 	
 		# Find the "Playground" node in the scene tree
 	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
@@ -97,7 +97,7 @@ func SendPlayerInformation(name, id):
 	if multiplayer.is_server():
 		print("SendPlayerInformation", BrowlManager.Players)
 		for i in BrowlManager.Players:
-			print(i)
+			# print(i)
 			SendPlayerInformation.rpc(BrowlManager.Players[i].name, i)
 	else:
 		if !BrowlManager.Players.has(id):
@@ -134,7 +134,7 @@ func _on_join_pressed():
 	print("Not running in a browser. Using ENetMultiplayerPeer.")
 	peer = ENetMultiplayerPeer.new()
 	var result = peer.create_client(address, port, 32, 0, 0)
-	print(result)
+	# print(result)
 	if result == OK:
 		print("Automatically joining", address)
 		
