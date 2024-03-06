@@ -36,17 +36,17 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 ## Grenade cooldown
 @export var grenade_cooldown := 0.5
 
-@onready var _rotation_root: Node3D = $CharacterRotationRoot
-@onready var _camera_controller: Node3D = $CameraController
-@onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
-@onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
-@onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
-@onready var _character_skin: CharacterSkin = $CharacterRotationRoot/CharacterSkin
-@onready var _ui_aim_recticle: ColorRect = %AimRecticle
-@onready var _ui_coins_container: HBoxContainer = %CoinsContainer
-@onready var _step_sound: AudioStreamPlayer3D = $StepSound
-@onready var _landing_sound: AudioStreamPlayer3D = $LandingSound
-@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+@onready var _rotation_root: Node3D = $PlayerRoot/CharacterRotationRoot
+# @onready var _camera_controller: Node3D = $CameraController
+@onready var _attack_animation_player: AnimationPlayer = $PlayerRoot/CharacterRotationRoot/MeleeAnchor/AnimationPlayer
+@onready var _ground_shapecast: ShapeCast3D = $PlayerRoot/GroundShapeCast
+@onready var _grenade_aim_controller: GrenadeLauncher = $PlayerRoot/GrenadeLauncher
+@onready var _character_skin: CharacterSkin = $PlayerRoot/CharacterRotationRoot/CharacterSkin
+@onready var _ui_aim_recticle: ColorRect = %PlayerRoot/AimRecticle
+@onready var _ui_coins_container: HBoxContainer = %PlayerRoot/CoinsContainer
+@onready var _step_sound: AudioStreamPlayer3D = $PlayerRoot/StepSound
+@onready var _landing_sound: AudioStreamPlayer3D = $PlayerRoot/LandingSound
+@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $PlayerRoot/MultiplayerSynchronizer
 
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
@@ -88,6 +88,8 @@ var current_position: Vector3 = Vector3.ZERO
 @export  var _time_since_last_update: float = 0.0
 @export  var _aim_direction: Vector3
 
+@onready var _camera: Camera3D
+
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
 
@@ -104,6 +106,7 @@ var has_authority: bool = false
 @export var is_just_on_floor :bool
 
 func _ready() -> void:
+	_camera = find_node_by_name(get_tree().get_root(), "MainCamera3D")
 	multiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -145,6 +148,17 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 
 	return p
 	
+func find_node_by_name(node, target_name):
+	if node.get_name() == target_name:
+		print(node.get_name())
+		return node
+
+	for child in node.get_children():
+		var result = find_node_by_name(child, target_name)
+		if result:
+			return result
+
+	return null
 	
 func _predict_and_set_network_player_position(delta):
 	# Only predict on server if it's not the authoritative player
@@ -271,40 +285,40 @@ func _move_network_client_smoothly(delta: float) -> void:
 		
 # On the client side
 func _move_client_smoothly(delta):
-	_move_direction = _get_camera_oriented_input()
+	# Get input direction oriented to the camera
+	var move_direction = _get_camera_oriented_input()
 
 	# Calculate time since last update
 	var time_since_update = delta
 
 	# Separate out the y velocity to not interpolate on gravity
-	var y_velocity := velocity.y
-	#velocity.y = 0.0
-	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
+	var y_velocity = velocity.y
+	velocity = velocity.lerp(move_direction * move_speed, acceleration * delta)
 
-	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
+	# Check if the character should stop moving
+	if move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
-		
-	
 
-	_position_before = global_position
+	# Store the position before movement
+	var position_before = global_position
 
-	
-	# Move and slide on the server side
+	# Move and slide the character
 	move_and_slide()
 
-	_position_after = global_position
-	_last_position_received = _position_after
-	#if(velocity.y != _predicted_velocity.y):
-	
-	
+	# Store the position after movement
+	var position_after = global_position
+	_last_position_received = position_after
+
 	# Store the predicted position based on the client's input
-	_predicted_position = global_position + velocity * delta
+	var predicted_position = global_position + velocity * delta
 
 	# Smooth rotation
-	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	_rotation_root.transform.basis = Basis(current_rotation_basis)
-	#velocity.y = 0.0
+	#var current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	#_rotation_root.transform.basis = Basis(current_rotation_basis)
+
+	# Apply gravity
 	velocity.y += _gravity * delta
+
 
 # On the server side
 func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
@@ -352,7 +366,7 @@ func _physics_process(delta: float) -> void:
 	var time_since_update := delta
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
-		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
+		if multiplayer.get_unique_id() == multiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
 			#print("_aim_direction ", _aim_direction)
@@ -385,7 +399,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+	if multiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		_move_network_client_smoothly(delta)
 		return;
 		
@@ -442,7 +456,7 @@ func _handle_local_input(delta: float) -> void:
 	if _move_direction.length() > 0.2:
 		_last_strong_direction = _move_direction.normalized()
 	if is_aiming:
-		_last_strong_direction = (_camera_controller.global_transform.basis * Vector3.BACK).normalized()
+		_last_strong_direction = (_camera.global_transform.basis * Vector3.BACK).normalized()
 	
 	
 		# Input smoothing using moving average
@@ -456,20 +470,20 @@ func _handle_local_input(delta: float) -> void:
 	
 	_orient_character_to_direction(_smoothed_input, delta)
 	# Set aiming camera and UI
-	if is_aiming:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
-		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
-		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
-		_ui_aim_recticle.visible = true
-		var aim_target :Vector3= _camera_controller.get_aim_target()
-		var origin := global_position + Vector3.UP
-		_aim_direction = (aim_target - origin).normalized()
-		#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
-	else:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
-		_grenade_aim_controller.throw_direction = _last_strong_direction
-		_grenade_aim_controller.from_look_position = global_position
-		_ui_aim_recticle.visible = false
+	# if is_aiming:
+	# 	_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
+	# 	_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
+	# 	_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
+	# 	_ui_aim_recticle.visible = true
+	# 	var aim_target :Vector3= _camera_controller.get_aim_target()
+	# 	var origin := global_position + Vector3.UP
+	# 	_aim_direction = (aim_target - origin).normalized()
+	# 	#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
+	# else:
+	# 	_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
+	# 	_grenade_aim_controller.throw_direction = _last_strong_direction
+	# 	_grenade_aim_controller.from_look_position = global_position
+	# 	_ui_aim_recticle.visible = false
 
 	# Update attack state and position
 
@@ -582,7 +596,7 @@ func _get_camera_oriented_input() -> Vector3:
 	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
 	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
 
-	input = _camera_controller.global_transform.basis * input
+	input = _camera.global_transform.basis * input
 	input.y = 0.0
 	return input
 

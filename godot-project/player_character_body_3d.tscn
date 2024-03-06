@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://diu7y0gck5aid"]
+[gd_scene load_steps=6 format=3 uid="uid://diu7y0gck5aid"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_w70re"]
 [ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://Player/Player.tscn" id="2_ux0gl"]
-[ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="3_v0tep"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vr5ym"]
 
@@ -10,20 +9,6 @@
 albedo_color = Color(0.988235, 0.498039, 0.498039, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ca4wa"]
-
-[sub_resource type="Resource" id="Resource_ua24e"]
-resource_local_to_scene = true
-resource_name = "GridInventory"
-script = ExtResource("3_v0tep")
-height = 12
-width = 8
-
-[sub_resource type="Resource" id="Resource_c6gw6"]
-resource_local_to_scene = true
-resource_name = "GridInventory"
-script = ExtResource("3_v0tep")
-height = 12
-width = 8
 
 [node name="PlayerCharacterBody3D" type="CharacterBody3D"]
 script = ExtResource("1_w70re")
@@ -42,19 +27,3 @@ shape = SubResource("CapsuleShape3D_ca4wa")
 shape = SubResource("CapsuleShape3D_ca4wa")
 
 [node name="PlayerRoot" parent="." instance=ExtResource("2_ux0gl")]
-
-[node name="MultiplayerSynchronizer" parent="PlayerRoot" index="7"]
-root_path = NodePath("../..")
-
-[node name="MeshInstance3D" parent="PlayerRoot/Node/Node3D/StaticBody3D" index="1"]
-visible = false
-
-[node name="Inventory" parent="PlayerRoot/Node/Node3D/Node3D/Openable/Chest" index="3"]
-inventory = SubResource("Resource_ua24e")
-
-[node name="Inventory" parent="PlayerRoot/Node/Node3D/Node3D/Openable/Chest2" index="3"]
-inventory = SubResource("Resource_c6gw6")
-
-[editable path="PlayerRoot"]
-[editable path="PlayerRoot/CharacterRotationRoot/CharacterSkin/gdbot"]
-[editable path="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
