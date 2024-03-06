@@ -22,7 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.*cache
+# .*cache
 dist
 godot-project/exports
 exports

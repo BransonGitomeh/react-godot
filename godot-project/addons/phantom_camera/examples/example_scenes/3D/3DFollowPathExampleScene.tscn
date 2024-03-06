@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://addons/phantom_camera/examples/models/3DPrototypeCubeDark.tscn" id="4_dfdlo"]
 [ext_resource type="PackedScene" uid="uid://b0k4melng53y2" path="res://spawn_locations.tscn" id="5_s36jf"]
 [ext_resource type="Script" path="res://addons/phantom_camera/examples/scripts/3D/path_follow.gd" id="5_vdqkm"]
-[ext_resource type="FontFile" path="res://addons/phantom_camera/fonts/Nunito-Black.ttf" id="6_obo83"]
+[ext_resource type="FontFile" uid="uid://c4mm3of2mc8o5" path="res://addons/phantom_camera/fonts/Nunito-Black.ttf" id="6_obo83"]
 [ext_resource type="Texture2D" uid="uid://2pulqdwo8hvd" path="res://part-old-red-persian-carpet-600nw-1912241188.webp" id="10_0db6e"]
 [ext_resource type="PackedScene" uid="uid://cdlhqur2fqlq7" path="res://multiplayer-connection-screen.tscn" id="10_6ivcf"]
 
