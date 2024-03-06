@@ -1,6 +1,6 @@
 extends Node3D
 
-var PlayerScene = preload("res://player_character_body_3d.tscn")
+var PlayerScene = preload("res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn")
 var currentPlayer
 var groundLevel = 0.0
 var offset = 0.1

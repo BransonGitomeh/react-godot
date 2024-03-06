@@ -1,6 +1,5 @@
-[gd_scene load_steps=25 format=3 uid="uid://dptvs8u0rlghm"]
+[gd_scene load_steps=23 format=3 uid="uid://dptvs8u0rlghm"]
 
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_lm5n8"]
 [ext_resource type="Script" path="res://SceneManager.gd" id="1_tiopq"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="3_bd7x3"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="3_hbjve"]
@@ -10,12 +9,6 @@
 [ext_resource type="FontFile" path="res://addons/phantom_camera/fonts/Nunito-Black.ttf" id="6_obo83"]
 [ext_resource type="Texture2D" uid="uid://2pulqdwo8hvd" path="res://part-old-red-persian-carpet-600nw-1912241188.webp" id="10_0db6e"]
 [ext_resource type="PackedScene" uid="uid://cdlhqur2fqlq7" path="res://multiplayer-connection-screen.tscn" id="10_6ivcf"]
-
-[sub_resource type="Resource" id="Resource_m07s2"]
-script = ExtResource("3_hbjve")
-duration = 0.6
-transition = 1
-ease = 2
 
 [sub_resource type="Resource" id="Resource_rw4bl"]
 script = ExtResource("3_hbjve")
@@ -70,34 +63,9 @@ size = Vector2(3.6, 4.88)
 [node name="Playground" type="Node3D"]
 script = ExtResource("1_tiopq")
 
-[node name="MainCamera3D" type="Camera3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(0.999807, -0.00216249, 0.00184445, 0, 0.648836, 0.760728, -0.00284214, -0.760718, 0.648839, 0, 2.5, 2)
-fov = 90.0
-
-[node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
-script = ExtResource("1_lm5n8")
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 8, 0)
 metadata/_edit_lock_ = true
-
-[node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(0.999807, -0.00216249, 0.00184445, 0, 0.648836, 0.760728, -0.00284214, -0.760718, 0.648839, 0, 2.5, 2)
-script = ExtResource("3_bd7x3")
-priority_override = false
-priority = 3
-follow_mode = 2
-follow_target = NodePath("")
-follow_parameters/target_offset = Vector3(0, 2.5, 2)
-follow_parameters/damping = true
-follow_parameters/damping_value = 10.0
-look_at_mode = 0
-tween_parameters = SubResource("Resource_m07s2")
-tween_on_load = false
-inactive_update_mode = 0
-camera_3D_resource = null
 
 [node name="spawnLocations" parent="." instance=ExtResource("5_s36jf")]
 

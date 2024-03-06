@@ -33,6 +33,10 @@ func _on_player_added(player_id: int, player_info: Dictionary):
 func _process(delta):
 	pass
 
+# Update connection status label
+func updateConnectionStatus(connected: bool):
+	if connected:
+		$ConnectionStatus.text =  connected
 
 func peer_connected(id):
 	if(id == 1):

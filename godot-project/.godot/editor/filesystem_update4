@@ -59,3 +59,4 @@ res://player_character_body_3d.tscn
 res://multiplayer-connection-screen.gd
 res://browl_manager.gd
 res://Player/Player.gd
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn
