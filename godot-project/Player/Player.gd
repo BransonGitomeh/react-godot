@@ -46,6 +46,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _ui_coins_container: HBoxContainer = %CoinsContainer
 @onready var _step_sound: AudioStreamPlayer3D = $StepSound
 @onready var _landing_sound: AudioStreamPlayer3D = $LandingSound
+@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
@@ -103,7 +104,7 @@ var has_authority: bool = false
 @export var is_just_on_floor :bool
 
 func _ready() -> void:
-	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+	multiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#_camera_controller.setup(self)
@@ -114,10 +115,6 @@ func _ready() -> void:
 	# In that case, we register input actions for the user at runtime.
 	if not InputMap.has_action("move_left"):
 		_register_input_actions()
-		
-	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		$CameraController/PlayerCamera.current = true
-		return;
 		
 
 
