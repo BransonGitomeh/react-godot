@@ -2779,7 +2779,7 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_ojh7h"]
+[sub_resource type="Resource" id="Resource_ooxyh"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
@@ -2799,7 +2799,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_7wj1q"]
+[sub_resource type="Resource" id="Resource_2c66q"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
@@ -3062,7 +3062,7 @@ offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
-inventory = SubResource("Resource_ojh7h")
+inventory = SubResource("Resource_ooxyh")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("28_83no3")
@@ -3092,7 +3092,7 @@ offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_7wj1q")
+inventory = SubResource("Resource_2c66q")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("28_83no3")
