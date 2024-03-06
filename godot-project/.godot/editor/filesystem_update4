@@ -57,3 +57,5 @@ res://Player/GenerateLoot.gd
 res://example/src/world/inworld_container.gd
 res://player_character_body_3d.tscn
 res://multiplayer-connection-screen.gd
+res://browl_manager.gd
+res://Player/Player.gd

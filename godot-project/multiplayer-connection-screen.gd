@@ -9,7 +9,7 @@ var peer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	BrowlManager.connect("player_added", self, "_on_player_added")
+	BrowlManager.connect("player_added", _on_player_added)
 	multiplayer.peer_connected.connect(peer_connected)
 	multiplayer.peer_disconnected.connect(peer_disconnected)
 	multiplayer.connected_to_server.connect(connected_to_server)
@@ -24,15 +24,21 @@ func _ready():
 	
 	pass # Replace with function body.
 
+# Function to handle when a new player is added.
+func _on_player_added(player_id: int, player_info: Dictionary):
+	# Implement spawning logic here using the player_info dictionary.
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
 
-
 func peer_connected(id):
 	if(id == 1):
+		BrowlManager.Players[multiplayer.get_unique_id()] = {
+			"name":multiplayer.get_unique_id()
+		}
 		# dont spawn on the clients
 		return;
 		
@@ -63,6 +69,7 @@ func peer_connected(id):
 
 func find_node_by_name(node, target_name):
 	if node.get_name() == target_name:
+		print(node.get_name())
 		return node
 
 	for child in node.get_children():

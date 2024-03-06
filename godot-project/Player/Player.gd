@@ -106,7 +106,7 @@ func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	_camera_controller.setup(self)
+	#_camera_controller.setup(self)
 	_grenade_aim_controller.visible = false
 	emit_signal("weapon_switched", WEAPON_TYPE.keys()[0])
 	

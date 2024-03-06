@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://diu7y0gck5aid"]
 
-[ext_resource type="Script" path="res://addons/phantom_camera/examples/scripts/3D/player_controller.gd" id="1_qckqm"]
+[ext_resource type="Script" path="res://Player/Player.gd" id="1_w70re"]
 [ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://Player/Player.tscn" id="2_ux0gl"]
 [ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="3_v0tep"]
 
@@ -26,8 +26,7 @@ height = 12
 width = 8
 
 [node name="PlayerCharacterBody3D" type="CharacterBody3D"]
-script = ExtResource("1_qckqm")
-SPEED = 3.5
+script = ExtResource("1_w70re")
 
 [node name="PlayerMeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false
@@ -42,17 +41,20 @@ shape = SubResource("CapsuleShape3D_ca4wa")
 [node name="PlayerCollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_ca4wa")
 
-[node name="Node3D" parent="." instance=ExtResource("2_ux0gl")]
+[node name="PlayerRoot" parent="." instance=ExtResource("2_ux0gl")]
 
-[node name="Inventory" parent="Node3D/Node/Node3D/Node3D/Openable/Chest" index="3"]
-inventory = SubResource("Resource_ua24e")
+[node name="MultiplayerSynchronizer" parent="PlayerRoot" index="7"]
+root_path = NodePath("../..")
 
-[node name="Inventory" parent="Node3D/Node/Node3D/Node3D/Openable/Chest2" index="3"]
-inventory = SubResource("Resource_c6gw6")
-
-[node name="Tooltip" parent="Node3D/Node/Inventory" index="2"]
+[node name="MeshInstance3D" parent="PlayerRoot/Node/Node3D/StaticBody3D" index="1"]
 visible = false
 
-[editable path="Node3D"]
-[editable path="Node3D/CharacterRotationRoot/CharacterSkin/gdbot"]
-[editable path="Node3D/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[node name="Inventory" parent="PlayerRoot/Node/Node3D/Node3D/Openable/Chest" index="3"]
+inventory = SubResource("Resource_ua24e")
+
+[node name="Inventory" parent="PlayerRoot/Node/Node3D/Node3D/Openable/Chest2" index="3"]
+inventory = SubResource("Resource_c6gw6")
+
+[editable path="PlayerRoot"]
+[editable path="PlayerRoot/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
