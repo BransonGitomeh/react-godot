@@ -36,17 +36,17 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 ## Grenade cooldown
 @export var grenade_cooldown := 0.5
 
-@onready var _rotation_root: Node3D = $PlayerRoot/CharacterRotationRoot
+@onready var _rotation_root: Node3D = $CharacterRotationRoot
 # @onready var _camera_controller: Node3D = $CameraController
-@onready var _attack_animation_player: AnimationPlayer = $PlayerRoot/CharacterRotationRoot/MeleeAnchor/AnimationPlayer
-@onready var _ground_shapecast: ShapeCast3D = $PlayerRoot/GroundShapeCast
-@onready var _grenade_aim_controller: GrenadeLauncher = $PlayerRoot/GrenadeLauncher
-@onready var _character_skin: CharacterSkin = $PlayerRoot/CharacterRotationRoot/CharacterSkin
-@onready var _ui_aim_recticle: ColorRect = %PlayerRoot/AimRecticle
-@onready var _ui_coins_container: HBoxContainer = %PlayerRoot/CoinsContainer
-@onready var _step_sound: AudioStreamPlayer3D = $PlayerRoot/StepSound
-@onready var _landing_sound: AudioStreamPlayer3D = $PlayerRoot/LandingSound
-@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $PlayerRoot/MultiplayerSynchronizer
+@onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
+@onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
+@onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
+@onready var _character_skin: CharacterSkin = $CharacterRotationRoot/CharacterSkin
+@onready var _ui_aim_recticle: ColorRect = %AimRecticle
+@onready var _ui_coins_container: HBoxContainer = %CoinsContainer
+@onready var _step_sound: AudioStreamPlayer3D = $StepSound
+@onready var _landing_sound: AudioStreamPlayer3D = $LandingSound
+@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
@@ -367,12 +367,19 @@ func _physics_process(delta: float) -> void:
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
 		if multiplayer.get_unique_id() == multiplayerSynchronizer.get_multiplayer_authority():
+			print("Server: Handling authoritative player's physics process")
 			_server_process(delta, time_since_update)
 		else:
-			#print("_aim_direction ", _aim_direction)
+			print("Server: Handling non-authoritative player's physics process")
 			_client_process(delta)
 	else:
-		_client_process(delta)
+		print("Client: Handling physics process ", multiplayer.get_unique_id(), " " , multiplayerSynchronizer.get_multiplayer_authority())
+
+		if multiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+			_move_network_client_smoothly(delta)
+			_client_process(delta)
+			return;
+		
 
 func _server_process(delta: float, time_since_update: float) -> void:
 	# Update position with input
@@ -399,11 +406,6 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
-	if multiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		_move_network_client_smoothly(delta)
-		return;
-		
-	
 	var time_since_update:=delta
 	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity

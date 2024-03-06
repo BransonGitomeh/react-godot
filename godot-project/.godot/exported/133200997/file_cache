@@ -18,18 +18,18 @@ res://Player/model/materials/face_mat.tres::cfd4773e06dea22da343219ead1667f9::17
 res://Player/model/materials/glass_mat.tres::427c4b72c15ab4cfa09fb1160b5168a2::1701113146::res://.godot/exported/133200997/export-4a1327b7ae2cf93425e873e8e2f57985-glass_mat.res
 res://Player/model/materials/heart_core_mat.tres::2650e69d1f0c66be6244e7ab275bb5db::1702806160::res://.godot/exported/133200997/export-8a761708896b23b29314b12c96fb5736-heart_core_mat.res
 res://Player/model/character_blend_tree.tres::5234bfe3293f395baa9ef9393d323bb5::1709688568::res://.godot/exported/133200997/export-9bb36b4c9bc8b6caa3c55ee4d047932c-character_blend_tree.res
-res://Player/Bullet.tscn::91fda6bc64954d94047eb37c4ea31033::1709716138::res://.godot/exported/133200997/export-b9f5a945bb77e8bf8a0ce2838f712380-Bullet.scn
+res://Player/Bullet.tscn::91fda6bc64954d94047eb37c4ea31033::1709739082::res://.godot/exported/133200997/export-b9f5a945bb77e8bf8a0ce2838f712380-Bullet.scn
 res://Player/CharacterSkin.tscn::540781153789709b28f346b09ca0ed7e::1701860375::res://.godot/exported/133200997/export-384d0befffd17be529ae510287492421-CharacterSkin.scn
 res://Player/Grenade.tscn::ffd8d62e47ac2bdb9a6099fc003e67a5::1701113146::res://.godot/exported/133200997/export-5a36d23b11dfe26100ddb543b70099c4-Grenade.scn
 res://Player/GrenadeLauncher.tscn::2270b509377f9910643b60b9aa0768e8::1708185729::res://.godot/exported/133200997/export-46701b4ac04467d3f041213b92d76a00-GrenadeLauncher.scn
-res://Player/Player.tscn::be7694349599d9ce0e2667b9eac2ca1e::1709716138::res://.godot/exported/133200997/export-48b487cb3fbab0e0d627d8f8de2ba1d9-Player.scn
-res://multiplayer-connection-screen.tscn::6e8d3f1591cbe2e9a7fedb23b836fa7d::1709716139::res://.godot/exported/133200997/export-ce3626780a5ed8c0fbcb679f4f4abb9f-multiplayer-connection-screen.scn
+res://Player/Player.tscn::d0035be341693ed708699d8fc0c8de57::1709739082::res://.godot/exported/133200997/export-48b487cb3fbab0e0d627d8f8de2ba1d9-Player.scn
+res://multiplayer-connection-screen.tscn::6e8d3f1591cbe2e9a7fedb23b836fa7d::1709739082::res://.godot/exported/133200997/export-ce3626780a5ed8c0fbcb679f4f4abb9f-multiplayer-connection-screen.scn
 res://Playground.tscn::c6d1aeb319ba8f0090cc69b094f87276::1708796626::res://.godot/exported/133200997/export-2de234ffdea55782e1645aec0627cbb3-Playground.scn
 res://PossumLevelLayers/cube_111_atlas_0.tscn::9db3b96dcd49f69ba810e82bc1a11539::1701873065::res://.godot/exported/133200997/export-2493cd311dfe96dc8811c19b236bd94a-cube_111_atlas_0.scn
 res://PossumLevelLayers/cube_111_atlas_02.tscn::21ccd1ff557607b20eb703bd58abaa7b::1701873065::res://.godot/exported/133200997/export-19f8aab4518760c97ca6544215cbc9c9-cube_111_atlas_02.scn
 res://PossumLevelLayers/houses.tscn::aa57139bc485d7abd2ff4a414121c08b::1701873066::res://.godot/exported/133200997/export-43b3b4631b36bd76c778fb6d512df54e-houses.scn
 res://PossumLevelLayers/other_houses.tscn::6065023ae57a5a0ee17f1103dcdc63ea::1701873066::res://.godot/exported/133200997/export-42ea34d26f7970c7f66057691d55e508-other_houses.scn
-res://PossumLevel.tscn::e1e18fc7dbedfabc26c39c1f7d2354a7::1709716137::res://.godot/exported/133200997/export-9dae4721528b6b393cd6d37b4ee977be-PossumLevel.scn
+res://PossumLevel.tscn::e1e18fc7dbedfabc26c39c1f7d2354a7::1709739082::res://.godot/exported/133200997/export-9dae4721528b6b393cd6d37b4ee977be-PossumLevel.scn
 res://possum_springs_inherited.tscn::e074259cc4a3bcb628da296850018cb1::1702839191::res://.godot/exported/133200997/export-841d5e912023b609fe1b150f6a5201ba-possum_springs_inherited.scn
 res://posum-springs.tscn::652fb397b4c89c1edbbb99da5c8feb34::1701873069::res://.godot/exported/133200997/export-f1c55b7d1ec1bfae21e340d49db96021-posum-springs.scn
 res://Box/DestroyedBox.tscn::5ff44fab123597eb11751b319415c695::1701113101::res://.godot/exported/133200997/export-2fbe5e2019538b1ca499e22fef1da17c-DestroyedBox.scn
@@ -91,7 +91,7 @@ res://shared/models/sophia/materials/sophia_mouth.tres::b8fcc1833c1be8c11ab37a91
 res://shared/models/sophia/sophia_skin.tscn::83092d900d466bce0072faae534845ee::1702755827::res://.godot/exported/133200997/export-367c359aaa3c4f22510c8b9501ae3ca6-sophia_skin.scn
 res://shared/gui.tscn::90c0ab3196cc176d77a8e482704a7ad3::1702755827::res://.godot/exported/133200997/export-c8232883b3c1f6f6b4d51a744c062fb4-gui.scn
 res://effect.tscn::fcff829c7663ba1369ec64052bf3465e::1702839192::res://.godot/exported/133200997/export-c6156a253c0c6eeba615c9a6a2509323-effect.scn
-res://spawn_locations.tscn::39a9a6cd833dd9fad64781bb6a264a44::1709716139::res://.godot/exported/133200997/export-71fe36700e0bf3db62bf4f2bb7a3f058-spawn_locations.scn
+res://spawn_locations.tscn::39a9a6cd833dd9fad64781bb6a264a44::1709739082::res://.godot/exported/133200997/export-71fe36700e0bf3db62bf4f2bb7a3f058-spawn_locations.scn
 res://addons/phantom_camera/examples/example_scenes/2D/2DExampleScene.tscn::6aeb130bfeb10ea36d25db60bce0b670::1704825953::res://.godot/exported/133200997/export-ea6aa5d1e6486dbea11b1378108d4000-2DExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/2D/2DFollowFramedExampleScene.tscn::1fc154d962f806e84a0895a0620a1066::1704825953::res://.godot/exported/133200997/export-e7cc53eae4e153133c1b3cc08f682acd-2DFollowFramedExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/2D/2DFollowGroupExampleScene.tscn::35518a8fb4cc2639c11b33b75dafd9a5::1704825953::res://.godot/exported/133200997/export-44c6d3ab6c27dacde9ecd23e70f2a12d-2DFollowGroupExampleScene.scn
@@ -102,7 +102,7 @@ res://addons/phantom_camera/examples/example_scenes/3D/3DExampleScene.tscn::1ab4
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowFramedExampleScene.tscn::36d98649902b939c39c3c0409850a35b::1704825953::res://.godot/exported/133200997/export-98234aa1b420e0537b34401216cd4409-3DFollowFramedExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowGluedExampleScene.tscn::fcf116b211f75f6f484f59da1e1e191b::1704825953::res://.godot/exported/133200997/export-3f36df3a98c1352ff48b19383301125c-3DFollowGluedExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowGroupExampleScene.tscn::eebde4f1172a5225d58372d8471e57fd::1704825953::res://.godot/exported/133200997/export-1eeab2214b8619185696eee0b9277beb-3DFollowGroupExampleScene.scn
-res://addons/phantom_camera/examples/example_scenes/3D/3DFollowPathExampleScene.tscn::74a0239db9f77a0462c36703a2be3e81::1709716139::res://.godot/exported/133200997/export-0996e822cd5c5ef3a6206d3a9d8d31ec-3DFollowPathExampleScene.scn
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowPathExampleScene.tscn::247aeb107d6def276493013a2260daf4::1709739082::res://.godot/exported/133200997/export-0996e822cd5c5ef3a6206d3a9d8d31ec-3DFollowPathExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowSimpleExampleScene.tscn::edfcc6c396c228999cfee156c0774cec::1704825953::res://.godot/exported/133200997/export-8c64eaacb2440442bea036c51a10473e-3DFollowSimpleExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn::4567039219456ac05416ec745b991ec9::1704825953::res://.godot/exported/133200997/export-8d15a4610f16a8fc54e56d4490cd123f-3DFollowThirdPersonExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DLookAtExampleScene.tscn::c05114efa5b833919875007d18267968::1704825953::res://.godot/exported/133200997/export-cc4a69589cc43dac9ca1de98d22196ea-3DLookAtExampleScene.scn
@@ -263,5 +263,5 @@ res://ground_items.tscn::998c4da0daba99499590cbb05784ff99::1707488938::res://.go
 res://inventory-hero.tscn::101df955877ee3b0cb03e88078a9465c::1707477963::res://.godot/exported/133200997/export-669ff08e6f3df6e73835e02dd21167d2-inventory-hero.scn
 res://inventory-ui-layer.tscn::0293bfd2580b88be1625eedeb0c64462::1707536455::res://.godot/exported/133200997/export-a1df2923ddd858ab3d5cb1aa94d85b75-inventory-ui-layer.scn
 res://inventory-ui.tscn::3413110bee4b07d3269bc7a69027b414::1707488325::res://.godot/exported/133200997/export-e412a151b001c7718a471271c43d2e03-inventory-ui.scn
-res://player_character_body_3d.tscn::fe8bd58927c22fe1a9d1df7ad45d249f::1709711563::res://.godot/exported/133200997/export-bb19c3f6cff74fa47cf897674971a5d6-player_character_body_3d.scn
+res://player_character_body_3d.tscn::2f5f1c8572051bb2b726606f97132f03::1709739085::res://.godot/exported/133200997/export-bb19c3f6cff74fa47cf897674971a5d6-player_character_body_3d.scn
 res://lootObject.tscn::44515d08066ac58c5effaee3ad56061a::1709714675::res://.godot/exported/133200997/export-31a024ea86953090f6b4e6d7b556cae5-lootObject.scn
