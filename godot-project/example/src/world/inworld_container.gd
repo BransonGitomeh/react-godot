@@ -15,6 +15,7 @@ func _on_body_entered(body):
 
 
 func _on_body_exited(body):
+	print(body)
 	if !body.is_in_group("hero"): return
 	
 	get_node("Button").hide()
@@ -23,5 +24,5 @@ func _on_body_exited(body):
 
 	var inventory_menu_path = body.get_node("Node/Inventory").get_path()
 	# Close the in-world inventory
-	body.get_node(body.inventory_menu).close_inworld_inventory(get_node("Inventory"))
+	#body.get_node(body.inventory_menu).close_inworld_inventory(get_node("Inventory"))
 

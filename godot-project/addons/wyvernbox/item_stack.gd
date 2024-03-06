@@ -298,7 +298,7 @@ static func new_from_dict(dict : Dictionary) -> ItemStack:
 	if position_from_dict is Vector2:
 		new_item.position_in_inventory = position_from_dict
 	else:
-		print("Invalid position data in the dictionary. Using default position.")
+		#print("Invalid position data in the dictionary. Using default position.")
 		new_item.position_in_inventory = position_default
 
 	return new_item

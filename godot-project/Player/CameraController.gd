@@ -193,7 +193,7 @@ func _handle_rule_of_thirds(delta):
 	_handle_clamp_camera_height()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process_old(delta: float) -> void:
 	if not _anchor:
 		return
 

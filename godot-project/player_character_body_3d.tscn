@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://diu7y0gck5aid"]
+
+[ext_resource type="Script" path="res://addons/phantom_camera/examples/scripts/3D/player_controller.gd" id="1_qckqm"]
+[ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://Player/Player.tscn" id="2_ux0gl"]
+[ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="3_v0tep"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vr5ym"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mjpjo"]
+albedo_color = Color(0.988235, 0.498039, 0.498039, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ca4wa"]
+
+[sub_resource type="Resource" id="Resource_ua24e"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("3_v0tep")
+height = 12
+width = 8
+
+[sub_resource type="Resource" id="Resource_c6gw6"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("3_v0tep")
+height = 12
+width = 8
+
+[node name="PlayerCharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_qckqm")
+SPEED = 3.5
+
+[node name="PlayerMeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CapsuleMesh_vr5ym")
+surface_material_override/0 = SubResource("StandardMaterial3D_mjpjo")
+
+[node name="PlayerArea3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea3D"]
+shape = SubResource("CapsuleShape3D_ca4wa")
+
+[node name="PlayerCollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ca4wa")
+
+[node name="Node3D" parent="." instance=ExtResource("2_ux0gl")]
+
+[node name="Inventory" parent="Node3D/Node/Node3D/Node3D/Openable/Chest" index="3"]
+inventory = SubResource("Resource_ua24e")
+
+[node name="Inventory" parent="Node3D/Node/Node3D/Node3D/Openable/Chest2" index="3"]
+inventory = SubResource("Resource_c6gw6")
+
+[node name="Tooltip" parent="Node3D/Node/Inventory" index="2"]
+visible = false
+
+[editable path="Node3D"]
+[editable path="Node3D/CharacterRotationRoot/CharacterSkin/gdbot"]
+[editable path="Node3D/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]

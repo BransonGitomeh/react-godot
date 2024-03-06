@@ -9,6 +9,7 @@ var peer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	BrowlManager.connect("player_added", self, "_on_player_added")
 	multiplayer.peer_connected.connect(peer_connected)
 	multiplayer.peer_disconnected.connect(peer_disconnected)
 	multiplayer.connected_to_server.connect(connected_to_server)
@@ -17,11 +18,9 @@ func _ready():
 		_on_host_pressed()
 		return
 	
+	print("Dropping user in scene", address) 	
 	_on_join_pressed()
 	await get_tree().create_timer(1).timeout
-	#
-	#print("Dropping user in scene", address) 	
-	#_on_start_browl_pressed()
 	
 	pass # Replace with function body.
 
@@ -29,6 +28,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+
 
 
 func peer_connected(id):

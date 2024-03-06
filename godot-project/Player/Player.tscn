@@ -1,16 +1,13 @@
-[gd_scene load_steps=56 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=59 format=3 uid="uid://ciqrpd5675boy"]
 
-[ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
 [ext_resource type="Script" path="res://Player/Area3DInteractor.gd" id="2_udgcm"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
 [ext_resource type="PackedScene" uid="uid://dsoiq0u4jfsqb" path="res://example/src/inventory_menu.tscn" id="3_a8mn3"]
-[ext_resource type="Script" path="res://Player/CameraController.gd" id="3_qrkly"]
-[ext_resource type="Shader" path="res://Player/PlayerOutline.gdshader" id="3_tjk7l"]
 [ext_resource type="Script" path="res://Player/MeleeAttackArea.gd" id="3_v1vve"]
-[ext_resource type="PackedScene" uid="uid://co5ok1mm2s7vu" path="res://exports/addons/wyvernbox_prefabs/item_stack_view.tscn" id="4_73k3s"]
+[ext_resource type="PackedScene" uid="uid://co5ok1mm2s7vu" path="res://addons/wyvernbox_prefabs/item_stack_view.tscn" id="4_73k3s"]
 [ext_resource type="Script" path="res://addons/wyvernbox/view_extra/grabbed_item_stack.gd" id="5_6ux1b"]
 [ext_resource type="Script" path="res://Player/CharacterSkin.gd" id="5_45tqe"]
-[ext_resource type="PackedScene" uid="uid://cqa45c6lfsffv" path="res://exports/addons/wyvernbox_prefabs/tooltip.tscn" id="6_ewl78"]
+[ext_resource type="PackedScene" uid="uid://cqa45c6lfsffv" path="res://addons/wyvernbox_prefabs/tooltip.tscn" id="6_ewl78"]
 [ext_resource type="PackedScene" uid="uid://db7wkegkjmixy" path="res://Player/model/gdbot.glb" id="6_yyejb"]
 [ext_resource type="Script" path="res://Player/CoinsContainer.gd" id="7_8eehq"]
 [ext_resource type="Theme" uid="uid://75b71yv7xu1e" path="res://example/theme/default.tres" id="7_dp1pd"]
@@ -23,33 +20,25 @@
 [ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="11_3s4i7"]
 [ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
+[ext_resource type="Script" path="res://addons/wyvernbox/ground/ground_items_manager.gd" id="17_cjkth"]
 [ext_resource type="PackedScene" uid="uid://dn7yhxnr3q5o3" path="res://effect.tscn" id="18_ge2id"]
-[ext_resource type="PackedScene" uid="uid://bfuapdb4wsbi1" path="res://ground_items.tscn" id="24_x2y8m"]
+[ext_resource type="PackedScene" uid="uid://cesxtk10fira3" path="res://addons/wyvernbox_prefabs/ground_item_stack_view_3d.tscn" id="18_tlbe7"]
+[ext_resource type="Script" path="res://Player/GenerateLoot.gd" id="19_1xw3u"]
+[ext_resource type="PackedScene" uid="uid://dqydaky30x7qt" path="res://lootObject.tscn" id="20_e8j4s"]
+[ext_resource type="Resource" uid="uid://ba1ie6jofkmu8" path="res://example/wyvernbox/item_types/consumable/coin_gold.tres" id="21_jcwqj"]
+[ext_resource type="Resource" uid="uid://bdo8mj57sn4es" path="res://example/wyvernbox/item_types/consumable/coin_purple.tres" id="22_d64v7"]
+[ext_resource type="Script" path="res://addons/wyvernbox/item_instantiator.gd" id="23_5vja2"]
+[ext_resource type="PackedScene" uid="uid://e8rkhrvavj7l" path="res://example/src/world/inworld_container.tscn" id="24_jjsrk"]
 [ext_resource type="Script" path="res://addons/wyvernbox/inventories/grid_inventory.gd" id="25_6q7pi"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
+[ext_resource type="PackedScene" uid="uid://dk2b3ordhblc2" path="res://addons/wyvernbox_prefabs/inventories/grid_inventory.tscn" id="25_tjeew"]
+[ext_resource type="Resource" uid="uid://bc5mn5etsfr76" path="res://example/wyvernbox/item_generators/random_enchanted_equip.tres" id="27_hwm86"]
+[ext_resource type="StyleBox" uid="uid://cqx3opxr50d2o" path="res://addons/wyvernbox_prefabs/graphics/selected_cell.tres" id="28_83no3"]
 
 [sub_resource type="CylinderShape3D" id="8"]
 height = 3.02818
 radius = 0.805338
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_roadh"]
-
-[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_gqx4v"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_2ooex"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 76.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ba4x5"]
-render_priority = 0
-shader = ExtResource("3_tjk7l")
-shader_parameter/shadow_color = Color(0, 0, 0, 1)
-shader_parameter/shadow_thickness = 2.0
-shader_parameter/min_edge_distance = 0.005
-
-[sub_resource type="QuadMesh" id="QuadMesh_j8o5e"]
-size = Vector2(2, 2)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s5n07"]
 
@@ -2790,41 +2779,36 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_e3x14"]
+[sub_resource type="Resource" id="Resource_vhb87"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
 height = 12
 width = 8
 
-[sub_resource type="Resource" id="Resource_vf78y"]
+[sub_resource type="Resource" id="12"]
+resource_name = "Random Equips"
+script = ExtResource("23_5vja2")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("27_hwm86"), ExtResource("22_d64v7"), ExtResource("22_d64v7"), ExtResource("21_jcwqj"), ExtResource("21_jcwqj"), ExtResource("21_jcwqj"), ExtResource("21_jcwqj")])
+item_repeat_ranges = Array[Vector2]([Vector2(8, 8), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100), Vector2(5, 100)])
+item_chances = Array[float]([100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.0
+spread_distance = 32.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="Resource" id="Resource_hy1x7"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
 height = 12
 width = 8
 
-[node name="Player" type="CharacterBody3D" groups=["damageables", "hero"]]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
-script = ExtResource("1_rvo1c")
-inventory_menu = NodePath("Node/Inventory/InventoryMenu")
-inventory_tooltip = NodePath("Node/Inventory/Tooltip")
-ground_items = NodePath("Node/Node3D/Node3D/Items")
-move_speed = 14.0
-bullet_speed = 14.0
-jump_initial_impulse = 34.0
-rotation_speed = 1.0
-network_position_interpolation_duration = 60.0
-
-[node name="CharacterCollisionShape" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_8x2xm")
+[node name="Node3D" type="Node3D"]
 
 [node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54807, 0)
 input_ray_pickable = false
 script = ExtResource("2_udgcm")
 inventory_menu = NodePath("../Node/Inventory/InventoryMenu")
@@ -2839,41 +2823,6 @@ transform = Transform3D(1.59758, 0, 0, 0, 1, 0, 0, 0, 1.50508, 0, 0, 0)
 visible = false
 mesh = SubResource("CylinderMesh_roadh")
 
-[node name="CameraController" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.985984, 0.166838, 0, -0.166838, 0.985984, 0, 3.39961, 0)
-top_level = true
-script = ExtResource("3_qrkly")
-invert_mouse_y = true
-tilt_upper_limit = 0.48
-tilt_lower_limit = -0.8
-
-[node name="CameraOverShoulderPivot" type="Marker3D" parent="CameraController"]
-transform = Transform3D(-0.994522, 0.0400013, -0.0965717, 0, 0.92388, 0.382683, 0.104528, 0.380587, -0.918818, -0.848491, 3.48765, -2.32639)
-
-[node name="CameraSpringArm" type="SpringArm3D" parent="CameraController"]
-transform = Transform3D(-1, -5.15034e-15, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, 0, 2.33984, 0)
-shape = SubResource("SeparationRayShape3D_gqx4v")
-spring_length = 30.0
-
-[node name="CameraThirdPersonPivot" type="Marker3D" parent="CameraController/CameraSpringArm"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
-
-[node name="PlayerCamera" type="Camera3D" parent="CameraController"]
-transform = Transform3D(-1, -3.71248e-14, -8.74228e-08, -3.23484e-08, 0.929023, 0.370022, 8.12178e-08, 0.370022, -0.929023, -8.74228e-07, 6.04006, -9.29023)
-top_level = true
-attributes = SubResource("CameraAttributesPractical_2ooex")
-fov = 50.0
-
-[node name="PostProcess" type="MeshInstance3D" parent="CameraController/PlayerCamera"]
-transform = Transform3D(2.2262, 1.77636e-14, -1.49214e-13, 0, 1.52689, 2.98023e-08, -4.26326e-14, -2.98023e-07, 1.20986, 5.55754e-08, -0.107898, -0.635699)
-material_override = SubResource("ShaderMaterial_ba4x5")
-mesh = SubResource("QuadMesh_j8o5e")
-
-[node name="CameraRayCast" type="RayCast3D" parent="CameraController/PlayerCamera"]
-transform = Transform3D(1, 0, -7.10543e-15, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-target_position = Vector3(0, 0, -100)
-debug_shape_custom_color = Color(0.105882, 0.0784314, 0.952941, 1)
-
 [node name="GrenadeLauncher" parent="." instance=ExtResource("3_54qc4")]
 
 [node name="GroundShapeCast" type="ShapeCast3D" parent="."]
@@ -2887,12 +2836,11 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 [node name="CharacterRotationRoot" type="Node3D" parent="."]
 
 [node name="offset" type="Node3D" parent="CharacterRotationRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.37307, 1.31863)
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
 mesh = SubResource("BoxMesh_o6lug")
-skeleton = NodePath("../../..")
+skeleton = NodePath("")
 
 [node name="MeleeAnchor" type="Node3D" parent="CharacterRotationRoot"]
 
@@ -2900,7 +2848,7 @@ skeleton = NodePath("../../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
 visible = false
 mesh = SubResource("SphereMesh_uex0s")
-skeleton = NodePath("../../..")
+skeleton = NodePath("")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterRotationRoot/MeleeAnchor"]
 root_node = NodePath("../..")
@@ -2918,11 +2866,11 @@ shape = SubResource("CapsuleShape3D_pcytg")
 disabled = true
 
 [node name="CharacterSkin" type="Node3D" parent="CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 script = ExtResource("5_45tqe")
 main_animation_player = NodePath("gdbot/AnimationPlayer")
 
 [node name="gdbot" parent="CharacterRotationRoot/CharacterSkin" instance=ExtResource("6_yyejb")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Skeleton3D" parent="CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
 bones/2/rotation = Quaternion(3.09086e-08, 0.707107, 0.707107, 3.09086e-08)
@@ -3065,6 +3013,7 @@ stream = ExtResource("11_3s4i7")
 volume_db = 1.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("")
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
@@ -3073,10 +3022,9 @@ replication_config = SubResource("SceneReplicationConfig_dtgvc")
 [node name="Node" type="Node" parent="."]
 
 [node name="Node3D" type="Node3D" parent="Node"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 147.626, 0, 0)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Node/Node3D"]
-transform = Transform3D(88.5146, 0, 0, 0, 1, 0, 0, 0, 88.5146, 0, 0, 0)
+transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -1, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node/Node3D/StaticBody3D"]
 shape = SubResource("2")
@@ -3087,13 +3035,81 @@ mesh = SubResource("3")
 [node name="Camera3D" type="Camera3D" parent="Node/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.584391, 0.811472, 0, -0.811472, 0.584391, -0.0395966, 14.83, 12.56)
 
-[node name="Node3D" parent="Node/Node3D" instance=ExtResource("24_x2y8m")]
+[node name="Node3D" type="Node3D" parent="Node/Node3D"]
 
-[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest" index="3"]
-inventory = SubResource("Resource_e3x14")
+[node name="Items" type="Node3D" parent="Node/Node3D/Node3D"]
+script = ExtResource("17_cjkth")
+autosave_file_path = "items/ground/area2.dat"
+item_scene = ExtResource("18_tlbe7")
+spawn_jump_length_range = Vector2(2, 3)
 
-[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest2" index="3"]
-inventory = SubResource("Resource_vf78y")
+[node name="Loot" type="Node3D" parent="Node/Node3D/Node3D"]
+script = ExtResource("19_1xw3u")
+
+[node name="Area3D" parent="Node/Node3D/Node3D/Loot" instance=ExtResource("20_e8j4s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.1, 2)
+
+[node name="Openable" type="Node3D" parent="Node/Node3D/Node3D"]
+
+[node name="Chest" parent="Node/Node3D/Node3D/Openable" instance=ExtResource("24_jjsrk")]
+transform = Transform3D(0.413263, 0, -0.910612, 0, 1, 0, 0.910612, 0, 0.413263, -2.5152, 1.34766, -4.27634)
+
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest" instance=ExtResource("25_tjeew")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -313.0
+offset_top = -39.0
+offset_right = -201.0
+offset_bottom = 129.0
+inventory = SubResource("Resource_vhb87")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("28_83no3")
+autosave_file_path = "items/world/chest1.dat"
+
+[node name="Control2" type="Control" parent="Node/Node3D/Node3D/Openable/Chest/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Node/Node3D/Node3D/Openable/Chest/Inventory/Control2"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"
+
+[node name="Chest2" parent="Node/Node3D/Node3D/Openable" instance=ExtResource("24_jjsrk")]
+transform = Transform3D(-0.645324, 0, -0.763909, 0, 1, 0, 0.763909, 0, -0.645324, 4.40275, 1.34766, -3.99078)
+
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest2" instance=ExtResource("25_tjeew")]
+visible = false
+custom_minimum_size = Vector2(112, 168)
+offset_left = -201.0
+offset_top = 20.0
+offset_right = -89.0
+offset_bottom = 188.0
+inventory = SubResource("Resource_hy1x7")
+contents = SubResource("12")
+interaction_mode = 5
+selected_item_style = ExtResource("28_83no3")
+autosave_file_path = "items/world/chest2.dat"
+
+[node name="Control" type="Control" parent="Node/Node3D/Node3D/Openable/Chest2/Inventory"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 10
+
+[node name="Button" type="Button" parent="Node/Node3D/Node3D/Openable/Chest2/Inventory/Control"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -20.0
+offset_right = 21.0
+size_flags_horizontal = 10
+size_flags_vertical = 10
+text = "?"
 
 [node name="Inventory" type="CanvasLayer" parent="Node"]
 
@@ -3158,9 +3174,6 @@ compare_to_inventory = NodePath("../InventoryMenu/CenterContainer/TabContainer/E
 color_neutral = Color(0.376471, 0.376471, 0.376471, 1)
 
 [connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
-[connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
-[connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 
 [editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
 [editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
-[editable path="Node/Node3D/Node3D"]

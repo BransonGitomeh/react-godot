@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=3 uid="uid://dqydaky30x7qt"]
+
+[ext_resource type="Script" path="res://example/src/world/touch_dropper.gd" id="1_g4kt3"]
+[ext_resource type="Resource" path="res://example/wyvernbox/item_generators/basic_loot.tres" id="2_2foxa"]
+[ext_resource type="Resource" uid="uid://ba1ie6jofkmu8" path="res://example/wyvernbox/item_types/consumable/coin_gold.tres" id="3_j405g"]
+[ext_resource type="Resource" uid="uid://bdo8mj57sn4es" path="res://example/wyvernbox/item_types/consumable/coin_purple.tres" id="4_yx5cl"]
+[ext_resource type="Script" path="res://addons/wyvernbox/item_instantiator.gd" id="5_81hql"]
+
+[sub_resource type="Resource" id="22"]
+resource_name = "Drop Chaotically"
+script = ExtResource("5_81hql")
+items_to_add = Array[Resource("res://addons/wyvernbox/crafting/item_like.gd")]([ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("3_j405g"), ExtResource("4_yx5cl"), ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("2_2foxa"), ExtResource("2_2foxa")])
+item_repeat_ranges = Array[Vector2]([Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(5, 100), Vector2(5, 100), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)])
+item_chances = Array[float]([100.0, 50.0, 50.0, 50.0, 100.0, 20.0, 50.0, 50.0, 50.0, 50.0, 50.0])
+repeat_post_chance = true
+randomize_locations = true
+delay_between_items = 0.1
+spread_distance = 4.0
+spread_cone_degrees = 360.0
+spread_angle_degrees = 0.0
+
+[sub_resource type="SphereShape3D" id="14"]
+
+[sub_resource type="SphereMesh" id="15"]
+
+[node name="Area3D" type="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.1, 1)
+script = ExtResource("1_g4kt3")
+ground_item_manager = NodePath("../../Items")
+collide_with_group = &"hero"
+loot_table = SubResource("22")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("14")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("15")
