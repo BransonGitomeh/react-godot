@@ -1,5 +1,6 @@
+extends "res://addons/phantom_camera/examples/scripts/3D/player_controller_third_person.gd"
+
 class_name Player
-extends CharacterBody3D
 
 signal weapon_switched(weapon_name: String)
 
@@ -88,8 +89,6 @@ var current_position: Vector3 = Vector3.ZERO
 @export  var _time_since_last_update: float = 0.0
 @export  var _aim_direction: Vector3
 
-@onready var _camera: Camera3D
-
 var _input_buffer: Array = []
 const INPUT_BUFFER_SIZE: int = 10
 
@@ -104,19 +103,6 @@ var has_authority: bool = false
 @export var is_aiming :bool
 @export var is_air_boosting:bool
 @export var is_just_on_floor :bool
-
-@onready var _player_pcam: PhantomCamera3D = %PlayerPhantomCamera3D
-@onready var _aim_pcam: PhantomCamera3D = %PlayerAimPhantomCamera3D
-@onready var _model: Node3D = $PlayerModel
-@onready var _ceiling_pcam: PhantomCamera3D = %CeilingPhantomCamera3D
-
-@export var mouse_sensitivity: float = 0.05
-
-@export var min_yaw: float = -89.9
-@export var max_yaw: float = 50
-
-@export var min_pitch: float = 0
-@export var max_pitch: float = 360
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.THIRD_PERSON:
@@ -432,8 +418,8 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 		_predicted_position = _position_after
 
 	# Smoothen rotation
-	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	#current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	#_rotation_root.transform.basis = Basis(current_rotation_basis)
 	
 
 var interpolated_position;

@@ -64,7 +64,7 @@ func peer_connected(id):
 	if playgroundNode:
 		playgroundNode.add_child(newPlayer)
 		newPlayer.position = randomSpawnNode.position
-	else:
+else:
 		print("Node not found: Playground")
 
 func find_node_by_name(node, target_name):
