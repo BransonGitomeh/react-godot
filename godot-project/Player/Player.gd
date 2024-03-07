@@ -478,7 +478,7 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 	_position_after = global_position
 	
 	
-	print(multiplayer.get_unique_id(), " _position_before ", _position_before, " _position_after ", _position_after)
+	#print(multiplayer.get_unique_id(), " _position_before ", _position_before, " _position_after ", _position_after)
 
 	# If there's a significant position change, adjust the predicted position on the client
 	var delta_position := _position_after - _position_before
