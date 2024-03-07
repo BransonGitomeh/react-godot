@@ -495,7 +495,7 @@ func _client_process(delta: float) -> void:
 	
 
 	# Update predicted velocity (client-side only)
-	var calculatedPredictedVelocity = _update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+	var calculatedPredictedVelocity = _update_predicted_velocity(_time_since_last_update, _position_before, _position_after, delta)
 	
 	print("calculatedPredictedVelocity",calculatedPredictedVelocity," ", time_since_update," ", _position_before," ", _position_after," ", delta)
 	# Predict future positions (client-side only)
