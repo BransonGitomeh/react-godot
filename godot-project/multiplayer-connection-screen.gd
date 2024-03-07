@@ -53,30 +53,30 @@ func peer_connected(id):
 		# dont do anything till we have real ids
 		return
 		
-	var spawnLocations = get_node("../spawnLocations")
-	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
+	#var spawnLocations = get_node("../spawnLocations")
+	#print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
 	
-	print(multiplayer.get_unique_id()," Spawning in network player ", id)
+	#print(multiplayer.get_unique_id()," Spawning in network player ", id)
 	var newPlayer = PlayerScene.instantiate()
 	
-	var spawnLocationsChildren = spawnLocations.get_children()
+	#var spawnLocationsChildren = spawnLocations.get_children()
 	
 	# Randomly select a spawn position
-	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
+	#var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
 
 	
 	newPlayer.name = str(id)
 	# print(get_parent())
 	
 		# Find the "Playground" node in the scene tree
-	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
+	var playgroundNode = find_node_by_name(get_tree().get_root(), "Root")
 
 	# Check if the "Playground" node was found
 	if playgroundNode:
 		playgroundNode.add_child(newPlayer)
-		newPlayer.position = randomSpawnNode.position
+		#newPlayer.position = randomSpawnNode.position
 	else:
-		print("Node not found: Playground")
+		print("Node not found: Root")
 
 func find_node_by_name(node, target_name):
 	if node.get_name() == target_name:

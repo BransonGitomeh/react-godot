@@ -140,7 +140,7 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_2hrc0"]
+[sub_resource type="Resource" id="Resource_ebfuq"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -160,7 +160,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_iyt1v"]
+[sub_resource type="Resource" id="Resource_xgxli"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -2817,88 +2817,86 @@ radius = 0.805338
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s5n07"]
 
-[node name="Root" type="Node3D"]
-
-[node name="PlayerCharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="PlayerCharacterBody3D" type="CharacterBody3D"]
 script = ExtResource("1_w70re")
 inventory_menu = NodePath("Node/Inventory/InventoryMenu")
 inventory_tooltip = NodePath("Node/Inventory/Tooltip")
 ground_items = NodePath("Node/Node3D/Node3D/Items")
 
-[node name="playerId" type="Label3D" parent="PlayerCharacterBody3D"]
+[node name="playerId" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.94172, 0)
 billboard = 2
 text = "playerId"
 
-[node name="StepSound" type="AudioStreamPlayer3D" parent="PlayerCharacterBody3D"]
+[node name="StepSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("2_8admp")
 volume_db = 1.0
 
-[node name="LandingSound" type="AudioStreamPlayer3D" parent="PlayerCharacterBody3D"]
+[node name="LandingSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_28wy0")
 volume_db = 1.0
 
-[node name="MultiplayerSynchronizer2" type="MultiplayerSynchronizer" parent="PlayerCharacterBody3D"]
+[node name="MultiplayerSynchronizer2" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
-[node name="Effect" parent="PlayerCharacterBody3D" instance=ExtResource("4_1dasg")]
+[node name="Effect" parent="." instance=ExtResource("4_1dasg")]
 
-[node name="Node" type="Node" parent="PlayerCharacterBody3D"]
+[node name="Node" type="Node" parent="."]
 
-[node name="Node3D" type="Node3D" parent="PlayerCharacterBody3D/Node"]
+[node name="Node3D" type="Node3D" parent="Node"]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PlayerCharacterBody3D/Node/Node3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Node/Node3D"]
 transform = Transform3D(30, 0, 0, 0, 1, 0, 0, 0, 30, 0, -1, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCharacterBody3D/Node/Node3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node/Node3D/StaticBody3D"]
 shape = SubResource("2")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerCharacterBody3D/Node/Node3D/StaticBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node/Node3D/StaticBody3D"]
 visible = false
 mesh = SubResource("3")
 
-[node name="Camera3D" type="Camera3D" parent="PlayerCharacterBody3D/Node/Node3D"]
+[node name="Camera3D" type="Camera3D" parent="Node/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.584391, 0.811472, 0, -0.811472, 0.584391, -0.0395966, 14.83, 12.56)
 
-[node name="Node3D" type="Node3D" parent="PlayerCharacterBody3D/Node/Node3D"]
+[node name="Node3D" type="Node3D" parent="Node/Node3D"]
 
-[node name="Items" type="Node3D" parent="PlayerCharacterBody3D/Node/Node3D/Node3D"]
+[node name="Items" type="Node3D" parent="Node/Node3D/Node3D"]
 script = ExtResource("5_yupyl")
 autosave_file_path = "items/ground/area2.dat"
 item_scene = ExtResource("6_ro4tn")
 spawn_jump_length_range = Vector2(2, 3)
 
-[node name="Loot" type="Node3D" parent="PlayerCharacterBody3D/Node/Node3D/Node3D"]
+[node name="Loot" type="Node3D" parent="Node/Node3D/Node3D"]
 script = ExtResource("7_s1etc")
 
-[node name="Area3D" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Loot" instance=ExtResource("8_04gdm")]
+[node name="Area3D" parent="Node/Node3D/Node3D/Loot" instance=ExtResource("8_04gdm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.1, 2)
 
-[node name="Openable" type="Node3D" parent="PlayerCharacterBody3D/Node/Node3D/Node3D"]
+[node name="Openable" type="Node3D" parent="Node/Node3D/Node3D"]
 
-[node name="Chest" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable" instance=ExtResource("9_mdctc")]
+[node name="Chest" parent="Node/Node3D/Node3D/Openable" instance=ExtResource("9_mdctc")]
 transform = Transform3D(0.413263, 0, -0.910612, 0, 1, 0, 0.910612, 0, 0.413263, -2.5152, 1.34766, -4.27634)
 
-[node name="Inventory" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest" instance=ExtResource("10_6swjc")]
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest" instance=ExtResource("10_6swjc")]
 visible = false
 custom_minimum_size = Vector2(112, 168)
 offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
-inventory = SubResource("Resource_2hrc0")
+inventory = SubResource("Resource_ebfuq")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
 autosave_file_path = "items/world/chest1.dat"
 
-[node name="Control2" type="Control" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest/Inventory"]
+[node name="Control2" type="Control" parent="Node/Node3D/Node3D/Openable/Chest/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 10
 
-[node name="Button" type="Button" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest/Inventory/Control2"]
+[node name="Button" type="Button" parent="Node/Node3D/Node3D/Openable/Chest/Inventory/Control2"]
 layout_mode = 0
 offset_left = 3.0
 offset_top = -20.0
@@ -2907,28 +2905,28 @@ size_flags_horizontal = 10
 size_flags_vertical = 10
 text = "?"
 
-[node name="Chest2" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable" instance=ExtResource("9_mdctc")]
+[node name="Chest2" parent="Node/Node3D/Node3D/Openable" instance=ExtResource("9_mdctc")]
 transform = Transform3D(-0.645324, 0, -0.763909, 0, 1, 0, 0.763909, 0, -0.645324, 4.40275, 1.34766, -3.99078)
 
-[node name="Inventory" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest2" instance=ExtResource("10_6swjc")]
+[node name="Inventory" parent="Node/Node3D/Node3D/Openable/Chest2" instance=ExtResource("10_6swjc")]
 visible = false
 custom_minimum_size = Vector2(112, 168)
 offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_iyt1v")
+inventory = SubResource("Resource_xgxli")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
 autosave_file_path = "items/world/chest2.dat"
 
-[node name="Control" type="Control" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest2/Inventory"]
+[node name="Control" type="Control" parent="Node/Node3D/Node3D/Openable/Chest2/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 10
 
-[node name="Button" type="Button" parent="PlayerCharacterBody3D/Node/Node3D/Node3D/Openable/Chest2/Inventory/Control"]
+[node name="Button" type="Button" parent="Node/Node3D/Node3D/Openable/Chest2/Inventory/Control"]
 layout_mode = 0
 offset_left = 3.0
 offset_top = -20.0
@@ -2937,16 +2935,16 @@ size_flags_horizontal = 10
 size_flags_vertical = 10
 text = "?"
 
-[node name="Inventory" type="CanvasLayer" parent="PlayerCharacterBody3D/Node"]
+[node name="Inventory" type="CanvasLayer" parent="Node"]
 
-[node name="Generator" type="Button" parent="PlayerCharacterBody3D/Node/Inventory"]
+[node name="Generator" type="Button" parent="Node/Inventory"]
 offset_left = 286.0
 offset_top = 290.0
 offset_right = 342.0
 offset_bottom = 310.0
 focus_mode = 0
 
-[node name="Label" type="Label" parent="PlayerCharacterBody3D/Node/Inventory/Generator"]
+[node name="Label" type="Label" parent="Node/Inventory/Generator"]
 layout_mode = 0
 offset_left = -78.0
 offset_top = 25.0
@@ -2954,7 +2952,7 @@ offset_right = 134.0
 offset_bottom = 39.0
 text = "(Press Tab or I to open inventory)"
 
-[node name="Label2" type="Label" parent="PlayerCharacterBody3D/Node/Inventory/Generator"]
+[node name="Label2" type="Label" parent="Node/Inventory/Generator"]
 layout_mode = 0
 offset_left = -78.0
 offset_top = 40.0
@@ -2962,9 +2960,9 @@ offset_right = 136.0
 offset_bottom = 54.0
 text = "(Hold Alt to highlight items)"
 
-[node name="InventoryMenu" parent="PlayerCharacterBody3D/Node/Inventory" instance=ExtResource("17_m51t3")]
+[node name="InventoryMenu" parent="Node/Inventory" instance=ExtResource("17_m51t3")]
 
-[node name="GrabbedItem" parent="PlayerCharacterBody3D/Node/Inventory/InventoryMenu" groups=["grabbed_item"] instance=ExtResource("18_vii0d")]
+[node name="GrabbedItem" parent="Node/Inventory/InventoryMenu" groups=["grabbed_item"] instance=ExtResource("18_vii0d")]
 visible = false
 offset_left = 220.787
 offset_top = 69.0519
@@ -2981,7 +2979,7 @@ drop_ray_mask = 1
 unit_size = Vector2(14, 14)
 hide_cursor = false
 
-[node name="InworlnventoriesTutorial" type="AcceptDialog" parent="PlayerCharacterBody3D/Node/Inventory/InventoryMenu"]
+[node name="InworlnventoriesTutorial" type="AcceptDialog" parent="Node/Inventory/InventoryMenu"]
 dialog_text = "This inventory has random stuff! An ItemInstantiator put them here.
 These can also drop items to the ground.
 
@@ -2989,8 +2987,7 @@ The chest's contents are displayed here by just duplicating the chest's
 InventoryView. Not just the Inventory resource - that way custom
 inventory layouts and extra nodes (like this ? button) can be used!"
 
-[node name="Tooltip" parent="PlayerCharacterBody3D/Node/Inventory" instance=ExtResource("20_6g0q7")]
-visible = false
+[node name="Tooltip" parent="Node/Inventory" instance=ExtResource("20_6g0q7")]
 offset_left = 198.0
 offset_top = -23.0
 offset_right = 358.0
@@ -2999,22 +2996,22 @@ theme = ExtResource("21_l0oo6")
 compare_to_inventory = NodePath("../InventoryMenu/CenterContainer/TabContainer/Equip/Control/Equip")
 color_neutral = Color(0.376471, 0.376471, 0.376471, 1)
 
-[node name="PlayerMeshInstance3D" type="MeshInstance3D" parent="PlayerCharacterBody3D"]
+[node name="PlayerMeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("CapsuleMesh_vr5ym")
 surface_material_override/0 = SubResource("StandardMaterial3D_mjpjo")
 
-[node name="PlayerArea3D" type="Area3D" parent="PlayerCharacterBody3D"]
+[node name="PlayerArea3D" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCharacterBody3D/PlayerArea3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea3D"]
 shape = SubResource("CapsuleShape3D_ca4wa")
 
-[node name="PlayerCollisionShape3D" type="CollisionShape3D" parent="PlayerCharacterBody3D"]
+[node name="PlayerCollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_ca4wa")
 
-[node name="PlayerRoot" type="Node3D" parent="PlayerCharacterBody3D"]
+[node name="PlayerRoot" type="Node3D" parent="."]
 
-[node name="PlayerUI" type="Control" parent="PlayerCharacterBody3D/PlayerRoot" groups=["camera_mode_toggle"]]
+[node name="PlayerUI" type="Control" parent="PlayerRoot" groups=["camera_mode_toggle"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -3023,7 +3020,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="AimRecticle" type="ColorRect" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI"]
+[node name="AimRecticle" type="ColorRect" parent="PlayerRoot/PlayerUI"]
 unique_name_in_owner = true
 layout_mode = 0
 anchor_left = 0.5
@@ -3039,7 +3036,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.290196)
 
-[node name="CoinsContainer" type="HBoxContainer" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI"]
+[node name="CoinsContainer" type="HBoxContainer" parent="PlayerRoot/PlayerUI"]
 unique_name_in_owner = true
 layout_mode = 0
 anchor_left = 1.0
@@ -3054,13 +3051,13 @@ theme_override_constants/separation = 30
 alignment = 2
 script = ExtResource("22_itssj")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="PlayerRoot/PlayerUI/CoinsContainer"]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_horizontal = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer"]
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
@@ -3068,72 +3065,72 @@ gui_disable_input = true
 size = Vector2i(96, 96)
 render_target_update_mode = 4
 
-[node name="Coin" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("23_a3tnc")]
+[node name="Coin" parent="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport" instance=ExtResource("23_a3tnc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.812403)
 
-[node name="godot_coin" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
+[node name="godot_coin" parent="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin" index="0"]
 transform = Transform3D(0.278847, 0, 0.960336, 0, 1, 0, -0.960336, 0, 0.278847, 0, 0, 0)
 script = null
 
-[node name="Camera3D" type="Camera3D" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+[node name="Camera3D" type="Camera3D" parent="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.604131)
 current = true
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport"]
 
-[node name="CoinsLabel" type="Label" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer"]
+[node name="CoinsLabel" type="Label" parent="PlayerRoot/PlayerUI/CoinsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 64
 text = "0"
 
-[node name="Timer" type="Timer" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer"]
+[node name="Timer" type="Timer" parent="PlayerRoot/PlayerUI/CoinsContainer"]
 wait_time = 3.0
 one_shot = true
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="PlayerCharacterBody3D"]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
-[node name="CharacterRotationRoot" type="Node3D" parent="PlayerCharacterBody3D"]
+[node name="CharacterRotationRoot" type="Node3D" parent="."]
 
-[node name="offset" type="Node3D" parent="PlayerCharacterBody3D/CharacterRotationRoot"]
+[node name="offset" type="Node3D" parent="CharacterRotationRoot"]
 visible = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerCharacterBody3D/CharacterRotationRoot/offset"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("")
 
-[node name="MeleeAnchor" type="Node3D" parent="PlayerCharacterBody3D/CharacterRotationRoot"]
+[node name="MeleeAnchor" type="Node3D" parent="CharacterRotationRoot"]
 
-[node name="MeleeSphere" type="MeshInstance3D" parent="PlayerCharacterBody3D/CharacterRotationRoot/MeleeAnchor"]
+[node name="MeleeSphere" type="MeshInstance3D" parent="CharacterRotationRoot/MeleeAnchor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25195, 1.075, 0)
 visible = false
 mesh = SubResource("SphereMesh_uex0s")
 skeleton = NodePath("")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerCharacterBody3D/CharacterRotationRoot/MeleeAnchor"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterRotationRoot/MeleeAnchor"]
 root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_xvsui")
 }
 
-[node name="MeleeAttackArea" type="Area3D" parent="PlayerCharacterBody3D/CharacterRotationRoot"]
+[node name="MeleeAttackArea" type="Area3D" parent="CharacterRotationRoot"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.959482, 1.0525)
 script = ExtResource("24_bjqg6")
 
-[node name="CollisionShape3d" type="CollisionShape3D" parent="PlayerCharacterBody3D/CharacterRotationRoot/MeleeAttackArea"]
+[node name="CollisionShape3d" type="CollisionShape3D" parent="CharacterRotationRoot/MeleeAttackArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.246944)
 shape = SubResource("CapsuleShape3D_pcytg")
 disabled = true
 
-[node name="CharacterSkin" type="Node3D" parent="PlayerCharacterBody3D/CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
+[node name="CharacterSkin" type="Node3D" parent="CharacterRotationRoot" node_paths=PackedStringArray("main_animation_player")]
 script = ExtResource("25_mv0fi")
 main_animation_player = NodePath("gdbot/AnimationPlayer")
 
-[node name="gdbot" parent="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin" instance=ExtResource("26_jxcqk")]
+[node name="gdbot" parent="CharacterRotationRoot/CharacterSkin" instance=ExtResource("26_jxcqk")]
 
-[node name="Skeleton3D" parent="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
+[node name="Skeleton3D" parent="CharacterRotationRoot/CharacterSkin/gdbot/Armature" index="0"]
 bones/2/position = Vector3(0.0192032, -1.6788e-09, 0.531767)
 bones/2/rotation = Quaternion(0.0625153, 0.705334, 0.704338, 0.0500353)
 bones/3/rotation = Quaternion(-1, -5.98305e-12, 7.92232e-08, 2.09787e-11)
@@ -3186,19 +3183,19 @@ bones/58/rotation = Quaternion(0, 0, -0.15168, 0.98843)
 bones/59/position = Vector3(-1.13183e-08, -5.14319e-09, 4.23749e-08)
 bones/60/rotation = Quaternion(0, 0, 1, 0)
 
-[node name="gdbot_mesh" parent="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
+[node name="gdbot_mesh" parent="CharacterRotationRoot/CharacterSkin/gdbot/Armature/Skeleton3D" index="0"]
 surface_material_override/1 = ExtResource("27_6chjl")
 surface_material_override/2 = ExtResource("28_n11ys")
 surface_material_override/3 = ExtResource("29_c38c7")
 
-[node name="AnimationPlayer" parent="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
+[node name="AnimationPlayer" parent="CharacterRotationRoot/CharacterSkin/gdbot" index="1"]
 playback_default_blend_time = 0.1
 libraries = {
 "": SubResource("AnimationLibrary_c1lpt"),
 "Godot Custom Animations": SubResource("AnimationLibrary_8q8s6")
 }
 
-[node name="AnimationTree" type="AnimationTree" parent="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin"]
+[node name="AnimationTree" type="AnimationTree" parent="CharacterRotationRoot/CharacterSkin"]
 tree_root = ExtResource("32_4y88d")
 anim_player = NodePath("../gdbot/AnimationPlayer")
 parameters/Add2/add_amount = 1.0
@@ -3208,24 +3205,24 @@ parameters/PunchOneShot/internal_active = false
 parameters/PunchOneShot/request = 0
 parameters/StateMachine/move/blend_position = 0
 
-[node name="Area3D" type="Area3D" parent="PlayerCharacterBody3D"]
+[node name="Area3D" type="Area3D" parent="."]
 input_ray_pickable = false
 script = ExtResource("33_rtdji")
 inventory_menu = NodePath("../Node/Inventory/InventoryMenu")
 ground_items = NodePath("../Node/Node3D/Node3D/Items")
 
-[node name="Shape3D" type="CollisionShape3D" parent="PlayerCharacterBody3D/Area3D"]
+[node name="Shape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.470862, 0)
 shape = SubResource("8")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerCharacterBody3D/Area3D/Shape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D/Shape3D"]
 transform = Transform3D(1.59758, 0, 0, 0, 1, 0, 0, 0, 1.50508, 0, 0, 0)
 visible = false
 mesh = SubResource("CylinderMesh_roadh")
 
-[node name="GrenadeLauncher" parent="PlayerCharacterBody3D" instance=ExtResource("34_d1ssx")]
+[node name="GrenadeLauncher" parent="." instance=ExtResource("34_d1ssx")]
 
-[node name="GroundShapeCast" type="ShapeCast3D" parent="PlayerCharacterBody3D"]
+[node name="GroundShapeCast" type="ShapeCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_s5n07")
 target_position = Vector3(0, -2.6, 0)
@@ -3233,13 +3230,13 @@ margin = 0.5
 max_results = 1
 debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 
-[node name="analogControls" type="Node2D" parent="PlayerCharacterBody3D"]
+[node name="analogControls" type="Node2D" parent="."]
 
-[node name="UI" type="CanvasLayer" parent="PlayerCharacterBody3D/analogControls"]
+[node name="UI" type="CanvasLayer" parent="analogControls"]
 
-[node name="Virtual joystick left" parent="PlayerCharacterBody3D/analogControls/UI" instance=ExtResource("35_ajs55")]
+[node name="Virtual joystick left" parent="analogControls/UI" instance=ExtResource("35_ajs55")]
 
-[node name="Virtual joystick right" parent="PlayerCharacterBody3D/analogControls/UI" instance=ExtResource("35_ajs55")]
+[node name="Virtual joystick right" parent="analogControls/UI" instance=ExtResource("35_ajs55")]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_right = 1.0
@@ -3251,7 +3248,7 @@ grow_horizontal = 0
 joystick_mode = 1
 use_input_actions = false
 
-[node name="Player" type="Sprite2D" parent="PlayerCharacterBody3D/analogControls" node_paths=PackedStringArray("joystick_left", "joystick_right")]
+[node name="Player" type="Sprite2D" parent="analogControls" node_paths=PackedStringArray("joystick_left", "joystick_right")]
 visible = false
 position = Vector2(600, 300)
 texture = ExtResource("36_lhss2")
@@ -3259,9 +3256,11 @@ script = ExtResource("37_kbotr")
 joystick_left = NodePath("../UI/Virtual joystick left")
 joystick_right = NodePath("../UI/Virtual joystick right")
 
-[node name="Node3D" type="Node3D" parent="PlayerCharacterBody3D/analogControls"]
+[node name="Node3D" type="Node3D" parent="analogControls"]
 
-[connection signal="body_entered" from="PlayerCharacterBody3D/Area3D" to="PlayerCharacterBody3D/Area3D" method="_on_body_entered" flags=18]
+[node name="Root" type="Node3D" parent="."]
 
-[editable path="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
-[editable path="PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin/gdbot"]
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered" flags=18]
+
+[editable path="PlayerRoot/PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
+[editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
