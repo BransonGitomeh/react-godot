@@ -198,5 +198,3 @@ material_override = SubResource("StandardMaterial3D_it7yb")
 mesh = SubResource("PlaneMesh_p07xb")
 
 [node name="Node2D" parent="." instance=ExtResource("10_6ivcf")]
-address = null
-port = null

@@ -64,7 +64,7 @@ func peer_connected(id):
 	if playgroundNode:
 		playgroundNode.add_child(newPlayer)
 		newPlayer.position = randomSpawnNode.position
-else:
+	else:
 		print("Node not found: Playground")
 
 func find_node_by_name(node, target_name):
@@ -119,21 +119,41 @@ func SendPlayerInformation(name, id):
 			print("Added", BrowlManager.Players, player)
 
 func _on_host_pressed():
+	print("[SERVER] Initiating server creation...")
+
 	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(port, 32)
-	if error!= OK:
-		print("error creating server", error)
-		return;
-		
-	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER);
-	
-	# allow you to host and play at the same time
-	multiplayer.set_multiplayer_peer(peer)
 
-	print("Started server successfully on ", address,":", port)
-	print("Waiting for Player v2")
-	SendPlayerInformation($Name.text,multiplayer.get_unique_id())
-	pass # Replace with function body.
+	if error != OK:
+		print("[SERVER] Error creating server:", error)
+		return
+
+	print("[SERVER] Server created successfully.")
+
+	# Enable compression for improved network performance
+	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
+	print("[SERVER] Enabled network compression.")
+
+	# Allow hosting and playing simultaneously
+	multiplayer.set_multiplayer_peer(peer)
+	print("[SERVER] Multiplayer peer set.")
+
+	# Provide clear start message with address and port
+	print("[SERVER] Server started successfully on ", address, ":", port)
+
+	# Indicate waiting status
+	print("[SERVER] Waiting for players v2...")
+
+	# Send player information (presumably to connected clients)
+	SendPlayerInformation($Name.text, multiplayer.get_unique_id())
+
+	# Additional improvement suggestions:
+	# - Consider error handling for SendPlayerInformation() to catch potential issues.
+	# - Explore using a dedicated logging system with log levels and file output.
+	# - Implement a mechanism to handle player connections and disconnections.
+	# - Define a clear process for handling incoming network data and events.
+	# - Structure server functionality into well-defined functions for better organization.
+
 
 
 func _on_join_pressed():

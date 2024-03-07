@@ -418,8 +418,8 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 		_predicted_position = _position_after
 
 	# Smoothen rotation
-	#current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	#_rotation_root.transform.basis = Basis(current_rotation_basis)
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
 	
 
 var interpolated_position;
@@ -428,21 +428,29 @@ var max_history_size := 5
 func _physics_process(delta: float) -> void:
   # Declare variables
 	var time_since_update := delta
-  # Handle input and update position if server and looking at that client
-	if multiplayer.is_server():
-		if multiplayer.get_unique_id() == multiplayerSynchronizer.get_multiplayer_authority():
-			print("Server: Handling authoritative player's physics process")
-			_server_process(delta, time_since_update)
-		else:
-			print("Server: Handling non-authoritative player's physics process")
-			_client_process(delta)
-	else:
-		print("Client: Handling physics process ", multiplayer.get_unique_id(), " " , multiplayerSynchronizer.get_multiplayer_authority())
 
-		if multiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-			_move_network_client_smoothly(delta)
+  # Server-side logging
+	if multiplayer.is_server():
+		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
+			# Log start of processing for authoritative player
+			print("[SERVER] Authoritative player physics process starting (ID: ", multiplayer.get_unique_id(), ").")
+			_server_process(delta, time_since_update)
+			# Log end of processing for authoritative player
+			print("[SERVER] Authoritative player physics process complete.")
+		else:
+			# Log start of processing for non-authoritative player
+			print("[SERVER] Non-authoritative player physics process starting (ID: ", multiplayer.get_unique_id(), ").")
 			_client_process(delta)
-			return;
+			# Log end of processing for non-authoritative player
+			print("[SERVER] Non-authoritative player physics process complete.")
+	else:
+			# Log start of processing for client
+			print("[CLIENT] Client physics process starting (ID: ", multiplayer.get_unique_id(), ").")
+			_client_process(delta)
+			# Log end of processing for client
+			print("[CLIENT] Client physics process complete.")
+
+
 		
 
 func _server_process(delta: float, time_since_update: float) -> void:
