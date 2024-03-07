@@ -47,18 +47,18 @@ func _ready():
 	
 	
 	print(multiplayer.get_unique_id(), "FOUND PLAYERS", BrowlManager.Players)
-	#for i in BrowlManager.Players:
-		#if(BrowlManager.Players[i].id == 1):
-			#return;
-			#
-		#print(multiplayer.get_unique_id()," Spawning in network player ", BrowlManager.Players[i].id)
-		#var networkPlayer = PlayerScene.instantiate()
-		#
-		## Randomly select a spawn position
+	for i in BrowlManager.Players:
+		if(BrowlManager.Players[i].id == 1):
+			return;
+			
+		print(multiplayer.get_unique_id()," Spawning in network player ", BrowlManager.Players[i].id)
+		var networkPlayer = PlayerScene.instantiate()
+		
+		# Randomly select a spawn position
 		#var randomSpawnNode = spawnLocations[randi() % spawnLocations.size()]
-		#
+		
 		#print(randomSpawnNode)
 		#currentPlayer.position = randomSpawnNode.position
-		#currentPlayer.name = str(BrowlManager.Players[i].id)
-		#
-		#add_child(currentPlayer)
+		currentPlayer.name = str(BrowlManager.Players[i].id)
+		
+		add_child(currentPlayer)

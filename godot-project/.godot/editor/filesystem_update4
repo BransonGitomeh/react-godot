@@ -54,3 +54,4 @@ res://multiplayer-connection-screen.gd
 res://SceneManager.gd
 res://player_character_body_3d.tscn
 res://Playground.tscn
+res://browl_manager.gd

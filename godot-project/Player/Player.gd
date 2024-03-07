@@ -181,20 +181,10 @@ func _ready() -> void:
 	_ceiling_pcam = find_node_by_name(get_tree().get_root(), "CeilingPhantomCamera3D")
 
 	print("set_multiplayer_authority " ,str(get_parent().name).to_int())
-	
-	#multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
-	#$playerId.text = str(get_parent().name)
-	
-	# Check if the node has a local variable called "name"
-	if name:
-		# Use the local variable if it exists
-		var local_name = name
-		multiplayerSynchronizer.set_multiplayer_authority(str(local_name).to_int())
-		$playerId.text = str(local_name)
-	else:
-		# If there's no local variable, fall back to the parent's name
-		multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
-		$playerId.text = str(get_parent().name)
+
+	# If there's no local variable, fall back to the parent's name
+	multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
+	$playerId.text = str(get_parent().name)
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#_camera_controller.setup(self)

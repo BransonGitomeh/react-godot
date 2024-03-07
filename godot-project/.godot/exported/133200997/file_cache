@@ -24,7 +24,7 @@ res://Player/Grenade.tscn::ffd8d62e47ac2bdb9a6099fc003e67a5::1701113146::res://.
 res://Player/GrenadeLauncher.tscn::2270b509377f9910643b60b9aa0768e8::1708185729::res://.godot/exported/133200997/export-46701b4ac04467d3f041213b92d76a00-GrenadeLauncher.scn
 res://Player/Player.tscn::837b2360e5765e096d45618881004c51::1709792971::res://.godot/exported/133200997/export-48b487cb3fbab0e0d627d8f8de2ba1d9-Player.scn
 res://multiplayer-connection-screen.tscn::6ca83f0dafc75c4c8e2120b86fea5745::1709809392::res://.godot/exported/133200997/export-ce3626780a5ed8c0fbcb679f4f4abb9f-multiplayer-connection-screen.scn
-res://Playground.tscn::c6d1aeb319ba8f0090cc69b094f87276::1708796626::res://.godot/exported/133200997/export-2de234ffdea55782e1645aec0627cbb3-Playground.scn
+res://Playground.tscn::c6d1aeb319ba8f0090cc69b094f87276::1709844526::res://.godot/exported/133200997/export-2de234ffdea55782e1645aec0627cbb3-Playground.scn
 res://PossumLevelLayers/cube_111_atlas_0.tscn::9db3b96dcd49f69ba810e82bc1a11539::1701873065::res://.godot/exported/133200997/export-2493cd311dfe96dc8811c19b236bd94a-cube_111_atlas_0.scn
 res://PossumLevelLayers/cube_111_atlas_02.tscn::21ccd1ff557607b20eb703bd58abaa7b::1701873065::res://.godot/exported/133200997/export-19f8aab4518760c97ca6544215cbc9c9-cube_111_atlas_02.scn
 res://PossumLevelLayers/houses.tscn::aa57139bc485d7abd2ff4a414121c08b::1701873066::res://.godot/exported/133200997/export-43b3b4631b36bd76c778fb6d512df54e-houses.scn
@@ -102,9 +102,9 @@ res://addons/phantom_camera/examples/example_scenes/3D/3DExampleScene.tscn::1ab4
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowFramedExampleScene.tscn::36d98649902b939c39c3c0409850a35b::1704825953::res://.godot/exported/133200997/export-98234aa1b420e0537b34401216cd4409-3DFollowFramedExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowGluedExampleScene.tscn::fcf116b211f75f6f484f59da1e1e191b::1704825953::res://.godot/exported/133200997/export-3f36df3a98c1352ff48b19383301125c-3DFollowGluedExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowGroupExampleScene.tscn::1b6a821229c5c3a5db468ec9bf29462d::1709761327::res://.godot/exported/133200997/export-1eeab2214b8619185696eee0b9277beb-3DFollowGroupExampleScene.scn
-res://addons/phantom_camera/examples/example_scenes/3D/3DFollowPathExampleScene.tscn::0d314792c237abea3c075aeffb31a7ab::1709842380::res://.godot/exported/133200997/export-0996e822cd5c5ef3a6206d3a9d8d31ec-3DFollowPathExampleScene.scn
-res://addons/phantom_camera/examples/example_scenes/3D/3DFollowSimpleExampleScene.tscn::72cf5d03428015f2ff10002fc261da95::1709842380::res://.godot/exported/133200997/export-8c64eaacb2440442bea036c51a10473e-3DFollowSimpleExampleScene.scn
-res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn::adf7247658925b0715deb0bc91df7f72::1709842380::res://.godot/exported/133200997/export-8d15a4610f16a8fc54e56d4490cd123f-3DFollowThirdPersonExampleScene.scn
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowPathExampleScene.tscn::0d314792c237abea3c075aeffb31a7ab::1709843832::res://.godot/exported/133200997/export-0996e822cd5c5ef3a6206d3a9d8d31ec-3DFollowPathExampleScene.scn
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowSimpleExampleScene.tscn::72cf5d03428015f2ff10002fc261da95::1709843832::res://.godot/exported/133200997/export-8c64eaacb2440442bea036c51a10473e-3DFollowSimpleExampleScene.scn
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn::363b4cf4a1a8a209b258bac8a6ab1c62::1709844523::res://.godot/exported/133200997/export-8d15a4610f16a8fc54e56d4490cd123f-3DFollowThirdPersonExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DLookAtExampleScene.tscn::c05114efa5b833919875007d18267968::1704825953::res://.godot/exported/133200997/export-cc4a69589cc43dac9ca1de98d22196ea-3DLookAtExampleScene.scn
 res://addons/phantom_camera/examples/example_scenes/3D/3DTweeningExampleScene.tscn::2596fe2165c13bd629138d89fc6f9732::1704825953::res://.godot/exported/133200997/export-64ebb84054be80caa7e8435e07c934dd-3DTweeningExampleScene.scn
 res://addons/phantom_camera/examples/models/3DPrototypeCubeDark.tscn::2adb1cd64af88cb7c885e44b62e288a9::1704825953::res://.godot/exported/133200997/export-72d95bb6dea7515d22e2933fe1a6a58c-3DPrototypeCubeDark.scn
@@ -263,7 +263,7 @@ res://ground_items.tscn::998c4da0daba99499590cbb05784ff99::1707488938::res://.go
 res://inventory-hero.tscn::101df955877ee3b0cb03e88078a9465c::1707477963::res://.godot/exported/133200997/export-669ff08e6f3df6e73835e02dd21167d2-inventory-hero.scn
 res://inventory-ui-layer.tscn::0293bfd2580b88be1625eedeb0c64462::1707536455::res://.godot/exported/133200997/export-a1df2923ddd858ab3d5cb1aa94d85b75-inventory-ui-layer.scn
 res://inventory-ui.tscn::3413110bee4b07d3269bc7a69027b414::1707488325::res://.godot/exported/133200997/export-e412a151b001c7718a471271c43d2e03-inventory-ui.scn
-res://player_character_body_3d.tscn::37aca74607b4d73e69647c83ccf89bbd::1709842383::res://.godot/exported/133200997/export-bb19c3f6cff74fa47cf897674971a5d6-player_character_body_3d.scn
+res://player_character_body_3d.tscn::c2137e2d59d95aac5eb3e85eb719b290::1709844526::res://.godot/exported/133200997/export-bb19c3f6cff74fa47cf897674971a5d6-player_character_body_3d.scn
 res://lootObject.tscn::44515d08066ac58c5effaee3ad56061a::1709714675::res://.godot/exported/133200997/export-31a024ea86953090f6b4e6d7b556cae5-lootObject.scn
 res://addons/virtual_joystick/test/test.tscn::8dcde4be2730dc92ace895f87c4227ef::1709792457::res://.godot/exported/133200997/export-65fc1102b221e3c86f8828aab5faf636-test.scn
-res://addons/virtual_joystick/virtual_joystick_scene.tscn::f1e39f411efe20d9264719ce6a7c37b6::1709842381::res://.godot/exported/133200997/export-4fefb2d1c978e429fe9cfeba8aa59129-virtual_joystick_scene.scn
+res://addons/virtual_joystick/virtual_joystick_scene.tscn::f1e39f411efe20d9264719ce6a7c37b6::1709843832::res://.godot/exported/133200997/export-4fefb2d1c978e429fe9cfeba8aa59129-virtual_joystick_scene.scn
