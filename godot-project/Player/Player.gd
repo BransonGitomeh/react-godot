@@ -360,39 +360,41 @@ func _move_network_client_smoothly(delta: float) -> void:
 		
 # On the client side
 func _move_client_smoothly(delta):
-	# Get input direction oriented to the camera
-	var move_direction = _get_camera_oriented_input()
+	_move_direction = _get_camera_oriented_input()
 
 	# Calculate time since last update
 	var time_since_update = delta
 
 	# Separate out the y velocity to not interpolate on gravity
-	var y_velocity = velocity.y
-	velocity = velocity.lerp(move_direction * move_speed, acceleration * delta)
+	var y_velocity := velocity.y
+	#velocity.y = 0.0
+	velocity = velocity.lerp(_move_direction * move_speed, acceleration * delta)
 
-	# Check if the character should stop moving
-	if move_direction.length() == 0 and velocity.length() < stopping_speed:
+	if _move_direction.length() == 0 and velocity.length() < stopping_speed:
 		velocity = Vector3.ZERO
+		
+	
 
-	# Store the position before movement
-	var position_before = global_position
+	_position_before = global_position
 
-	# Move and slide the character
+	
+	# Move and slide on the server side
 	move_and_slide()
 
-	# Store the position after movement
-	var position_after = global_position
-	_last_position_received = position_after
-
+	_position_after = global_position
+	_last_position_received = _position_after
+	#if(velocity.y != _predicted_velocity.y):
+	
+	
 	# Store the predicted position based on the client's input
-	var predicted_position = global_position + velocity * delta
+	_predicted_position = global_position + velocity * delta
 
 	# Smooth rotation
-	#var current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
-	#_rotation_root.transform.basis = Basis(current_rotation_basis)
-
-	# Apply gravity
+	current_rotation_basis = current_rotation_basis.slerp(target_rotation_basis, interpolation_alpha)
+	_rotation_root.transform.basis = Basis(current_rotation_basis)
+	#velocity.y = 0.0
 	velocity.y += _gravity * delta
+
 
 
 # On the server side
@@ -475,6 +477,10 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
+	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+		_move_network_client_smoothly(delta)
+		return;
+		
 	var time_since_update:=delta
 	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
