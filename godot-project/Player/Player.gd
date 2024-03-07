@@ -273,7 +273,7 @@ func interpolate_cubic(p0, p1, p2, p3, t):
 	
 func find_node_by_name(node, target_name):
 	if node.get_name() == target_name:
-		print(node.get_name())
+		# print(node.get_name())
 		return node
 
 	for child in node.get_children():
@@ -299,7 +299,7 @@ func _predict_and_set_network_player_position(delta):
 		_predicted_position = predicted_position
 		_predicted_velocity = (_position_after - _position_before) / time_since_update
 		
-		print($MultiplayerSynchronizer.get_multiplayer_authority(), _predicted_velocity)
+		print("Authority ", $MultiplayerSynchronizer.get_multiplayer_authority(), " get_unique_id ", multiplayer.get_unique_id(), " _predicted_velocity =>", _predicted_velocity)
 	else:
 		# No prediction needed on clients or server for authoritative player
 		pass

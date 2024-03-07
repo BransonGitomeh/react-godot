@@ -1,7 +1,7 @@
 extends Control
 
 
-var PlayerScene = preload("res://player_character_body_3d.tscn")
+var PlayerScene = preload("res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn")
 var HyperPlayerScene = preload("res://Player/HyperSpawnedPlayer.tscn")
 
 @export var address = "137.184.112.15"
@@ -37,6 +37,10 @@ func _process(delta):
 
 func peer_connected(id):
 	if(multiplayer.is_server()):
+		if id==1:
+			# dont do anything till we have real ids
+			return
+
 		BrowlManager.Players[multiplayer.get_unique_id()] = {
 			"name":multiplayer.get_unique_id()
 		}
@@ -44,6 +48,10 @@ func peer_connected(id):
 		print("New Player List",BrowlManager.Players)
 		# dont spawn on the clients
 		return;
+
+	if id==1:
+		# dont do anything till we have real ids
+		return
 		
 	var spawnLocations = get_node("../spawnLocations")
 	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)

@@ -53,3 +53,4 @@ res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd
 res://multiplayer-connection-screen.gd
 res://SceneManager.gd
 res://player_character_body_3d.tscn
+res://Playground.tscn
