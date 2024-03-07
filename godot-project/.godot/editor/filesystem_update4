@@ -47,3 +47,8 @@ res://FogVolume.gdshader
 res://addons/phantom_camera/examples/scripts/3D/player_controller_third_person.gd
 res://addons/phantom_camera/examples/scripts/3D/player_controller.gd
 res://multiplayer-connection-screen.gd
+res://Player/Player.tscn
+res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn
+res://player_character_body_3d.tscn
+res://addons/virtual_joystick/test/test.tscn
+res://multiplayer-connection-screen.tscn

@@ -178,7 +178,7 @@ func _ready() -> void:
 	if not InputMap.has_action("move_left"):
 		_register_input_actions()
 		
-	#super()
+	super()
 
 	if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.THIRD_PERSON:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -428,29 +428,15 @@ var max_history_size := 5
 func _physics_process(delta: float) -> void:
   # Declare variables
 	var time_since_update := delta
-
-  # Server-side logging
+  # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
 		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
-			# Log start of processing for authoritative player
-			print("[SERVER] Authoritative player physics process starting (ID: ", multiplayer.get_unique_id(), ").")
 			_server_process(delta, time_since_update)
-			# Log end of processing for authoritative player
-			print("[SERVER] Authoritative player physics process complete.")
 		else:
-			# Log start of processing for non-authoritative player
-			print("[SERVER] Non-authoritative player physics process starting (ID: ", multiplayer.get_unique_id(), ").")
+			#print("_aim_direction ", _aim_direction)
 			_client_process(delta)
-			# Log end of processing for non-authoritative player
-			print("[SERVER] Non-authoritative player physics process complete.")
 	else:
-			# Log start of processing for client
-			print("[CLIENT] Client physics process starting (ID: ", multiplayer.get_unique_id(), ").")
-			_client_process(delta)
-			# Log end of processing for client
-			print("[CLIENT] Client physics process complete.")
-
-
+		_client_process(delta)
 		
 
 func _server_process(delta: float, time_since_update: float) -> void:

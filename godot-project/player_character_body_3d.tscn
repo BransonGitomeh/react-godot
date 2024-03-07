@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://diu7y0gck5aid"]
+[gd_scene load_steps=64 format=3 uid="uid://diu7y0gck5aid"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_w70re"]
 [ext_resource type="AudioStream" uid="uid://bx0t7f2nuk2lr" path="res://Player/Sounds/03_Step_grass_03.wav" id="2_8admp"]
@@ -34,6 +34,7 @@
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="32_4y88d"]
 [ext_resource type="Script" path="res://Player/Area3DInteractor.gd" id="33_rtdji"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="34_d1ssx"]
+[ext_resource type="PackedScene" uid="uid://bq2sqb1u1l5ve" path="res://addons/virtual_joystick/test/test.tscn" id="35_ffmko"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dtgvc"]
 properties/0/path = NodePath("CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer:current_animation")
@@ -137,7 +138,7 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_g5r4c"]
+[sub_resource type="Resource" id="Resource_xj84s"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -157,7 +158,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_b8kq7"]
+[sub_resource type="Resource" id="Resource_d87gd"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -2877,7 +2878,7 @@ offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
-inventory = SubResource("Resource_g5r4c")
+inventory = SubResource("Resource_xj84s")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
@@ -2907,7 +2908,7 @@ offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_b8kq7")
+inventory = SubResource("Resource_d87gd")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
@@ -3222,6 +3223,8 @@ target_position = Vector3(0, -2.6, 0)
 margin = 0.5
 max_results = 1
 debug_shape_custom_color = Color(0.658824, 1, 0, 1)
+
+[node name="Test" parent="." instance=ExtResource("35_ffmko")]
 
 [connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered" flags=18]
 

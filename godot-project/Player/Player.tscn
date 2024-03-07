@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=60 format=3 uid="uid://ciqrpd5675boy"]
 
 [ext_resource type="Script" path="res://Player/Area3DInteractor.gd" id="2_udgcm"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://dk2b3ordhblc2" path="res://addons/wyvernbox_prefabs/inventories/grid_inventory.tscn" id="25_tjeew"]
 [ext_resource type="Resource" uid="uid://bc5mn5etsfr76" path="res://example/wyvernbox/item_generators/random_enchanted_equip.tres" id="27_hwm86"]
 [ext_resource type="StyleBox" uid="uid://cqx3opxr50d2o" path="res://addons/wyvernbox_prefabs/graphics/selected_cell.tres" id="28_83no3"]
+[ext_resource type="PackedScene" uid="uid://bq2sqb1u1l5ve" path="res://addons/virtual_joystick/test/test.tscn" id="34_vupcl"]
 
 [sub_resource type="CylinderShape3D" id="8"]
 height = 3.02818
@@ -2779,7 +2780,7 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_5emu6"]
+[sub_resource type="Resource" id="Resource_rq2pb"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
@@ -2799,7 +2800,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_aydo3"]
+[sub_resource type="Resource" id="Resource_bv5kb"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("25_6q7pi")
@@ -2935,6 +2936,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="AimRecticle" type="ColorRect" parent="PlayerUI"]
 unique_name_in_owner = true
@@ -3062,7 +3064,7 @@ offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
-inventory = SubResource("Resource_5emu6")
+inventory = SubResource("Resource_rq2pb")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("28_83no3")
@@ -3092,7 +3094,7 @@ offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_aydo3")
+inventory = SubResource("Resource_bv5kb")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("28_83no3")
@@ -3173,6 +3175,9 @@ offset_bottom = 52.0
 theme = ExtResource("7_dp1pd")
 compare_to_inventory = NodePath("../InventoryMenu/CenterContainer/TabContainer/Equip/Control/Equip")
 color_neutral = Color(0.376471, 0.376471, 0.376471, 1)
+
+[node name="Test" parent="." instance=ExtResource("34_vupcl")]
+metadata/_edit_lock_ = true
 
 [connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
 
