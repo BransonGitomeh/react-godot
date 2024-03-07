@@ -39,6 +39,8 @@ func peer_connected(id):
 		BrowlManager.Players[multiplayer.get_unique_id()] = {
 			"name":multiplayer.get_unique_id()
 		}
+
+		print("New Player List",BrowlManager.Players)
 		# dont spawn on the clients
 		return;
 		
