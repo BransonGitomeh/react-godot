@@ -92,7 +92,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.73176, 7.9199, -4.8731)
 curve = SubResource("Curve3D_b33df")
 
 [node name="StraightPathFollowTrigger" type="Area3D" parent="Paths" node_paths=PackedStringArray("path_pcam")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.45, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -10)
 priority = 5
 script = ExtResource("5_vdqkm")
 path_pcam = NodePath("../PathPhantomCamera3D")
@@ -148,11 +148,11 @@ metadata/_edit_group_ = true
 [node name="Environment" type="Node" parent="."]
 
 [node name="Floor" parent="Environment" instance=ExtResource("4_dfdlo")]
-transform = Transform3D(1000, 0, 0, 0, 1, 0, 0, 0, 1000, 0, -1, 0)
+transform = Transform3D(1000, 0, 0, 0, 1, 0, 0, 0, 1000, 0, 0, 0)
 metadata/_edit_lock_ = true
 
 [node name="Floor3" parent="Environment" instance=ExtResource("4_dfdlo")]
-transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, -0.95073, -1.5)
+transform = Transform3D(6, 0, 0, 0, 1, 0, 0, 0, 1, 3.46892, 0, -1.57761)
 
 [node name="Floor2" parent="Environment/Floor3" instance=ExtResource("4_dfdlo")]
 transform = Transform3D(0.166667, 0, 0, 0, 3, 0, 0, 0, 14, -0.516667, 1, -6.5)

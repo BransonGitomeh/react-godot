@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d0iqd1ab65sam"]
+[gd_scene load_steps=11 format=3 uid="uid://d0iqd1ab65sam"]
 
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_b4nxi"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="2_whx47"]
@@ -32,8 +32,6 @@ h_offset = 1.0
 v_offset = 0.0
 fov = 50.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_jmqyp"]
-
 [sub_resource type="Resource" id="Resource_daoak"]
 script = ExtResource("3_oisgy")
 duration = 1.0
@@ -44,7 +42,7 @@ ease = 2
 
 [node name="MainCamera3D" type="Camera3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 10.9513, 8.97325)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, 0, 5.14263, 4.24263)
 current = true
 
 [node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
@@ -52,13 +50,13 @@ script = ExtResource("1_b4nxi")
 
 [node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 10.9513, 8.97325)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, 0, 5.14263, 4.24263)
 script = ExtResource("2_whx47")
 priority_override = false
 priority = 10
 follow_mode = 6
-follow_target = NodePath("../PlayerCharacterBody3D/cam_look_offset")
-follow_parameters/spring_arm/spring_length = 10.0
+follow_target = NodePath("../PlayerCharacterBody3D")
+follow_parameters/spring_arm/spring_length = 6.0
 follow_parameters/spring_arm/collision_mask = 1
 follow_parameters/spring_arm/shape = null
 follow_parameters/spring_arm/margin = 0.01
@@ -91,14 +89,6 @@ tween_on_load = false
 inactive_update_mode = 0
 camera_3D_resource = SubResource("Resource_yf1op")
 
-[node name="PlayerCharacterBody3D" parent="." instance=ExtResource("5_njges")]
-unique_name_in_owner = true
-transform = Transform3D(0.999903, 0.0139622, 0, -0.0139622, 0.999903, 0, 0, 0, 1, -0.0194088, 0.506884, -0.0163251)
-
-[node name="cam_look_offset" type="MeshInstance3D" parent="PlayerCharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0345331, 2.47309, 1.91853)
-mesh = SubResource("BoxMesh_jmqyp")
-
 [node name="CeilingPhantomCamera3D" type="Node3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, -1, 2.98023e-08, 0, 2.98023e-08, 1, -1, 4.37114e-08, -1.3027e-15, -0.200665, 13.366, -0.162648)
@@ -111,3 +101,5 @@ tween_parameters = SubResource("Resource_daoak")
 tween_on_load = true
 inactive_update_mode = 0
 camera_3D_resource = null
+
+[node name="PlayerCharacterBody3D" parent="." instance=ExtResource("5_njges")]

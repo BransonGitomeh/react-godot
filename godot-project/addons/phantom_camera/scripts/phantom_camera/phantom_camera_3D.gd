@@ -840,6 +840,8 @@ func is_tween_on_load() -> bool:
 func get_follow_mode() -> int:
 	return Properties.follow_mode
 
+func set_follow_mode(value):
+	Properties.follow_mode = value
 
 ## Assigns a new Node3D as the Follow Target.
 func set_follow_target_node(value: Node3D) -> void:

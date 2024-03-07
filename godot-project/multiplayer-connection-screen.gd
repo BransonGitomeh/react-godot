@@ -1,6 +1,7 @@
 extends Control
 
-var PlayerScene = preload("res://Player/Player.tscn")
+
+var PlayerScene = preload("res://player_character_body_3d.tscn")
 var HyperPlayerScene = preload("res://Player/HyperSpawnedPlayer.tscn")
 
 @export var address = "137.184.112.15"

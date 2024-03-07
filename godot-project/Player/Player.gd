@@ -105,6 +105,21 @@ var has_authority: bool = false
 @export var is_just_on_floor :bool
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("menu_inventory"):
+		# toggle_inventory_menu()
+
+		# Toggle between framed mode and third-person mode
+		if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.FRAMED:
+			# If currently in inventory mode, switch to third-person mode
+			_player_pcam.set_follow_mode(_player_pcam.Constants.FollowMode.THIRD_PERSON)
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED) # Lock cursor
+		else:
+			# If not in inventory mode, switch to framed mode
+			_player_pcam.set_follow_mode(_player_pcam.Constants.FollowMode.FRAMED)
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE) # Unlock cursor
+
+
+
 	if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.THIRD_PERSON:
 		var active_pcam: PhantomCamera3D
 
@@ -166,7 +181,20 @@ func _ready() -> void:
 	_ceiling_pcam = find_node_by_name(get_tree().get_root(), "CeilingPhantomCamera3D")
 
 	print("set_multiplayer_authority " ,str(get_parent().name).to_int())
-	multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
+	
+	#multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
+	#$playerId.text = str(get_parent().name)
+	
+	# Check if the node has a local variable called "name"
+	if name:
+		# Use the local variable if it exists
+		var local_name = name
+		multiplayerSynchronizer.set_multiplayer_authority(str(local_name).to_int())
+		$playerId.text = str(local_name)
+	else:
+		# If there's no local variable, fall back to the parent's name
+		multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
+		$playerId.text = str(get_parent().name)
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#_camera_controller.setup(self)
@@ -194,6 +222,26 @@ func _ready() -> void:
 		print("CharacterSkin not found within CharacterRotationRoot!")
 		# Handle the error if necessary
 	print(str(id),character_root, _character_skin)
+	
+	# Get references to the analogControls and Player nodes
+	var analogControlsNode = $analogControls/UI
+	var playerNode = $analogControls/Player
+
+	if OS.get_name() == "iOS":
+			# Check the device model
+			var device_model = OS.get_model_name()
+			if device_model.find("iPad") != -1:
+				# Device is an iPad, show analog controls and Player
+				analogControlsNode.visible = true
+				playerNode.visible = true
+			else:
+				# Hide analog controls and Player for other iOS devices
+				analogControlsNode.visible = false
+				playerNode.visible = false
+	else:
+		# Hide analog controls and Player for other mobile platforms
+		analogControlsNode.visible = false
+		playerNode.visible = false
 
 
 
@@ -448,6 +496,9 @@ var interpolated_position;
 var _velocity_history := []
 var max_history_size := 5
 func _physics_process(delta: float) -> void:
+	if _player_pcam.get_follow_mode() != _player_pcam.Constants.FollowMode.THIRD_PERSON:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
   # Declare variables
 	var time_since_update := delta
   # Handle input and update position if server and looking at that client

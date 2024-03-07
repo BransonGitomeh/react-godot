@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://diu7y0gck5aid"]
+[gd_scene load_steps=66 format=3 uid="uid://diu7y0gck5aid"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_w70re"]
 [ext_resource type="AudioStream" uid="uid://bx0t7f2nuk2lr" path="res://Player/Sounds/03_Step_grass_03.wav" id="2_8admp"]
@@ -34,7 +34,9 @@
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="32_4y88d"]
 [ext_resource type="Script" path="res://Player/Area3DInteractor.gd" id="33_rtdji"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="34_d1ssx"]
-[ext_resource type="PackedScene" uid="uid://bq2sqb1u1l5ve" path="res://addons/virtual_joystick/test/test.tscn" id="35_ffmko"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://addons/virtual_joystick/virtual_joystick_scene.tscn" id="35_ajs55"]
+[ext_resource type="Texture2D" uid="uid://cfhdehmrwyr1a" path="res://godot-debug-menu/icon.svg" id="36_lhss2"]
+[ext_resource type="Script" path="res://addons/virtual_joystick/test/player.gd" id="37_kbotr"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dtgvc"]
 properties/0/path = NodePath("CharacterRotationRoot/CharacterSkin/gdbot/AnimationPlayer:current_animation")
@@ -138,7 +140,7 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
-[sub_resource type="Resource" id="Resource_jli3n"]
+[sub_resource type="Resource" id="Resource_q8dex"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -158,7 +160,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_lx2kn"]
+[sub_resource type="Resource" id="Resource_jf7xo"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("3_v0tep")
@@ -2821,6 +2823,11 @@ inventory_menu = NodePath("Node/Inventory/InventoryMenu")
 inventory_tooltip = NodePath("Node/Inventory/Tooltip")
 ground_items = NodePath("Node/Node3D/Node3D/Items")
 
+[node name="playerId" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.94172, 0)
+billboard = 2
+text = "playerId"
+
 [node name="StepSound" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("2_8admp")
 volume_db = 1.0
@@ -2878,7 +2885,7 @@ offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
-inventory = SubResource("Resource_jli3n")
+inventory = SubResource("Resource_q8dex")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
@@ -2908,7 +2915,7 @@ offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_lx2kn")
+inventory = SubResource("Resource_jf7xo")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("16_s5shd")
@@ -3224,7 +3231,30 @@ margin = 0.5
 max_results = 1
 debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 
-[node name="Test" parent="." instance=ExtResource("35_ffmko")]
+[node name="analogControls" type="Node2D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="analogControls"]
+
+[node name="Virtual joystick left" parent="analogControls/UI" instance=ExtResource("35_ajs55")]
+
+[node name="Virtual joystick right" parent="analogControls/UI" instance=ExtResource("35_ajs55")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+joystick_mode = 1
+use_input_actions = false
+
+[node name="Player" type="Sprite2D" parent="analogControls" node_paths=PackedStringArray("joystick_left", "joystick_right")]
+position = Vector2(600, 300)
+texture = ExtResource("36_lhss2")
+script = ExtResource("37_kbotr")
+joystick_left = NodePath("../UI/Virtual joystick left")
+joystick_right = NodePath("../UI/Virtual joystick right")
 
 [connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered" flags=18]
 
