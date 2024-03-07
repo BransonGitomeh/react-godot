@@ -42,7 +42,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
 @onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
 @onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
-@onready var _character_skin: CharacterSkin = $CharacterRotationRoot/CharacterSkin
+@onready var _character_skin: CharacterSkin
 @onready var _ui_aim_recticle: ColorRect = %AimRecticle
 @onready var _ui_coins_container: HBoxContainer = %CoinsContainer
 @onready var _step_sound: AudioStreamPlayer3D = $StepSound
@@ -182,7 +182,18 @@ func _ready() -> void:
 
 	if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.THIRD_PERSON:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		
+
+	var id = multiplayer.get_unique_id()  # Get the dynamic ID
+
+	#_character_skin 
+	var character_root:Node3D = find_node_by_name(get_tree().get_root(), str(id))
+	
+	_character_skin = character_root.get_node("PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin")
+
+	if not _character_skin:
+		print("CharacterSkin not found within CharacterRotationRoot!")
+		# Handle the error if necessary
+	print(str(id),character_root, _character_skin)
 
 
 

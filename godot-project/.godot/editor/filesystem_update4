@@ -50,3 +50,4 @@ res://player_character_body_3d.tscn
 res://multiplayer-connection-screen.tscn
 res://Particle_Rain_FX/Player/Player.tscn
 res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd
+res://Player/Player.gd

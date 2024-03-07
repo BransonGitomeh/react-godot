@@ -42,7 +42,7 @@ ease = 2
 
 [node name="MainCamera3D" type="Camera3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 7.57793, 7.05472)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 8.47793, 7.05472)
 current = true
 
 [node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
@@ -50,7 +50,7 @@ script = ExtResource("1_b4nxi")
 
 [node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 7.57793, 7.05472)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 8.47793, 7.05472)
 script = ExtResource("2_whx47")
 priority_override = false
 priority = 10
@@ -60,7 +60,7 @@ follow_parameters/spring_arm/spring_length = 10.0
 follow_parameters/spring_arm/collision_mask = 1
 follow_parameters/spring_arm/shape = null
 follow_parameters/spring_arm/margin = 0.01
-follow_parameters/target_offset = Vector3(0, 0, 0)
+follow_parameters/target_offset = Vector3(0, 0.9, 0)
 follow_parameters/damping = true
 follow_parameters/damping_value = 10.0
 look_at_mode = 0
