@@ -250,6 +250,8 @@ func _predict_and_set_network_player_position(delta):
 		# Save predicted position and velocity
 		_predicted_position = predicted_position
 		_predicted_velocity = (_position_after - _position_before) / time_since_update
+		
+		print($MultiplayerSynchronizer.get_multiplayer_authority(), _predicted_velocity)
 	else:
 		# No prediction needed on clients or server for authoritative player
 		pass
@@ -497,7 +499,7 @@ func _client_process(delta: float) -> void:
 	# Update predicted velocity (client-side only)
 	var calculatedPredictedVelocity = _update_predicted_velocity(_time_since_last_update, _position_before, _position_after, delta)
 	
-	print("calculatedPredictedVelocity",calculatedPredictedVelocity," ", time_since_update," ", _position_before," ", _position_after," ", delta)
+	print("calculatedPredictedVelocity",calculatedPredictedVelocity, " _time_since_last_update =", _time_since_last_update ," ", time_since_update," ", _position_before," ", _position_after," ", delta)
 	# Predict future positions (client-side only)
 	_predict_future_positions(delta)
 
@@ -622,7 +624,7 @@ func _handle_local_input(delta: float) -> void:
 				if _grenade_cooldown_tick > grenade_cooldown:
 					_grenade_cooldown_tick = 0.0
 					_grenade_aim_controller.throw_grenade()
-	#time_since_update = delta
+	_time_since_last_update = delta
 	
 
 		
