@@ -165,8 +165,8 @@ func _ready() -> void:
 	_model = find_node_by_name(get_tree().get_root(), "CharacterRotationRoot")
 	_ceiling_pcam = find_node_by_name(get_tree().get_root(), "CeilingPhantomCamera3D")
 
-
-	multiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+	print("set_multiplayer_authority " ,str(get_parent().name).to_int())
+	multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#_camera_controller.setup(self)
@@ -477,12 +477,14 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
+	print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity))
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		_move_network_client_smoothly(delta)
 		return;
-		
+	
+	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+
 	var time_since_update:=delta
-	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 	# Store previous predicted velocity
 	_predicted_velocity_previous = _predicted_velocity
 	

@@ -36,6 +36,7 @@ func _ready():
 	
 	#print(currentPlayerRandomSpawnNode)
 	#currentPlayer.position = $"PlayerCharacterBody3D".global_transform.origin
+	print("setting currentPlayer.name = ",str(multiplayer.get_unique_id()))
 	currentPlayer.name = str(multiplayer.get_unique_id())
 	
 	#$"PlayerCharacterBody3D".position = Vector3(0,0,0)
