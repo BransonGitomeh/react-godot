@@ -42,13 +42,7 @@ func _ready():
 	#$"PlayerCharacterBody3D".position = Vector3(0,0,0)
 	
 	add_child(currentPlayer)
-	
-	# Apply gravity to the PlayerCharacterBody3D
-	#var gravity = Vector3(0, -9.8, 0) # Adjust the gravity as per your game's requirements
-	#var gravityVelocity = gravity * delta
 
-	# Move the PlayerCharacterBody3D downward with gravity
-	#$"PlayerCharacterBody3D".translate(gravityVelocity * delta)
 	
 	
 	

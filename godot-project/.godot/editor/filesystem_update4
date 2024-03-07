@@ -48,3 +48,4 @@ res://addons/phantom_camera/examples/example_scenes/3D/3DFollowPathExampleScene.
 res://multiplayer-connection-screen.gd
 res://player_character_body_3d.tscn
 res://SceneManager.gd
+res://browl_manager.gd

@@ -35,7 +35,7 @@ func _process(delta):
 
 
 func peer_connected(id):
-	if(id == 1):
+	if(multiplayer.is_server()):
 		BrowlManager.Players[multiplayer.get_unique_id()] = {
 			"name":multiplayer.get_unique_id()
 		}
