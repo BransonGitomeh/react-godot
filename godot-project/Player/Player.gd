@@ -531,19 +531,19 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	_velocity_before = velocity.normalized()
 
 	# Log updated _velocity_before
-	print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	#print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 	
 	return
 
 
 func _client_process(delta: float) -> void:
-	print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity)," _position_before => ", _position_before, " _position_after => ", str(_position_after))
+	#print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity)," _position_before => ", _position_before, " _position_after => ", str(_position_after))
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		if !multiplayer.is_server():
 			_move_network_client_smoothly(delta)
 		return;
 	
-	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+	#print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 
 	var time_since_update:=delta
 	# Store previous predicted velocity
@@ -553,7 +553,7 @@ func _client_process(delta: float) -> void:
 	# Update predicted velocity (client-side only)
 	var calculatedPredictedVelocity = _update_predicted_velocity(_time_since_last_update, _position_before, _position_after, delta)
 	
-	print("calculatedPredictedVelocity",calculatedPredictedVelocity, " _time_since_last_update =", _time_since_last_update ," ", time_since_update," ", _position_before," ", _position_after," ", delta)
+	#print("calculatedPredictedVelocity",calculatedPredictedVelocity, " _time_since_last_update =", _time_since_last_update ," ", time_since_update," ", _position_before," ", _position_after," ", delta)
 	# Predict future positions (client-side only)
 	_predict_future_positions(delta)
 
