@@ -262,6 +262,8 @@ func _update_predicted_velocity(time_since_update, _position_before, _position_a
 
 	# Update predicted velocity
 	_predicted_velocity += acceleration * time_since_update
+	
+	return _predicted_velocity
 
 
 func _predict_future_positions(delta):
@@ -306,6 +308,8 @@ var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
 var previous_predicted_positions
 func _move_network_client_smoothly(delta: float) -> void:
+	print("_move_network_client_smoothly ",multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
 		_predicted_position_index = _predicted_position_index % _predicted_positions.size()
@@ -477,9 +481,10 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 
 func _client_process(delta: float) -> void:
-	print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity))
+	print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity)," _position_before => ", _position_before, " _position_after => ", str(_position_after))
 	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
-		_move_network_client_smoothly(delta)
+		if !multiplayer.is_server():
+			_move_network_client_smoothly(delta)
 		return;
 	
 	print(multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
@@ -490,7 +495,9 @@ func _client_process(delta: float) -> void:
 	
 
 	# Update predicted velocity (client-side only)
-	_update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+	var calculatedPredictedVelocity = _update_predicted_velocity(time_since_update, _position_before, _position_after, delta)
+	
+	print("calculatedPredictedVelocity",calculatedPredictedVelocity," ", time_since_update," ", _position_before," ", _position_after," ", delta)
 	# Predict future positions (client-side only)
 	_predict_future_positions(delta)
 
