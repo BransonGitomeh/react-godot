@@ -42,7 +42,7 @@ ease = 2
 
 [node name="MainCamera3D" type="Camera3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 7.57793, 7.05472)
 current = true
 
 [node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
@@ -50,22 +50,22 @@ script = ExtResource("1_b4nxi")
 
 [node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+transform = Transform3D(1, 0, 0, 0, 0.707106, 0.707105, 0, -0.707106, 0.707105, -0.0194088, 7.57793, 7.05472)
 script = ExtResource("2_whx47")
 priority_override = false
 priority = 10
 follow_mode = 6
 follow_target = NodePath("../PlayerCharacterBody3D")
-follow_parameters/spring_arm/spring_length = 3.5
+follow_parameters/spring_arm/spring_length = 10.0
 follow_parameters/spring_arm/collision_mask = 1
 follow_parameters/spring_arm/shape = null
-follow_parameters/spring_arm/margin = 0.2
+follow_parameters/spring_arm/margin = 0.01
 follow_parameters/target_offset = Vector3(0, 0, 0)
 follow_parameters/damping = true
 follow_parameters/damping_value = 10.0
 look_at_mode = 0
 tween_parameters = SubResource("Resource_0yw0t")
-tween_on_load = false
+tween_on_load = true
 inactive_update_mode = 0
 camera_3D_resource = SubResource("Resource_bai5y")
 
