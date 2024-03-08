@@ -42,12 +42,12 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
 @onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
 @onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
-@onready var _character_skin: CharacterSkin
+@onready var _character_skin: CharacterSkin = $CharacterRotationRoot/CharacterSkin
 @onready var _ui_aim_recticle: ColorRect = %AimRecticle
 @onready var _ui_coins_container: HBoxContainer = %CoinsContainer
 @onready var _step_sound: AudioStreamPlayer3D = $StepSound
 @onready var _landing_sound: AudioStreamPlayer3D = $LandingSound
-@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $"../MultiplayerSynchronizer"
+@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $"MultiplayerSynchronizer"
 
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
@@ -180,11 +180,11 @@ func _ready() -> void:
 	_model = find_node_by_name(get_tree().get_root(), "CharacterRotationRoot")
 	_ceiling_pcam = find_node_by_name(get_tree().get_root(), "CeilingPhantomCamera3D")
 
-	print("set_multiplayer_authority " ,str(get_parent().name).to_int())
+	print("set_multiplayer_authority " ,str(name).to_int())
 
 	# If there's no local variable, fall back to the parent's name
-	multiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
-	$playerId.text = str(get_parent().name)
+	multiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+	$playerId.text = str(name)
 
 	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#_camera_controller.setup(self)
@@ -206,7 +206,7 @@ func _ready() -> void:
 	#_character_skin 
 	var character_root:Node3D = find_node_by_name(get_tree().get_root(), str(id))
 	
-	_character_skin = character_root.get_node("PlayerCharacterBody3D/CharacterRotationRoot/CharacterSkin")
+	_character_skin = character_root.get_node("CharacterRotationRoot/CharacterSkin")
 
 	if not _character_skin:
 		print("CharacterSkin not found within CharacterRotationRoot!")
