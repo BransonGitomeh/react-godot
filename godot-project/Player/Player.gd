@@ -493,7 +493,7 @@ func _physics_process(delta: float) -> void:
 	var time_since_update := delta
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
-		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
+		if multiplayer.get_unique_id() == multiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
 			#print("_aim_direction ", _aim_direction)
