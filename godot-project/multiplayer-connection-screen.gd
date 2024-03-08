@@ -28,6 +28,7 @@ func _ready():
 # Function to handle when a new player is added.
 func _on_player_added(player_id: int, player_info: Dictionary):
 	# Implement spawning logic here using the player_info dictionary.
+	print("_on_player_added", player_id, player_info)
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -36,6 +37,7 @@ func _process(delta):
 
 
 func peer_connected(id):
+	print("Player List",BrowlManager.Players)
 	if(multiplayer.is_server()):
 		if id==1:
 			# dont do anything till we have real ids
@@ -45,7 +47,6 @@ func peer_connected(id):
 			"name":multiplayer.get_unique_id()
 		}
 
-		print("New Player List",BrowlManager.Players)
 		# dont spawn on the clients
 		return;
 
