@@ -275,7 +275,7 @@ func find_node_by_name(node, target_name):
 	
 func _predict_and_set_network_player_position(delta):
 	# Only predict on server if it's not the authoritative player
-	if multiplayer.is_server() and $MultiplayerSynchronizer.get_multiplayer_authority() != 1:
+	if multiplayer.is_server() and multiplayerSynchronizer.get_multiplayer_authority() != 1:
 		# Calculate time since last update
 		var time_since_update = delta
 
@@ -289,7 +289,7 @@ func _predict_and_set_network_player_position(delta):
 		_predicted_position = predicted_position
 		_predicted_velocity = (_position_after - _position_before) / time_since_update
 		
-		print("Authority ", $MultiplayerSynchronizer.get_multiplayer_authority(), " get_unique_id ", multiplayer.get_unique_id(), " _predicted_velocity =>", _predicted_velocity)
+		print("Authority ", multiplayerSynchronizer.get_multiplayer_authority(), " get_unique_id ", multiplayer.get_unique_id(), " _predicted_velocity =>", _predicted_velocity)
 	else:
 		# No prediction needed on clients or server for authoritative player
 		pass
@@ -493,11 +493,11 @@ func _physics_process(delta: float) -> void:
 	var time_since_update := delta
   # Handle input and update position if server and looking at that client
 	if multiplayer.is_server():
-		#if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
+		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
-		#else:
+		else:
 			#print("_aim_direction ", _aim_direction)
-		#	_client_process(delta)
+			_client_process(delta)
 	else:
 		_client_process(delta)
 		
