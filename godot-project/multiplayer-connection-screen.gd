@@ -1,7 +1,7 @@
 extends Control
 
 
-var PlayerScene = preload("res://player_character_body_3d.tscn")
+var PlayerScene = preload("res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn")
 var HyperPlayerScene = preload("res://Player/HyperSpawnedPlayer.tscn")
 
 @export var address = "137.184.112.15"
@@ -37,7 +37,6 @@ func _process(delta):
 
 
 func peer_connected(id):
-	print("Player List",BrowlManager.Players)
 	if(multiplayer.is_server()):
 		if id==1:
 			# dont do anything till we have real ids
@@ -48,6 +47,7 @@ func peer_connected(id):
 		}
 
 		# dont spawn on the clients
+		print("Player List",BrowlManager.Players)
 		return;
 
 	if id==1:
@@ -70,7 +70,7 @@ func peer_connected(id):
 	# print(get_parent())
 	
 		# Find the "Playground" node in the scene tree
-	var playgroundNode = find_node_by_name(get_tree().get_root(), "Root")
+	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
 
 	# Check if the "Playground" node was found
 	if playgroundNode:

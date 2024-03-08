@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://d0iqd1ab65sam"]
+[gd_scene load_steps=75 format=3 uid="uid://d0iqd1ab65sam"]
 
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_b4nxi"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="2_whx47"]
@@ -176,6 +176,13 @@ albedo_color = Color(0.576471, 0.270588, 0.0313726, 1)
 [sub_resource type="BoxMesh" id="3"]
 material = SubResource("StandardMaterial3D_i1865")
 
+[sub_resource type="Resource" id="Resource_4cric"]
+resource_local_to_scene = true
+resource_name = "GridInventory"
+script = ExtResource("20_kb6k6")
+height = 12
+width = 8
+
 [sub_resource type="Resource" id="12"]
 resource_name = "Random Equips"
 script = ExtResource("18_rqv57")
@@ -189,7 +196,7 @@ spread_distance = 32.0
 spread_cone_degrees = 360.0
 spread_angle_degrees = 0.0
 
-[sub_resource type="Resource" id="Resource_ynrq0"]
+[sub_resource type="Resource" id="Resource_gpqrk"]
 resource_local_to_scene = true
 resource_name = "GridInventory"
 script = ExtResource("20_kb6k6")
@@ -2910,6 +2917,11 @@ tween_on_load = true
 inactive_update_mode = 0
 camera_3D_resource = null
 
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../PlayerCharacterBody3D")
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_dtgvc")
+
 [node name="PlayerCharacterBody3D" type="CharacterBody3D" parent="."]
 script = ExtResource("5_gtphr")
 inventory_menu = NodePath("Node/Inventory/InventoryMenu")
@@ -2978,6 +2990,7 @@ offset_left = -313.0
 offset_top = -39.0
 offset_right = -201.0
 offset_bottom = 129.0
+inventory = SubResource("Resource_4cric")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("19_7n24v")
@@ -3007,7 +3020,7 @@ offset_left = -201.0
 offset_top = 20.0
 offset_right = -89.0
 offset_bottom = 188.0
-inventory = SubResource("Resource_ynrq0")
+inventory = SubResource("Resource_gpqrk")
 contents = SubResource("12")
 interaction_mode = 5
 selected_item_style = ExtResource("19_7n24v")
@@ -3180,10 +3193,6 @@ text = "0"
 [node name="Timer" type="Timer" parent="PlayerCharacterBody3D/PlayerRoot/PlayerUI/CoinsContainer"]
 wait_time = 3.0
 one_shot = true
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="PlayerCharacterBody3D"]
-replication_interval = 0.1
-replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
 [node name="CharacterRotationRoot" type="Node3D" parent="PlayerCharacterBody3D"]
 

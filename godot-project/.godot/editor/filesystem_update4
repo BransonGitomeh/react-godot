@@ -47,3 +47,4 @@ res://SceneManager.gd
 res://multiplayer-connection-screen.gd
 res://addons/phantom_camera/examples/example_scenes/3D/3DFollowThirdPersonExampleScene.tscn
 res://browl_manager.gd
+res://Player/Player.gd

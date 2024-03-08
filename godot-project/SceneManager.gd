@@ -26,16 +26,16 @@ func _ready():
 	# Assuming you are calling this function in the root of your scene
 	find_and_print_node_path(self, "CharacterSkin")
 
-	#var spawnLocations = $spawnLocations.get_children()
+	var spawnLocations = $spawnLocations.get_children()
 	
 	# print(multiplayer.get_unique_id()," Spawning in current player ")
 	currentPlayer = PlayerScene.instantiate()
 	
 	# Randomly select a spawn position
-	#var currentPlayerRandomSpawnNode = spawnLocations[randi() % spawnLocations.size()]
+	var currentPlayerRandomSpawnNode = spawnLocations[randi() % spawnLocations.size()]
 	
 	#print(currentPlayerRandomSpawnNode)
-	#currentPlayer.position = $"PlayerCharacterBody3D".global_transform.origin
+	currentPlayer.position = currentPlayerRandomSpawnNode.global_transform.origin
 	print("setting currentPlayer.name = ",str(multiplayer.get_unique_id()))
 	currentPlayer.name = str(multiplayer.get_unique_id())
 	

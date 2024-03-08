@@ -47,7 +47,7 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @onready var _ui_coins_container: HBoxContainer = %CoinsContainer
 @onready var _step_sound: AudioStreamPlayer3D = $StepSound
 @onready var _landing_sound: AudioStreamPlayer3D = $LandingSound
-@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
+@onready var multiplayerSynchronizer: MultiplayerSynchronizer = $"../MultiplayerSynchronizer"
 
 @onready var _equipped_weapon: WEAPON_TYPE = WEAPON_TYPE.DEFAULT
 @export var _move_direction := Vector3.ZERO
@@ -348,7 +348,7 @@ var _predicted_position_index: int = 0
 var _interpolation_start_position: Vector3 = Vector3.ZERO
 var previous_predicted_positions
 func _move_network_client_smoothly(delta: float) -> void:
-	print("_move_network_client_smoothly ",multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", $MultiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
+	print("_move_network_client_smoothly ",multiplayer.get_unique_id() ," _update_predicted_velocity and _predict_future_positions and _move_client_smoothly ", multiplayerSynchronizer.get_multiplayer_authority(), " _predicted_velocity " + str(_predicted_velocity))
 
 	if _predicted_positions.size() > 0:
 		# Ensure _predicted_position_index is within bounds
@@ -528,7 +528,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 
 func _client_process(delta: float) -> void:
 	#print(" authority ",$MultiplayerSynchronizer.get_multiplayer_authority(), " current-> ", multiplayer.get_unique_id()," _predicted_velocity->", str(_predicted_velocity)," _position_before => ", _position_before, " _position_after => ", str(_position_after))
-	if $MultiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
+	if multiplayerSynchronizer.get_multiplayer_authority() != multiplayer.get_unique_id():
 		if !multiplayer.is_server():
 			_move_network_client_smoothly(delta)
 		return;
