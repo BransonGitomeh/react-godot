@@ -105,6 +105,9 @@ var has_authority: bool = false
 @export var is_just_on_floor :bool
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _player_pcam== null:
+		return;
+		
 	if event.is_action_pressed("menu_inventory"):
 		# toggle_inventory_menu()
 
@@ -179,6 +182,11 @@ func _ready() -> void:
 	_aim_pcam = find_node_by_name(get_tree().get_root(), "PlayerAimPhantomCamera3D")
 	_model = find_node_by_name(get_tree().get_root(), "CharacterRotationRoot")
 	_ceiling_pcam = find_node_by_name(get_tree().get_root(), "CeilingPhantomCamera3D")
+	
+	
+	if multiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		_player_pcam.queue_free()
+		_aim_pcam.queue_free()
 
 	print("set_multiplayer_authority " ,str(name).to_int())
 
@@ -486,8 +494,7 @@ var interpolated_position;
 var _velocity_history := []
 var max_history_size := 5
 func _physics_process(delta: float) -> void:
-	if _player_pcam.get_follow_mode() != _player_pcam.Constants.FollowMode.THIRD_PERSON:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 
   # Declare variables
 	var time_since_update := delta
@@ -499,6 +506,9 @@ func _physics_process(delta: float) -> void:
 			#print("_aim_direction ", _aim_direction)
 			_client_process(delta)
 	else:
+		if _player_pcam != null:
+			if _player_pcam.get_follow_mode() != _player_pcam.Constants.FollowMode.THIRD_PERSON:
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		_client_process(delta)
 		
 
