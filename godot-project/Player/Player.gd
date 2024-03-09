@@ -140,10 +140,14 @@ func _ready() -> void:
 	_player_pcam = get_node("/root/Playground/PlayerPhantomCamera3D")
 	_aim_pcam= get_node("/root/Playground/PlayerAimPhantomCamera3D")
 	$playerId.text = str(multiplayer.get_unique_id())
-	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		# Instantiate the camera scene
-		
-		pass;
+	if OS.get_name() == "Android" or OS.get_name() == "iOS":
+		# Check if the local instance has authority
+		if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+			# Instantiate the camera scene
+			$analogSticks/UI.visible = true
+			$analogSticks.visible = true
+			
+			pass;
 
 
 func ease_out_cubic(t: float) -> float:
@@ -427,7 +431,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	_velocity_before = velocity.normalized()
 
 	# Log updated _velocity_before
-	#print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
+	print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 	
 	
 	

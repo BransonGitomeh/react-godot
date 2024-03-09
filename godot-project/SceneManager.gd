@@ -57,7 +57,7 @@ func _ready():
 	
 	# Get references to the camera node and the current player node
 	var pcam = get_node("/root/Playground/PlayerPhantomCamera3D")
-	var currentPlayerNode = get_node("/root/Playground/" + str(multiplayer.get_unique_id()))
+	var currentPlayerNode = get_node("/root/Playground/" + str(multiplayer.get_unique_id()) + "/CharacterRotationRoot/offset")
 
 	# Set the follow target and other properties for the camera
 	if pcam:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=37 format=3 uid="uid://ciqrpd5675boy"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
@@ -15,6 +15,9 @@
 [ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="11_3s4i7"]
 [ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
+[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.tscn" id="16_xkjlj"]
+[ext_resource type="Texture2D" uid="uid://b4jy3cynf4voa" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/icon.svg" id="17_aqy7q"]
+[ext_resource type="Script" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/test/player.gd" id="18_hwkxu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
 
@@ -2780,6 +2783,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -7)
+visible = false
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 
@@ -2961,6 +2965,33 @@ replication_config = SubResource("SceneReplicationConfig_dtgvc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85578, 0)
 billboard = 2
 text = "playerId"
+
+[node name="analogSticks" type="Node2D" parent="."]
+visible = false
+
+[node name="UI" type="CanvasLayer" parent="analogSticks"]
+visible = false
+
+[node name="Virtual joystick left" parent="analogSticks/UI" instance=ExtResource("16_xkjlj")]
+
+[node name="Virtual joystick right" parent="analogSticks/UI" instance=ExtResource("16_xkjlj")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+joystick_mode = 1
+use_input_actions = false
+
+[node name="Player" type="Sprite2D" parent="analogSticks" node_paths=PackedStringArray("joystick_left", "joystick_right")]
+position = Vector2(600, 300)
+texture = ExtResource("17_aqy7q")
+script = ExtResource("18_hwkxu")
+joystick_left = NodePath("../UI/Virtual joystick left")
+joystick_right = NodePath("../UI/Virtual joystick right")
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
