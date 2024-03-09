@@ -1,10 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://dg0wykgc07csg"]
+[gd_scene load_steps=21 format=3 uid="uid://dg0wykgc07csg"]
 
+[ext_resource type="Script" path="res://SceneManager.gd" id="1_431na"]
 [ext_resource type="Texture2D" uid="uid://boexk81is8yhq" path="res://Level/gridbox_texture.png" id="1_dxgkr"]
-[ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://Player/Player.tscn" id="1_stlen"]
 [ext_resource type="PackedScene" uid="uid://cmwyiep10m4u4" path="res://Box/Box.tscn" id="3_od2wg"]
 [ext_resource type="PackedScene" uid="uid://rn45gytkk6tv" path="res://Enemies/BeeBot.tscn" id="4_n8dao"]
 [ext_resource type="PackedScene" uid="uid://7j15r0ej4fwx" path="res://JumpingPad/JumpingPad.tscn" id="5_mqpld"]
+[ext_resource type="PackedScene" uid="uid://dhpe136saoiel" path="res://spawn_locations.tscn" id="7_e4ggc"]
+[ext_resource type="PackedScene" uid="uid://cdlhqur2fqlq7" path="res://multiplayer-connection-screen.tscn" id="7_i637b"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_etawf"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="9_iaho1"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_v7pmt"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3D_resource.gd" id="11_0nxqj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v8uq4"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -29,7 +35,34 @@ albedo_color = Color(0.482353, 0.854902, 0.513726, 1)
 albedo_texture = ExtResource("1_dxgkr")
 uv1_triplanar = true
 
+[sub_resource type="Resource" id="Resource_0yw0t"]
+script = ExtResource("10_v7pmt")
+duration = 0.3
+transition = 1
+ease = 2
+
+[sub_resource type="Resource" id="Resource_bai5y"]
+script = ExtResource("11_0nxqj")
+cull_mask = 1048575
+h_offset = 0.0
+v_offset = 0.0
+fov = 75.0
+
+[sub_resource type="Resource" id="Resource_xvcjx"]
+script = ExtResource("10_v7pmt")
+duration = 0.25
+transition = 1
+ease = 2
+
+[sub_resource type="Resource" id="Resource_yf1op"]
+script = ExtResource("11_0nxqj")
+cull_mask = 1048575
+h_offset = 1.0
+v_offset = 0.0
+fov = 50.0
+
 [node name="Playground" type="Node3D"]
+script = ExtResource("1_431na")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_allox")
@@ -80,9 +113,6 @@ operation = 2
 radius = 2.74026
 height = 13.6062
 
-[node name="CharacterBody3d" parent="." instance=ExtResource("1_stlen")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.43125, -1.90735e-06, -14.066)
-
 [node name="Box" parent="." instance=ExtResource("3_od2wg")]
 
 [node name="Box2" parent="." instance=ExtResource("3_od2wg")]
@@ -111,3 +141,56 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.89345, 3.11496, -4.45808)
 
 [node name="JumpingPad" parent="." instance=ExtResource("5_mqpld")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.83804, 0.497432, 8.99548)
+
+[node name="spawnLocations" parent="." instance=ExtResource("7_e4ggc")]
+
+[node name="Node2D" parent="." instance=ExtResource("7_i637b")]
+
+[node name="MainCamera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+current = true
+
+[node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
+script = ExtResource("8_etawf")
+
+[node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+script = ExtResource("9_iaho1")
+priority_override = false
+priority = 10
+follow_mode = 6
+follow_target = NodePath("../../PlayerCharacterBody3D")
+follow_parameters/spring_arm/spring_length = 3.5
+follow_parameters/spring_arm/collision_mask = 1
+follow_parameters/spring_arm/shape = null
+follow_parameters/spring_arm/margin = 0.2
+follow_parameters/target_offset = Vector3(0, 0, 0)
+follow_parameters/damping = true
+follow_parameters/damping_value = 10.0
+look_at_mode = 0
+tween_parameters = SubResource("Resource_0yw0t")
+tween_on_load = false
+inactive_update_mode = 0
+camera_3D_resource = SubResource("Resource_bai5y")
+
+[node name="PlayerAimPhantomCamera3D" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.953716, -0.0104945, 0.300522, 0, 0.99939, 0.0348995, -0.300706, -0.0332842, 0.953135, 0.431374, 1.35423, 1.41338)
+script = ExtResource("9_iaho1")
+priority_override = false
+priority = 0
+follow_mode = 6
+follow_target = NodePath("../../PlayerCharacterBody3D")
+follow_parameters/spring_arm/spring_length = 1.5
+follow_parameters/spring_arm/collision_mask = 1
+follow_parameters/spring_arm/shape = null
+follow_parameters/spring_arm/margin = 0.5
+follow_parameters/target_offset = Vector3(0, 0.795, 0)
+follow_parameters/damping = false
+look_at_mode = 0
+tween_parameters = SubResource("Resource_xvcjx")
+tween_on_load = false
+inactive_update_mode = 0
+camera_3D_resource = SubResource("Resource_yf1op")

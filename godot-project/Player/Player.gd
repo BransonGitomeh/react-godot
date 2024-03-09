@@ -4,7 +4,6 @@ extends CharacterBody3D
 signal weapon_switched(weapon_name: String)
 
 const BULLET_SCENE := preload("Bullet.tscn")
-const CAMERA_SCENE := preload("res://camera_setup.tscn")
 const COIN_SCENE := preload("Coin/Coin.tscn")
 
 enum WEAPON_TYPE { DEFAULT, GRENADE }
@@ -128,9 +127,9 @@ func find_node_by_name(node, target_name):
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-	_grenade_aim_controller.visible = false
+	_grenade_aim_controller.visible = true
 	emit_signal("weapon_switched", WEAPON_TYPE.keys()[0])
 	
 	# When copying this character to a new project, the project may lack required input actions.
@@ -385,7 +384,7 @@ func _physics_process(delta: float) -> void:
 	
 	if timer >= interval:
 		# Call your function here
-		yourFunctionToRun()
+		#yourFunctionToRun()
 		
 		# Reset the timer
 		timer = 0
@@ -684,31 +683,23 @@ func _get_camera_oriented_input() -> Vector3:
 	var raw_input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
 	var input := Vector3.ZERO
-	# This is to ensure that diagonal input isn't stronger than axis aligned input
+	# This is to ensure that diagonal input isn't stronger than axis-aligned input
 	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
 	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
 	
-	_player_pcam = get_parent().get_node("/root/PlayerPhantomCamera3D")
+	var pcam = get_node_or_null("/root/Playground/PlayerPhantomCamera3D")
 	
-	# Traverse the scene tree from the root node to find the PlayerPhantomCamera3D node under the Playground node
-	var rootNode = get_tree().get_root()
-	var playgroundNode = rootNode.get_node("Playground")
-
-	# Check if the Playground node was found
-	if playgroundNode:
-		var playerPhantomCamera = playgroundNode.get_node("PlayerPhantomCamera3D")
-
-		# Check if the PlayerPhantomCamera3D node was found
-		if playerPhantomCamera:
-			# Transform the input based on the global transform of the player phantom camera
-			input = playerPhantomCamera.global_transform.basis * input
-			input.y = 0.0
-		else:
-			print("PlayerPhantomCamera3D node not found under Playground.")
+	# Check if pcam exists before using it
+	if pcam:
+		# Transform the input based on the global transform of the player phantom camera
+		input = pcam.global_transform.basis * input
+		input.y = 0.0
 	else:
-		print("Playground node not found.")
-
+		# Handle the case where pcam is not found
+		print("PlayerPhantomCamera3D node not found.")
+	
 	return input
+
 
 
 func printSceneTree(node: Node, indent: String = "", isLast: bool = true) -> void:

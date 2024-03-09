@@ -59,7 +59,7 @@ func _ready():
 
 	# Set the follow target and other properties for the camera
 	if pcam:
-		pcam.set_follow_target_node(currentPlayerNode)
+		pcam.set_follow_target_node(currentPlayer)
 		pcam.set_spring_arm_spring_length(8)
 		pcam.set_third_person_rotation(Vector3(-30, 0, 0))
 

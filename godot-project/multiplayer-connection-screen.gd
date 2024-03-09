@@ -49,7 +49,7 @@ func peer_connected(id):
 
 	
 	newPlayer.name = str(id)
-	print(get_parent())
+	# print(get_parent())
 	
 		# Find the "Playground" node in the scene tree
 	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
