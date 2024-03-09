@@ -63,12 +63,10 @@ func peer_connected(id):
 	# Check if it's the server thats receiving the connection
 	if multiplayer.get_unique_id() == 1:
 		print("Server receiving the connection:", id)
-		return
 
 	# Check if it's the server that connected to you
 	if id == 1:
 		print("Server connected to client:", multiplayer.get_unique_id())
-		return
 
 	# The player is not instantiated and it's not the server, proceed with instantiation
 	var spawnLocations = get_node("../spawnLocations")
