@@ -1,12 +1,10 @@
-res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.tscn
-res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/test/test.tscn
-res://Player/Player.tscn
+res://PossumLevel.tscn
 res://Player/BulletVisuals/bullet_trail_mat.tres
 res://Player/ExplosionVisuals/materials/shell_mat.tres
 res://Player/ExplosionVisuals/materials/blast_mat.tres
 res://Player/ExplosionVisuals/materials/particles_mat.tres
 res://Player/model/character_blend_tree.tres
 res://Enemies/smoke_puff/smoke_ball_middle_mat.tres
-res://Player/Player.gd
-res://PossumLevel.tscn
 res://SceneManager.gd
+res://multiplayer-connection-screen.gd
+res://Player/Player.tscn
