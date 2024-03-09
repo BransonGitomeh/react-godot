@@ -2747,10 +2747,6 @@ properties/21/path = NodePath(".:is_just_on_floor")
 properties/21/spawn = true
 properties/21/sync = true
 properties/21/watch = false
-properties/22/path = NodePath("CameraController:_aim_target")
-properties/22/spawn = true
-properties/22/sync = true
-properties/22/watch = false
 
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
@@ -2992,6 +2988,8 @@ texture = ExtResource("17_aqy7q")
 script = ExtResource("18_hwkxu")
 joystick_left = NodePath("../UI/Virtual joystick left")
 joystick_right = NodePath("../UI/Virtual joystick right")
+
+[node name="CameraController" type="Node3D" parent="."]
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
