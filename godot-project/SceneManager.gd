@@ -45,6 +45,9 @@ func _ready():
 	#print(currentPlayerRandomSpawnNode)
 	currentPlayer.position = currentPlayerRandomSpawnNode.position
 	currentPlayer.name = str(multiplayer.get_unique_id())
+
+	if multiplayer.get_unique_id() == 1:
+		return
 	
 	add_child(currentPlayer)
 	# Print the scene tree for debugging
