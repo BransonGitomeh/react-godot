@@ -2779,6 +2779,7 @@ debug_shape_custom_color = Color(0.658824, 1, 0, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.66334)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRotationRoot/offset"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -7)
 mesh = SubResource("BoxMesh_o6lug")
 skeleton = NodePath("../../..")
 

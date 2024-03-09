@@ -139,22 +139,9 @@ func _ready() -> void:
 		_register_input_actions()
 		
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		#$CameraController/PlayerCamera.current = true
+		# Instantiate the camera scene
 		
-		# Add the camera scene as a child to the current player
-		var cameraSceneInstance = CAMERA_SCENE.instantiate()
-		add_child(cameraSceneInstance)
-		
-		printSceneTree(get_tree().get_root())
-
-		var pcam = get_node("/root/Playground/" + str(multiplayer.get_unique_id()) + "/CameraController/PlayerPhantomCamera3D")
-		var currentPlayerNode =  get_node("/root/Playground/" + str(multiplayer.get_unique_id()))
-		pcam.set_follow_target_node(currentPlayerNode)
-		pcam.set_spring_arm_spring_length(8)
-		pcam.set_third_person_rotation(Vector3(-30, 0, 0))
-		
-		if pcam.get_follow_mode() == pcam.Constants.FollowMode.THIRD_PERSON:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		pass;
 
 
 func ease_out_cubic(t: float) -> float:
@@ -385,7 +372,24 @@ func _update_position_with_input(delta: float, input_vector: Vector3) -> void:
 var interpolated_position;
 var _velocity_history := []
 var max_history_size := 5
+
+var timer = 0
+var interval = 2  # Interval in seconds
+
+func yourFunctionToRun():
+	# Your function code here
+	printSceneTree(get_tree().get_root())
+
 func _physics_process(delta: float) -> void:
+	timer += delta
+	
+	if timer >= interval:
+		# Call your function here
+		yourFunctionToRun()
+		
+		# Reset the timer
+		timer = 0
+
   # Declare variables
 	var time_since_update := delta
   # Handle input and update position if server and looking at that client
@@ -427,7 +431,7 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	
 
 func _unhandled_input(event: InputEvent) -> void:
-	var _player_pcam = get_node("/root/Playground/" + str(multiplayer.get_unique_id()) + "/CameraController/PlayerPhantomCamera3D")
+	var _player_pcam = get_node("/root/PlayerPhantomCamera3D")
 	print(_player_pcam)
 	if !_player_pcam:
 		return;
@@ -684,11 +688,28 @@ func _get_camera_oriented_input() -> Vector3:
 	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
 	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
 	
-	_player_pcam = find_node_by_name(get_tree().get_root(), "PlayerPhantomCamera3D")
+	_player_pcam = get_parent().get_node("/root/PlayerPhantomCamera3D")
+	
+	# Traverse the scene tree from the root node to find the PlayerPhantomCamera3D node under the Playground node
+	var rootNode = get_tree().get_root()
+	var playgroundNode = rootNode.get_node("Playground")
 
-	input = _player_pcam.global_transform.basis * input
-	input.y = 0.0
+	# Check if the Playground node was found
+	if playgroundNode:
+		var playerPhantomCamera = playgroundNode.get_node("PlayerPhantomCamera3D")
+
+		# Check if the PlayerPhantomCamera3D node was found
+		if playerPhantomCamera:
+			# Transform the input based on the global transform of the player phantom camera
+			input = playerPhantomCamera.global_transform.basis * input
+			input.y = 0.0
+		else:
+			print("PlayerPhantomCamera3D node not found under Playground.")
+	else:
+		print("Playground node not found.")
+
 	return input
+
 
 func printSceneTree(node: Node, indent: String = "", isLast: bool = true) -> void:
 	var children = node.get_children()

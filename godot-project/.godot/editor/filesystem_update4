@@ -15,3 +15,4 @@ res://SceneManager.gd
 res://Player/Bullet.tscn
 res://Player/Bullet.gd
 res://addons/phantom_camera/examples/scripts/2D/PlayerCharacterBody2D.gd
+res://godot-simple-sky-project/main.tscn
