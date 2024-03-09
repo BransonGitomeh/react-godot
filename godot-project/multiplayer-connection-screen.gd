@@ -83,12 +83,9 @@ func peer_connected(id):
 	# Find the "Playground" node in the scene tree
 	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
 
-	# Check if the "Playground" node was found
-	if playgroundNode:
-		playgroundNode.add_child(newPlayer)
-		newPlayer.position = randomSpawnNode.position
-	else:
-		print("Node not found: Playground")
+	print(playgroundNode)
+	playgroundNode.add_child(newPlayer)
+	newPlayer.position = randomSpawnNode.position
 
 	printSceneTree(get_tree().get_root())
 
