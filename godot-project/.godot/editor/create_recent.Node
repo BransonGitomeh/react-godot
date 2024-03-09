@@ -1,14 +1,2 @@
-MeshInstance3D
 Node3D
-FogVolume
-HTTPRequest
-NavigationRegion3D
-MultiplayerSynchronizer
-Label
-LineEdit
-Control
-Button
-AnimationPlayer
-Camera3D
-RayCast3D
-Area3D
+MeshInstance3D

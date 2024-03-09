@@ -196,7 +196,7 @@ func _handle_rule_of_thirds(delta):
 		clamp(player_world_pos.y, rule_of_thirds_region.position.y, rule_of_thirds_region.position.y + rule_of_thirds_region.size.y)
 	)
 	# Apply additional offset
-	print("new_camera_pos", "Apply additional offset", new_camera_pos)
+	# print("new_camera_pos", "Apply additional offset", new_camera_pos)
 	new_camera_pos += character_offset
 	global_position = Vector3(new_camera_pos.x, new_camera_pos.y, global_position.z)
 

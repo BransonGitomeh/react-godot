@@ -4,6 +4,7 @@ extends CharacterBody3D
 signal weapon_switched(weapon_name: String)
 
 const BULLET_SCENE := preload("Bullet.tscn")
+const CAMERA_SCENE := preload("res://camera_setup.tscn")
 const COIN_SCENE := preload("Coin/Coin.tscn")
 
 enum WEAPON_TYPE { DEFAULT, GRENADE }
@@ -33,7 +34,6 @@ enum WEAPON_TYPE { DEFAULT, GRENADE }
 @export var grenade_cooldown := 0.5
 
 @onready var _rotation_root: Node3D = $CharacterRotationRoot
-@onready var _camera_controller: CameraController = $CameraController
 @onready var _attack_animation_player: AnimationPlayer = $CharacterRotationRoot/MeleeAnchor/AnimationPlayer
 @onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
 @onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
@@ -98,11 +98,38 @@ var has_authority: bool = false
 @export var is_air_boosting:bool
 @export var is_just_on_floor :bool
 
+@export var _camera_controller: Node3D
+@export var _camera: Camera3D
+
+@onready var _player_pcam: PhantomCamera3D 
+@onready var _aim_pcam: PhantomCamera3D 
+@onready var _model: Node3D 
+@onready var _ceiling_pcam: PhantomCamera3D 
+
+@export var mouse_sensitivity: float = 0.05
+
+@export var min_yaw: float = -89.9
+@export var max_yaw: float = 50
+
+@export var min_pitch: float = 0
+@export var max_pitch: float = 360
+
+func find_node_by_name(node, target_name):
+	if node.get_name() == target_name:
+		return node
+
+	for child in node.get_children():
+		var result = find_node_by_name(child, target_name)
+		if result:
+			return result
+
+	return null
+
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	_camera_controller.setup(self)
+
 	_grenade_aim_controller.visible = false
 	emit_signal("weapon_switched", WEAPON_TYPE.keys()[0])
 	
@@ -112,8 +139,22 @@ func _ready() -> void:
 		_register_input_actions()
 		
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		$CameraController/PlayerCamera.current = true
-		return;
+		#$CameraController/PlayerCamera.current = true
+		
+		# Add the camera scene as a child to the current player
+		var cameraSceneInstance = CAMERA_SCENE.instantiate()
+		add_child(cameraSceneInstance)
+		
+		printSceneTree(get_tree().get_root())
+
+		var pcam = get_node("/root/Playground/" + str(multiplayer.get_unique_id()) + "/CameraController/PlayerPhantomCamera3D")
+		var currentPlayerNode =  get_node("/root/Playground/" + str(multiplayer.get_unique_id()))
+		pcam.set_follow_target_node(currentPlayerNode)
+		pcam.set_spring_arm_spring_length(8)
+		pcam.set_third_person_rotation(Vector3(-30, 0, 0))
+		
+		if pcam.get_follow_mode() == pcam.Constants.FollowMode.THIRD_PERSON:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
 func ease_out_cubic(t: float) -> float:
@@ -356,6 +397,10 @@ func _physics_process(delta: float) -> void:
 			_client_process(delta)
 	else:
 		_client_process(delta)
+		
+	if velocity.length() > 0.2:
+		var look_direction: Vector2 = Vector2(velocity.z, velocity.x)
+		$CharacterRotationRoot.rotation.y = look_direction.angle()
 
 func _server_process(delta: float, time_since_update: float) -> void:
 	# Update position with input
@@ -378,7 +423,70 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	# Log updated _velocity_before
 	#print(multiplayer.get_unique_id(), " Velocity changed Timestamp:", Time.get_datetime_string_from_system(), "Updated _velocity_before:", _velocity_before)
 	
-	return
+	
+	
+
+func _unhandled_input(event: InputEvent) -> void:
+	var _player_pcam = get_node("/root/Playground/" + str(multiplayer.get_unique_id()) + "/CameraController/PlayerPhantomCamera3D")
+	print(_player_pcam)
+	if !_player_pcam:
+		return;
+		
+	if _player_pcam.get_follow_mode() == _player_pcam.Constants.FollowMode.THIRD_PERSON:
+		var active_pcam: PhantomCamera3D
+
+		if is_instance_valid(_aim_pcam):
+			_set_pcam_rotation(_player_pcam, event)
+			_set_pcam_rotation(_aim_pcam, event)
+			if _player_pcam.get_priority() > _aim_pcam.get_priority():
+				_toggle_aim_pcam(event)
+			else:
+				_toggle_aim_pcam(event)
+
+		if event is InputEventKey and event.pressed:
+			if event.keycode == KEY_SPACE:
+				if _ceiling_pcam.get_priority() < 30 and _player_pcam.is_active():
+					_ceiling_pcam.set_priority(30)
+				else:
+					_ceiling_pcam.set_priority(1)
+
+
+
+
+
+func _set_pcam_rotation(pcam: PhantomCamera3D, event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var pcam_rotation_degrees: Vector3
+
+		# Assigns the current 3D rotation of the SpringArm3D node - so it starts off where it is in the editor
+		pcam_rotation_degrees = pcam.get_third_person_rotation_degrees()
+
+		# Change the X rotation
+		pcam_rotation_degrees.x -= event.relative.y * mouse_sensitivity
+
+		# Clamp the rotation in the X axis so it go over or under the target
+		pcam_rotation_degrees.x = clampf(pcam_rotation_degrees.x, min_yaw, max_yaw)
+
+		# Change the Y rotation value
+		pcam_rotation_degrees.y -= event.relative.x * mouse_sensitivity
+
+		# Sets the rotation to fully loop around its target, but witout going below or exceeding 0 and 360 degrees respectively
+		pcam_rotation_degrees.y = wrapf(pcam_rotation_degrees.y, min_pitch, max_pitch)
+
+		# Change the SpringArm3D node's rotation and rotate around its target
+		pcam.set_third_person_rotation_degrees(pcam_rotation_degrees)
+
+
+func _toggle_aim_pcam(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+		and event.is_pressed() \
+		and event.button_index == 2 \
+		and (_player_pcam.is_active() or _aim_pcam.is_active()):
+		if _player_pcam.get_priority() > _aim_pcam.get_priority():
+			_aim_pcam.set_priority(30)
+		else:
+			_aim_pcam.set_priority(0)
+
 
 
 func _client_process(delta: float) -> void:
@@ -453,20 +561,20 @@ func _handle_local_input(delta: float) -> void:
 	
 	_orient_character_to_direction(_smoothed_input, delta)
 	# Set aiming camera and UI
-	if is_aiming:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
-		_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
-		_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
-		_ui_aim_recticle.visible = true
-		var aim_target := _camera_controller.get_aim_target()
-		var origin := global_position + Vector3.UP
-		_aim_direction = (aim_target - origin).normalized()
-		#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
-	else:
-		_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
-		_grenade_aim_controller.throw_direction = _last_strong_direction
-		_grenade_aim_controller.from_look_position = global_position
-		_ui_aim_recticle.visible = false
+	# if is_aiming:
+	# 	_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.OVER_SHOULDER)
+	# 	_grenade_aim_controller.throw_direction = _camera_controller.camera.quaternion * Vector3.FORWARD
+	# 	_grenade_aim_controller.from_look_position = _camera_controller.camera.global_position
+	# 	_ui_aim_recticle.visible = true
+	# 	var aim_target := _camera_controller.get_aim_target()
+	# 	var origin := global_position + Vector3.UP
+	# 	_aim_direction = (aim_target - origin).normalized()
+	# 	#print(multiplayer.get_unique_id()," saved _aim_direction ", _aim_direction)
+	# else:
+	# 	_camera_controller.set_pivot(_camera_controller.CAMERA_PIVOT.THIRD_PERSON)
+	# 	_grenade_aim_controller.throw_direction = _last_strong_direction
+	# 	_grenade_aim_controller.from_look_position = global_position
+	# 	_ui_aim_recticle.visible = false
 
 	# Update attack state and position
 
@@ -575,10 +683,31 @@ func _get_camera_oriented_input() -> Vector3:
 	# This is to ensure that diagonal input isn't stronger than axis aligned input
 	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
 	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
+	
+	_player_pcam = find_node_by_name(get_tree().get_root(), "PlayerPhantomCamera3D")
 
-	input = _camera_controller.global_transform.basis * input
+	input = _player_pcam.global_transform.basis * input
 	input.y = 0.0
 	return input
+
+func printSceneTree(node: Node, indent: String = "", isLast: bool = true) -> void:
+	var children = node.get_children()
+	var childCount = children.size()
+
+	if isLast:
+		print(indent + "└── " + node.get_name())
+	else:
+		print(indent + "├── " + node.get_name())
+
+	for i in range(childCount):
+		var child = children[i]
+		var isLastChild = i == childCount - 1
+		var newIndent = ""
+		if isLast:
+			newIndent = indent + "    "
+		else:
+			newIndent = indent + "│   "
+		printSceneTree(child, newIndent, isLastChild)
 
 
 func play_foot_step_sound() -> void:

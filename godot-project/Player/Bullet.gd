@@ -18,8 +18,8 @@ func _ready() -> void:
 	_area.body_entered.connect(_on_body_entered)
 	look_at(global_position + velocity)
 	_alive_limit = distance_limit / velocity.length()
-	_projectile_sound.pitch_scale = randfn(1.0, 0.1)
-	_projectile_sound.play()
+#	_projectile_sound.pitch_scale = randfn(1.0, 0.1)
+#	_projectile_sound.play()
 
 
 func _process(delta: float) -> void:
