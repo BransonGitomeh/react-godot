@@ -30,8 +30,30 @@ func _ready():
 func _process(delta):
 	pass
 
+func printSceneTree(node: Node, indent: String = "", isLast: bool = true) -> void:
+	var children = node.get_children()
+	var childCount = children.size()
+
+	if isLast:
+		print(indent + "└── " + node.get_name())
+	else:
+		print(indent + "├── " + node.get_name())
+
+	for i in range(childCount):
+		var child = children[i]
+		var isLastChild = i == childCount - 1
+		var newIndent = ""
+		if isLast:
+			newIndent = indent + "    "
+		else:
+			newIndent = indent + "│   "
+		printSceneTree(child, newIndent, isLastChild)
+
 
 func peer_connected(id):
+	if multiplayer.is_server():
+		SendPlayerInformation($Name.text,multiplayer.get_unique_id())
+
 	# Check if the player is already instantiated
 	var existingPlayer = find_node_by_name(get_tree().get_root() , str(id))
 	if existingPlayer:
@@ -69,6 +91,10 @@ func peer_connected(id):
 		newPlayer.position = randomSpawnNode.position
 	else:
 		print("Node not found: Playground")
+
+	printSceneTree(get_tree().get_root())
+
+	
 
 
 
@@ -110,6 +136,17 @@ func SendPlayerInformation(name, id):
 		for i in BrowlManager.Players:
 			print(i)
 			SendPlayerInformation.rpc(BrowlManager.Players[i].name, i)
+
+		if !BrowlManager.Players.has(id):
+			var player = {
+				"name": name,
+				"id": id,
+				"score":0
+			}	
+			print("Attempting to add ", player)
+			BrowlManager.Players[id] = player
+		
+			print("Added", BrowlManager.Players, player)
 	else:
 		if !BrowlManager.Players.has(id):
 			var player = {
