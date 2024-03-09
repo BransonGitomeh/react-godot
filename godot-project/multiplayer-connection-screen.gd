@@ -33,14 +33,19 @@ func _process(delta):
 
 func peer_connected(id):
 	# Check if the player is already instantiated
-	var existingPlayer = find_node_by_name(get_tree().get_root(), "Player_" + str(id))
+	var existingPlayer = find_node_by_name(get_tree().get_root() , str(id))
 	if existingPlayer:
 		print("Player", id, "is already instantiated")
 		return
 
-	# Check if it's the server that connected
-	if multiplayer.is_network_server():
-		print("Server connected:", id)
+	# Check if it's the server thats receiving the connection
+	if multiplayer.get_unique_id() == 1:
+		print("Server receiving the connection:", id)
+		return
+
+	# Check if it's the server that connected to you
+	if id == 1:
+		print("Server connected to client:", multiplayer.get_unique_id())
 		return
 
 	# The player is not instantiated and it's not the server, proceed with instantiation
@@ -53,7 +58,7 @@ func peer_connected(id):
 	# Randomly select a spawn position
 	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
 
-	newPlayer.name = "Player_" + str(id)
+	newPlayer.name = str(id)
 
 	# Find the "Playground" node in the scene tree
 	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
@@ -64,6 +69,7 @@ func peer_connected(id):
 		newPlayer.position = randomSpawnNode.position
 	else:
 		print("Node not found: Playground")
+
 
 
 func find_node_by_name(node, target_name):
