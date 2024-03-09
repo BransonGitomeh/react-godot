@@ -403,7 +403,7 @@ func _physics_process(delta: float) -> void:
 		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
-			print("_aim_direction ", _aim_direction)
+			# print("_aim_direction ", _aim_direction)
 			_client_process(delta)
 	else:
 		_client_process(delta)
