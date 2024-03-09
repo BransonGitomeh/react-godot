@@ -100,7 +100,7 @@ var has_authority: bool = false
 @export var _camera_controller: Node3D
 @export var _camera: Camera3D
 
-@onready var _player_pcam: PhantomCamera3D 
+@onready var _player_pcam: PhantomCamera3D
 @onready var _aim_pcam: PhantomCamera3D 
 @onready var _model: Node3D 
 @onready var _ceiling_pcam: PhantomCamera3D 
@@ -127,7 +127,7 @@ func find_node_by_name(node, target_name):
 func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
 
-	#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	_grenade_aim_controller.visible = true
 	emit_signal("weapon_switched", WEAPON_TYPE.keys()[0])
@@ -137,6 +137,9 @@ func _ready() -> void:
 	if not InputMap.has_action("move_left"):
 		_register_input_actions()
 		
+	_player_pcam = get_node("/root/Playground/PlayerPhantomCamera3D")
+	_aim_pcam= get_node("/root/Playground/PlayerAimPhantomCamera3D")
+	$playerId.text = str(multiplayer.get_unique_id())
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# Instantiate the camera scene
 		
@@ -373,7 +376,7 @@ var _velocity_history := []
 var max_history_size := 5
 
 var timer = 0
-var interval = 2  # Interval in seconds
+var interval = 10  # Interval in seconds
 
 func yourFunctionToRun():
 	# Your function code here
@@ -384,7 +387,7 @@ func _physics_process(delta: float) -> void:
 	
 	if timer >= interval:
 		# Call your function here
-		#yourFunctionToRun()
+		yourFunctionToRun()
 		
 		# Reset the timer
 		timer = 0
@@ -430,7 +433,6 @@ func _server_process(delta: float, time_since_update: float) -> void:
 	
 
 func _unhandled_input(event: InputEvent) -> void:
-	var _player_pcam = get_node("/root/PlayerPhantomCamera3D")
 	print(_player_pcam)
 	if !_player_pcam:
 		return;
@@ -686,17 +688,9 @@ func _get_camera_oriented_input() -> Vector3:
 	# This is to ensure that diagonal input isn't stronger than axis-aligned input
 	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
 	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
-	
-	var pcam = get_node_or_null("/root/Playground/PlayerPhantomCamera3D")
-	
-	# Check if pcam exists before using it
-	if pcam:
-		# Transform the input based on the global transform of the player phantom camera
-		input = pcam.global_transform.basis * input
-		input.y = 0.0
-	else:
-		# Handle the case where pcam is not found
-		print("PlayerPhantomCamera3D node not found.")
+
+	input = _player_pcam.global_transform.basis * input
+	input.y = 0.0
 	
 	return input
 

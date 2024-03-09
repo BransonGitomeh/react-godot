@@ -2957,6 +2957,11 @@ volume_db = 1.0
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_dtgvc")
 
+[node name="playerId" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.85578, 0)
+billboard = 2
+text = "playerId"
+
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
 

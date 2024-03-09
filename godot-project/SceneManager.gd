@@ -45,13 +45,15 @@ func _ready():
 	#print(currentPlayerRandomSpawnNode)
 	currentPlayer.position = currentPlayerRandomSpawnNode.position
 	currentPlayer.name = str(multiplayer.get_unique_id())
-
+	
+	printSceneTree(get_tree().get_root())
+	
 	if multiplayer.get_unique_id() == 1:
 		return
 	
 	add_child(currentPlayer)
 	# Print the scene tree for debugging
-	printSceneTree(get_tree().get_root())
+	
 	
 	# Get references to the camera node and the current player node
 	var pcam = get_node("/root/Playground/PlayerPhantomCamera3D")

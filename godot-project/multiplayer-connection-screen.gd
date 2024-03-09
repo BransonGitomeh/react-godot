@@ -32,26 +32,30 @@ func _process(delta):
 
 
 func peer_connected(id):
-	if(id == 1):
-		# dont spawn on the clients
-		return;
-		
+	# Check if the player is already instantiated
+	var existingPlayer = find_node_by_name(get_tree().get_root(), "Player_" + str(id))
+	if existingPlayer:
+		print("Player", id, "is already instantiated")
+		return
+
+	# Check if it's the server that connected
+	if multiplayer.is_network_server():
+		print("Server connected:", id)
+		return
+
+	# The player is not instantiated and it's not the server, proceed with instantiation
 	var spawnLocations = get_node("../spawnLocations")
-	print(multiplayer.get_unique_id(), " peer_connected " ,id, BrowlManager.Players)
-	
-	print(multiplayer.get_unique_id()," Spawning in network player ", id)
+	print(multiplayer.get_unique_id(), " peer_connected ", id, BrowlManager.Players)
+	print(multiplayer.get_unique_id(), " Spawning in network player ", id)
 	var newPlayer = PlayerScene.instantiate()
-	
 	var spawnLocationsChildren = spawnLocations.get_children()
-	
+
 	# Randomly select a spawn position
 	var randomSpawnNode = spawnLocationsChildren[randi() % spawnLocationsChildren.size()]
 
-	
-	newPlayer.name = str(id)
-	# print(get_parent())
-	
-		# Find the "Playground" node in the scene tree
+	newPlayer.name = "Player_" + str(id)
+
+	# Find the "Playground" node in the scene tree
 	var playgroundNode = find_node_by_name(get_tree().get_root(), "Playground")
 
 	# Check if the "Playground" node was found
@@ -60,6 +64,7 @@ func peer_connected(id):
 		newPlayer.position = randomSpawnNode.position
 	else:
 		print("Node not found: Playground")
+
 
 func find_node_by_name(node, target_name):
 	if node.get_name() == target_name:
