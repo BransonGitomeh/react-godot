@@ -403,7 +403,7 @@ func _physics_process(delta: float) -> void:
 		if multiplayer.get_unique_id() == $MultiplayerSynchronizer.get_multiplayer_authority():
 			_server_process(delta, time_since_update)
 		else:
-			# print("_aim_direction ", _aim_direction)
+			print("_aim_direction ", _aim_direction)
 			_client_process(delta)
 	else:
 		_client_process(delta)
@@ -597,20 +597,20 @@ func _handle_local_input(delta: float) -> void:
 	
 	# Set character animation
 	if is_just_jumping:
-		_character_skin.jump()
+		_character_skin.jump.rpc()
 		#_character_skin.jump()
 	elif not is_on_floor() and velocity.y < 0:
-		_character_skin.fall()
+		_character_skin.fall.rpc()
 		#_character_skin.fall()
 	elif is_on_floor():
 		var xz_velocity := Vector3(velocity.x, 0, velocity.z)
 		#print("xz_velocity", xz_velocity, stopping_speed, xz_velocity.length() > stopping_speed)
 		if xz_velocity.length() > stopping_speed:
-			_character_skin.set_moving(true)
+			_character_skin.set_moving.rpc(true)
 			#_character_skin.set_moving(true)
-			_character_skin.set_moving_speed(inverse_lerp(0.0, move_speed, xz_velocity.length()))
+			_character_skin.set_moving_speed.rpc(inverse_lerp(0.0, move_speed, xz_velocity.length()))
 		else:
-			_character_skin.set_moving(false)
+			_character_skin.set_moving.rpc(false)
 	
 	#_character_skin.set_moving(false)
 
