@@ -5,6 +5,14 @@ res://Player/ExplosionVisuals/materials/blast_mat.tres
 res://Player/ExplosionVisuals/materials/particles_mat.tres
 res://Player/model/character_blend_tree.tres
 res://Enemies/smoke_puff/smoke_ball_middle_mat.tres
-res://SceneManager.gd
-res://multiplayer-connection-screen.gd
 res://Player/Player.tscn
+res://Player/Player.gd
+res://Player/touchGestureController.gd
+res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd
+res://addons/phantom_camera/examples/scripts/3D/player_controller_third_person.gd
+res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.tscn
+res://godot-simple-sky-project/main.tscn
+res://Player/joysticks-transparency.gdshader
+res://addons/jm_pp_outlines/examples/ExampleOutlines3D.tscn
+res://addons/jm_pp_outlines/examples/Example.gd
+res://addons/jm_pp_outlines/jm_pp_outlines_camera.gd

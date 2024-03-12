@@ -1,18 +1,20 @@
 [gd_scene load_steps=4 format=3 uid="uid://dmr0fcamx7t56"]
 
 [ext_resource type="Script" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.gd" id="1_8x4dy"]
-[ext_resource type="Texture2D" uid="uid://bm30au8mjfc2f" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/textures/joystick_base_outline.png" id="2_jhjs2"]
-[ext_resource type="Texture2D" uid="uid://dt13r06u87fib" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/textures/joystick_tip_arrows.png" id="3_3etdg"]
+[ext_resource type="Texture2D" uid="uid://brqpap58i3ito" path="res://onscreenControls/Sprites/shadedDark/shadedDark01.png" id="2_1fla6"]
+[ext_resource type="Texture2D" uid="uid://crg3xe3imkpjw" path="res://onscreenControls/Sprites/shadedDark/shadedDark07.png" id="3_wxl5y"]
 
 [node name="Virtual Joystick" type="Control"]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -308.0
-offset_right = 300.0
-offset_bottom = -8.0
+offset_left = 2.0
+offset_top = -142.0
+offset_right = 302.0
+offset_bottom = 158.0
 grow_vertical = 0
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_8x4dy")
 
 [node name="Base" type="TextureRect" parent="."]
@@ -30,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100, 100)
 mouse_force_pass_scroll_events = false
-texture = ExtResource("2_jhjs2")
+texture = ExtResource("2_1fla6")
 stretch_mode = 5
 
 [node name="Tip" type="TextureRect" parent="Base"]
@@ -47,5 +49,5 @@ offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(50, 50)
-texture = ExtResource("3_3etdg")
+texture = ExtResource("3_wxl5y")
 stretch_mode = 5

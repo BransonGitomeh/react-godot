@@ -102,6 +102,54 @@ var _camera_3D_resouce_default: Camera3DResource = Camera3DResource.new()
 #endregion
 
 
+
+# start zoom
+
+@export var pinch_threshold: float = 0.2
+@export var spring_scale_factor: float = 0.5
+
+var touch_points: Dictionary = {}
+var start_distance
+
+# Add your function to be called on pinch action here
+func pinch_action(pinch_value):
+	# Calculate the new spring length based on the pinch value
+	var new_spring_length = get_spring_arm_spring_length() - pinch_value * spring_scale_factor
+
+	# Ensure the spring length does not become negative
+	new_spring_length = max(new_spring_length, 0.1)
+
+	# Set the new spring length
+	set_spring_arm_spring_length(new_spring_length)
+
+func _input(event):
+	if event is InputEventScreenTouch:
+		handle_touch(event)
+	elif event is InputEventScreenDrag:
+		handle_drag(event)
+
+func handle_touch(event: InputEventScreenTouch):
+	if event.pressed:
+		touch_points[event.index] = event.position
+	else:
+		touch_points.erase(event.index)
+
+	if touch_points.size() == 2:
+		var touch_point_positions = touch_points.values()
+		start_distance = touch_point_positions[0].distance_to(touch_point_positions[1])
+
+func handle_drag(event: InputEventScreenDrag):
+	touch_points[event.index] = event.position
+
+	if touch_points.size() == 2:
+		var touch_point_positions = touch_points.values()
+		var current_dist = touch_point_positions[0].distance_to(touch_point_positions[1])
+		var pinch_value = (current_dist - start_distance) / start_distance
+
+		# Call the function to handle pinch action
+		pinch_action(pinch_value)
+
+
 #region Properties
 
 func _get_property_list() -> Array:

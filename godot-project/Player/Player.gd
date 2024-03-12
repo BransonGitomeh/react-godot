@@ -105,7 +105,7 @@ var has_authority: bool = false
 @onready var _model: Node3D 
 @onready var _ceiling_pcam: PhantomCamera3D 
 
-@export var mouse_sensitivity: float = 0.05
+@export var mouse_sensitivity: float = 0.09
 
 @export var min_yaw: float = -89.9
 @export var max_yaw: float = 50
@@ -138,8 +138,12 @@ func _ready() -> void:
 		_register_input_actions()
 		
 	_player_pcam = get_node("/root/Playground/PlayerPhantomCamera3D")
+	_ceiling_pcam = get_node("/root/Playground/PlayerCeilingCamera3D")
 	_aim_pcam= get_node("/root/Playground/PlayerAimPhantomCamera3D")
-	$playerId.text = str(multiplayer.get_unique_id())
+	$playerId.text = str(name)
+	
+	#DisplayServer.screen_set_orientation(2)
+
 	if OS.get_name() == "Android" or OS.get_name() == "iOS":
 		# Check if the local instance has authority
 		if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
@@ -452,12 +456,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				_toggle_aim_pcam(event)
 
-		if event is InputEventKey and event.pressed:
-			if event.keycode == KEY_SPACE:
-				if _ceiling_pcam.get_priority() < 30 and _player_pcam.is_active():
-					_ceiling_pcam.set_priority(30)
-				else:
-					_ceiling_pcam.set_priority(1)
+		#if event is InputEventKey and event.pressed:
+		#	if event.keycode == KEY_SPACE:
+		#		if _ceiling_pcam.get_priority() < 30 and _player_pcam.is_active():
+		#			_ceiling_pcam.set_priority(30)
+		#		else:
+		#			_ceiling_pcam.set_priority(1)
 
 
 
@@ -690,8 +694,8 @@ func _get_camera_oriented_input() -> Vector3:
 
 	var input := Vector3.ZERO
 	# This is to ensure that diagonal input isn't stronger than axis-aligned input
-	input.x = -raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
-	input.z = -raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
+	input.x = raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y / 2.0)
+	input.z = raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x / 2.0)
 
 	input = _player_pcam.global_transform.basis * input
 	input.y = 0.0
@@ -793,7 +797,11 @@ func _on_multiplayer_synchronizer_delta_synchronized(delta_data):
 	#print("target_position", target_position)
 
 
+func _on_touch_screen_button_pressed():
+	velocity.y += jump_initial_impulse
+	pass # Replace with function body.
 
-func _on_multiplayer_synchronizer_synchronized():
-	#print("---------------MulitplayerSynchronizer.syncronized!!!!----------------")
+
+func _on_touch_screen_button_released():
+	velocity.y -= jump_initial_impulse
 	pass # Replace with function body.

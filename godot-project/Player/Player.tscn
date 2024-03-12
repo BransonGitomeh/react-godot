@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://ciqrpd5675boy"]
+[gd_scene load_steps=44 format=3 uid="uid://ciqrpd5675boy"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_rvo1c"]
 [ext_resource type="PackedScene" uid="uid://b2ew46dlu7u7x" path="res://Player/GrenadeLauncher.tscn" id="3_54qc4"]
@@ -15,9 +15,15 @@
 [ext_resource type="AudioStream" uid="uid://cbcb2d63weegs" path="res://Player/Sounds/45_Landing_01.wav" id="11_3s4i7"]
 [ext_resource type="Animation" uid="uid://diuutac72yquv" path="res://Player/model/custom_animations/simple_blink.tres" id="11_dfucc"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctycm6blx4sw4" path="res://Player/model/character_blend_tree.tres" id="12_ohjne"]
+[ext_resource type="Shader" path="res://Player/joysticks-transparency.gdshader" id="16_3elfv"]
+[ext_resource type="Script" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.gd" id="16_ndd24"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/joystick/virtual_joystick.tscn" id="16_xkjlj"]
 [ext_resource type="Texture2D" uid="uid://b4jy3cynf4voa" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/icon.svg" id="17_aqy7q"]
+[ext_resource type="Texture2D" uid="uid://brqpap58i3ito" path="res://onscreenControls/Sprites/shadedDark/shadedDark01.png" id="17_xodhg"]
+[ext_resource type="Texture2D" uid="uid://cxmonklbuywsi" path="res://onscreenControls/Sprites/shadedDark/shadedDark26.png" id="17_ydp04"]
 [ext_resource type="Script" path="res://Virtual-Joystick-Godot-e028933f70f63063dd97c112df18378b0e7fc957/test/player.gd" id="18_hwkxu"]
+[ext_resource type="Texture2D" uid="uid://crg3xe3imkpjw" path="res://onscreenControls/Sprites/shadedDark/shadedDark07.png" id="18_wc1ba"]
+[ext_resource type="Texture2D" uid="uid://bejr2re5xjqpb" path="res://onscreenControls/Sprites/flatLight/flatLight25.png" id="20_6e5yr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8x2xm"]
 
@@ -2748,6 +2754,9 @@ properties/21/spawn = true
 properties/21/sync = true
 properties/21/watch = false
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibtam"]
+shader = ExtResource("16_3elfv")
+
 [node name="Player" type="CharacterBody3D" groups=["damageables"]]
 axis_lock_angular_x = true
 axis_lock_angular_y = true
@@ -2963,26 +2972,83 @@ billboard = 2
 text = "playerId"
 
 [node name="analogSticks" type="Node2D" parent="."]
-visible = false
 
 [node name="UI" type="CanvasLayer" parent="analogSticks"]
-visible = false
 
-[node name="Virtual joystick left" parent="analogSticks/UI" instance=ExtResource("16_xkjlj")]
+[node name="Virtual joystick left" type="Control" parent="analogSticks/UI"]
+material = SubResource("ShaderMaterial_ibtam")
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 58.0
+offset_top = -227.0
+offset_right = 208.0
+offset_bottom = -77.0
+grow_vertical = 0
+scale = Vector2(1.2, 1.2)
+script = ExtResource("16_ndd24")
+action_left = "move_left"
+action_right = "move_right"
+action_up = "move_up"
+action_down = "move_down"
+
+[node name="Base" type="TextureRect" parent="analogSticks/UI/Virtual joystick left"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(100, 100)
+mouse_force_pass_scroll_events = false
+texture = ExtResource("17_xodhg")
+stretch_mode = 5
+
+[node name="Tip" type="TextureRect" parent="analogSticks/UI/Virtual joystick left/Base"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(50, 50)
+texture = ExtResource("18_wc1ba")
+stretch_mode = 5
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="analogSticks/UI"]
+position = Vector2(1065, 287)
+scale = Vector2(0.8, 0.8)
+texture_normal = ExtResource("17_ydp04")
+texture_pressed = ExtResource("20_6e5yr")
 
 [node name="Virtual joystick right" parent="analogSticks/UI" instance=ExtResource("16_xkjlj")]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -300.0
-offset_top = -300.0
-offset_right = 0.0
-offset_bottom = 0.0
+offset_left = -233.0
+offset_top = -233.0
+offset_right = 67.0
+offset_bottom = 67.0
 grow_horizontal = 0
+scale = Vector2(0.8, 0.8)
 joystick_mode = 1
 use_input_actions = false
 
 [node name="Player" type="Sprite2D" parent="analogSticks" node_paths=PackedStringArray("joystick_left", "joystick_right")]
+visible = false
 position = Vector2(600, 300)
 texture = ExtResource("17_aqy7q")
 script = ExtResource("18_hwkxu")
@@ -2993,6 +3059,8 @@ joystick_right = NodePath("../UI/Virtual joystick right")
 
 [connection signal="foot_step" from="CharacterRotationRoot/CharacterSkin" to="." method="play_foot_step_sound"]
 [connection signal="synchronized" from="MultiplayerSynchronizer" to="." method="_on_multiplayer_synchronizer_synchronized"]
+[connection signal="pressed" from="analogSticks/UI/TouchScreenButton" to="." method="_on_touch_screen_button_pressed"]
+[connection signal="released" from="analogSticks/UI/TouchScreenButton" to="." method="_on_touch_screen_button_released"]
 
 [editable path="CharacterRotationRoot/CharacterSkin/gdbot"]
 [editable path="PlayerUI/CoinsContainer/SubViewportContainer/SubViewport/Coin"]
