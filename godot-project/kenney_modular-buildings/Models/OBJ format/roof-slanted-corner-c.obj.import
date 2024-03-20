@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d2jtjqluake00"
+path="res://.godot/imported/roof-slanted-corner-c.obj-938426d0df1e24340ecdc6c43e2578f2.mesh"
+
+[deps]
+
+files=["res://.godot/imported/roof-slanted-corner-c.obj-938426d0df1e24340ecdc6c43e2578f2.mesh"]
+
+source_file="res://kenney_modular-buildings/Models/OBJ format/roof-slanted-corner-c.obj"
+dest_files=["res://.godot/imported/roof-slanted-corner-c.obj-938426d0df1e24340ecdc6c43e2578f2.mesh", "res://.godot/imported/roof-slanted-corner-c.obj-938426d0df1e24340ecdc6c43e2578f2.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

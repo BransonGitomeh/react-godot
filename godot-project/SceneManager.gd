@@ -16,12 +16,14 @@ func printSceneTree(node: Node, indent: String = "", isLast: bool = true) -> voi
 	var childCount = children.size()
 
 	if isLast:
+		
 		print(indent + "└── " + node.get_name())
 	else:
 		print(indent + "├── " + node.get_name())
 
 	for i in range(childCount):
 		var child = children[i]
+		
 		var isLastChild = i == childCount - 1
 		var newIndent = ""
 		if isLast:

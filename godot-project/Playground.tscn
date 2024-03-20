@@ -1,9 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://dg0wykgc07csg"]
+[gd_scene load_steps=26 format=3 uid="uid://dg0wykgc07csg"]
 
 [ext_resource type="Script" path="res://SceneManager.gd" id="1_431na"]
 [ext_resource type="Texture2D" uid="uid://boexk81is8yhq" path="res://Level/gridbox_texture.png" id="1_dxgkr"]
+[ext_resource type="PackedScene" uid="uid://dakv6vs1hq5v4" path="res://kenney_modular-buildings/import.tscn" id="2_ld8eu"]
 [ext_resource type="PackedScene" uid="uid://cmwyiep10m4u4" path="res://Box/Box.tscn" id="3_od2wg"]
+[ext_resource type="PackedScene" uid="uid://cabgrr2bvykhs" path="res://spider/spider_bot/spider_bot.tscn" id="4_8nblr"]
 [ext_resource type="PackedScene" uid="uid://rn45gytkk6tv" path="res://Enemies/BeeBot.tscn" id="4_n8dao"]
+[ext_resource type="Texture2D" uid="uid://dxe78lsvxbslm" path="res://grid-stripe-seamless-pattern-vector-27626223.jpeg" id="4_ttiru"]
 [ext_resource type="PackedScene" uid="uid://7j15r0ej4fwx" path="res://JumpingPad/JumpingPad.tscn" id="5_mqpld"]
 [ext_resource type="PackedScene" uid="uid://dhpe136saoiel" path="res://spawn_locations.tscn" id="7_e4ggc"]
 [ext_resource type="PackedScene" uid="uid://cdlhqur2fqlq7" path="res://multiplayer-connection-screen.tscn" id="7_i637b"]
@@ -11,6 +14,8 @@
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="9_iaho1"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_v7pmt"]
 [ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3D_resource.gd" id="11_0nxqj"]
+[ext_resource type="PackedScene" uid="uid://bjjceeyq3csc3" path="res://godot-simple-sky-project/main.tscn" id="14_h8n4a"]
+[ext_resource type="PackedScene" uid="uid://ex6xdwop0ujy" path="res://addons/WFC_Based_Gen/demo2/demo.tscn" id="16_rijxe"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v8uq4"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -26,8 +31,8 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8eocf"]
-albedo_color = Color(0.501961, 0.792157, 0.980392, 1)
-albedo_texture = ExtResource("1_dxgkr")
+albedo_color = Color(0.941176, 0.980392, 0.956863, 1)
+albedo_texture = ExtResource("4_ttiru")
 uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e7o2h"]
@@ -64,6 +69,12 @@ fov = 50.0
 [node name="Playground" type="Node3D"]
 script = ExtResource("1_431na")
 
+[node name="Node3D" parent="." instance=ExtResource("2_ld8eu")]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, -354.617, -0.440412, -99.1357)
+
+[node name="SpiderBot" parent="." instance=ExtResource("4_8nblr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975323, 0)
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_allox")
 
@@ -78,7 +89,7 @@ collision_layer = 3
 collision_mask = 3
 
 [node name="CsgBox3d" type="CSGBox3D" parent="CSGFloor"]
-size = Vector3(50, 1, 50)
+size = Vector3(1200, 1, 1200)
 
 [node name="CSGPlatforms" type="CSGCombiner3D" parent="."]
 material_override = SubResource("StandardMaterial3D_e7o2h")
@@ -143,6 +154,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.89345, 3.11496, -4.45808)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.83804, 0.497432, 8.99548)
 
 [node name="spawnLocations" parent="." instance=ExtResource("7_e4ggc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4634, 10.0398, 8.23184)
 
 [node name="Node2D" parent="." instance=ExtResource("7_i637b")]
 
@@ -162,11 +174,11 @@ priority_override = false
 priority = 10
 follow_mode = 6
 follow_target = NodePath("../../PlayerCharacterBody3D")
-follow_parameters/spring_arm/spring_length = 3.5
+follow_parameters/spring_arm/spring_length = 0.5
 follow_parameters/spring_arm/collision_mask = 1
 follow_parameters/spring_arm/shape = null
 follow_parameters/spring_arm/margin = 0.2
-follow_parameters/target_offset = Vector3(0, 0, 0)
+follow_parameters/target_offset = Vector3(0, 5, 0)
 follow_parameters/damping = true
 follow_parameters/damping_value = 10.0
 look_at_mode = 0
@@ -194,3 +206,8 @@ tween_parameters = SubResource("Resource_xvcjx")
 tween_on_load = false
 inactive_update_mode = 0
 camera_3D_resource = SubResource("Resource_yf1op")
+
+[node name="Main" parent="." instance=ExtResource("14_h8n4a")]
+
+[node name="Node3D2" parent="." instance=ExtResource("16_rijxe")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 37.6241, -8.03474, 0)

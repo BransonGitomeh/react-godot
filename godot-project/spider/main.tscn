@@ -1,0 +1,120 @@
+[gd_scene load_steps=16 format=3 uid="uid://7ns70huqnvco"]
+
+[ext_resource type="Script" path="res://SceneManager.gd" id="1_2v4r7"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_ckkjs"]
+[ext_resource type="Material" uid="uid://h0omavrnsek5" path="res://spider/materials/floor.tres" id="2_dgnap"]
+[ext_resource type="PackedScene" uid="uid://cabgrr2bvykhs" path="res://spider/spider_bot/spider_bot.tscn" id="3_6ojgc"]
+[ext_resource type="Texture2D" uid="uid://k3uxfhm56wlt" path="res://spider/textures/prototype/orange/texture_09.png" id="3_r0c1f"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3D.gd" id="3_rmmy6"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_i2tbx"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3D_resource.gd" id="5_7imue"]
+[ext_resource type="PackedScene" uid="uid://cdlhqur2fqlq7" path="res://multiplayer-connection-screen.tscn" id="9_j414b"]
+[ext_resource type="PackedScene" uid="uid://dhpe136saoiel" path="res://spawn_locations.tscn" id="10_k1rxh"]
+
+[sub_resource type="Resource" id="Resource_0yw0t"]
+script = ExtResource("4_i2tbx")
+duration = 0.3
+transition = 1
+ease = 2
+
+[sub_resource type="Resource" id="Resource_bai5y"]
+script = ExtResource("5_7imue")
+cull_mask = 1048575
+h_offset = 0.0
+v_offset = 0.0
+fov = 75.0
+
+[sub_resource type="Resource" id="Resource_xvcjx"]
+script = ExtResource("4_i2tbx")
+duration = 0.25
+transition = 1
+ease = 2
+
+[sub_resource type="Resource" id="Resource_yf1op"]
+script = ExtResource("5_7imue")
+cull_mask = 1048575
+h_offset = 1.0
+v_offset = 0.0
+fov = 50.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awb4i"]
+albedo_texture = ExtResource("3_r0c1f")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[node name="Playground" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -14.0982)
+script = ExtResource("1_2v4r7")
+
+[node name="MainCamera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+current = true
+
+[node name="PhantomCameraHost" type="Node" parent="MainCamera3D"]
+script = ExtResource("2_ckkjs")
+
+[node name="PlayerPhantomCamera3D" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.499999, 0, -0.5, 0.866023, -0.0194088, 2.25688, 3.01476)
+script = ExtResource("3_rmmy6")
+priority_override = false
+priority = 10
+follow_mode = 6
+follow_target = NodePath("../../PlayerCharacterBody3D")
+follow_parameters/spring_arm/spring_length = 3.5
+follow_parameters/spring_arm/collision_mask = 1
+follow_parameters/spring_arm/shape = null
+follow_parameters/spring_arm/margin = 0.2
+follow_parameters/target_offset = Vector3(0, 5, 0)
+follow_parameters/damping = true
+follow_parameters/damping_value = 10.0
+look_at_mode = 0
+tween_parameters = SubResource("Resource_0yw0t")
+tween_on_load = false
+inactive_update_mode = 0
+camera_3D_resource = SubResource("Resource_bai5y")
+
+[node name="PlayerAimPhantomCamera3D" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.953716, -0.0104945, 0.300522, 0, 0.99939, 0.0348995, -0.300706, -0.0332842, 0.953135, 0.431374, 1.35423, 1.41338)
+script = ExtResource("3_rmmy6")
+priority_override = false
+priority = 0
+follow_mode = 6
+follow_target = NodePath("../../PlayerCharacterBody3D")
+follow_parameters/spring_arm/spring_length = 1.5
+follow_parameters/spring_arm/collision_mask = 1
+follow_parameters/spring_arm/shape = null
+follow_parameters/spring_arm/margin = 0.5
+follow_parameters/target_offset = Vector3(0, 0.795, 0)
+follow_parameters/damping = false
+look_at_mode = 0
+tween_parameters = SubResource("Resource_xvcjx")
+tween_on_load = false
+inactive_update_mode = 0
+camera_3D_resource = SubResource("Resource_yf1op")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17, 0)
+operation = 1
+use_collision = true
+flip_faces = true
+size = Vector3(80, 40, 80)
+material = ExtResource("2_dgnap")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.799572, -17.725, -9.61878)
+radius = 16.6239
+radial_segments = 24
+rings = 12
+material = SubResource("StandardMaterial3D_awb4i")
+
+[node name="SpiderBot" parent="." instance=ExtResource("3_6ojgc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.60824, 11.9092)
+
+[node name="Node2D" parent="." instance=ExtResource("9_j414b")]
+
+[node name="spawnLocations" parent="." instance=ExtResource("10_k1rxh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.29397, 0)

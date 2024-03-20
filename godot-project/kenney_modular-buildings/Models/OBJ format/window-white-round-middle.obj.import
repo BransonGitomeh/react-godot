@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://sc0m2pvm5tfi"
+path="res://.godot/imported/window-white-round-middle.obj-3adacd193fac26fe00b8af5bcbf4336e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/window-white-round-middle.obj-3adacd193fac26fe00b8af5bcbf4336e.mesh"]
+
+source_file="res://kenney_modular-buildings/Models/OBJ format/window-white-round-middle.obj"
+dest_files=["res://.godot/imported/window-white-round-middle.obj-3adacd193fac26fe00b8af5bcbf4336e.mesh", "res://.godot/imported/window-white-round-middle.obj-3adacd193fac26fe00b8af5bcbf4336e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

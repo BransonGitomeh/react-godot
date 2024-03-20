@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://c7kkpw04at75n"
+path.s3tc="res://.godot/imported/building-windows-high-top-round-9fd99eae3a764509b2cec38dec7cc57d_colormap.png-836c6a9f6898d7c7917c9d981e66c5f1.s3tc.ctex"
+path.etc2="res://.godot/imported/building-windows-high-top-round-9fd99eae3a764509b2cec38dec7cc57d_colormap.png-836c6a9f6898d7c7917c9d981e66c5f1.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={}
+
+[deps]
+
+source_file="res://kenney_modular-buildings/Models/FBX format/building-windows-high-top-round-9fd99eae3a764509b2cec38dec7cc57d_colormap.png"
+dest_files=["res://.godot/imported/building-windows-high-top-round-9fd99eae3a764509b2cec38dec7cc57d_colormap.png-836c6a9f6898d7c7917c9d981e66c5f1.s3tc.ctex", "res://.godot/imported/building-windows-high-top-round-9fd99eae3a764509b2cec38dec7cc57d_colormap.png-836c6a9f6898d7c7917c9d981e66c5f1.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="TPS Demo"
-run/main_scene="res://PossumLevel.tscn"
+run/main_scene="res://Playground.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 run/max_fps=60
 config/icon="res://icon.png"
@@ -21,11 +21,23 @@ config/icon="res://icon.png"
 BrowlManager="*res://browl_manager.gd"
 CameraMode="*res://CameraMode/CameraMode.tscn"
 FullScreenHandler="*res://FullScreenHandler.gd"
+Mapper2dTilemap="*res://addons/wfc/problems/2d/mappers/mapper_2d_tilemap.gd"
+Mapper2d="*res://addons/wfc/problems/2d/mappers/mapper_2d.gd"
+Mapper2dGridmap="*res://addons/wfc/problems/2d/mappers/mapper_2d_gridmap.gd"
+Mapper2dGridmapMeshMeta="*res://addons/wfc/problems/2d/mappers/mapper_2d_gridmap_mesh_meta.gd"
+Mapper2dLayeredTilemap="*res://addons/wfc/problems/2d/mappers/mapper_2d_layered_tilemap.gd"
 
 [display]
 
+window/size/viewport_width=1366
+window/size/viewport_height=1024
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/handheld/orientation=4
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/phantom_camera/plugin.cfg")
 
 [input]
 

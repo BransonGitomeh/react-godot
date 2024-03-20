@@ -3,7 +3,7 @@ extends Control
 var PlayerScene = preload("res://Player/Player.tscn")
 
 
-@export var address = "137.184.112.15"
+@export var address = "165.227.223.178"
 @export var port = 8910
 var peer;
 

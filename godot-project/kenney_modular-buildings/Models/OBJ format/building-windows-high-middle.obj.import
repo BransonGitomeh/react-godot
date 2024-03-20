@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bmjs4vgkufde5"
+path="res://.godot/imported/building-windows-high-middle.obj-3b394c0f16d5a8e61d5a53482fdd3087.mesh"
+
+[deps]
+
+files=["res://.godot/imported/building-windows-high-middle.obj-3b394c0f16d5a8e61d5a53482fdd3087.mesh"]
+
+source_file="res://kenney_modular-buildings/Models/OBJ format/building-windows-high-middle.obj"
+dest_files=["res://.godot/imported/building-windows-high-middle.obj-3b394c0f16d5a8e61d5a53482fdd3087.mesh", "res://.godot/imported/building-windows-high-middle.obj-3b394c0f16d5a8e61d5a53482fdd3087.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

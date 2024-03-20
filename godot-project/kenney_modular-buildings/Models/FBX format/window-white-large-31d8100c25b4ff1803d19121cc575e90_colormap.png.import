@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://deatevn3s82o6"
+path.s3tc="res://.godot/imported/window-white-large-31d8100c25b4ff1803d19121cc575e90_colormap.png-b06aa375a3846fd89c2248a75dc064b3.s3tc.ctex"
+path.etc2="res://.godot/imported/window-white-large-31d8100c25b4ff1803d19121cc575e90_colormap.png-b06aa375a3846fd89c2248a75dc064b3.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={}
+
+[deps]
+
+source_file="res://kenney_modular-buildings/Models/FBX format/window-white-large-31d8100c25b4ff1803d19121cc575e90_colormap.png"
+dest_files=["res://.godot/imported/window-white-large-31d8100c25b4ff1803d19121cc575e90_colormap.png-b06aa375a3846fd89c2248a75dc064b3.s3tc.ctex", "res://.godot/imported/window-white-large-31d8100c25b4ff1803d19121cc575e90_colormap.png-b06aa375a3846fd89c2248a75dc064b3.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

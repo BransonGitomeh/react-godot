@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://csev0ensadyub"
+path="res://.godot/imported/window-brown-large.obj-250058bdfd9a7e18c819caf368320e78.mesh"
+
+[deps]
+
+files=["res://.godot/imported/window-brown-large.obj-250058bdfd9a7e18c819caf368320e78.mesh"]
+
+source_file="res://kenney_modular-buildings/Models/OBJ format/window-brown-large.obj"
+dest_files=["res://.godot/imported/window-brown-large.obj-250058bdfd9a7e18c819caf368320e78.mesh", "res://.godot/imported/window-brown-large.obj-250058bdfd9a7e18c819caf368320e78.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

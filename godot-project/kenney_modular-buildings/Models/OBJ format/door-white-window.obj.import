@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bqiovhopkc1j"
+path="res://.godot/imported/door-white-window.obj-3eaf7b59e780bcebf6e6e6f6a4e2df20.mesh"
+
+[deps]
+
+files=["res://.godot/imported/door-white-window.obj-3eaf7b59e780bcebf6e6e6f6a4e2df20.mesh"]
+
+source_file="res://kenney_modular-buildings/Models/OBJ format/door-white-window.obj"
+dest_files=["res://.godot/imported/door-white-window.obj-3eaf7b59e780bcebf6e6e6f6a4e2df20.mesh", "res://.godot/imported/door-white-window.obj-3eaf7b59e780bcebf6e6e6f6a4e2df20.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
